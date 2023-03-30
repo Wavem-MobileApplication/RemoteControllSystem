@@ -9,18 +9,16 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.remotecontrollsystem.R;
+import com.example.remotecontrollsystem.mqtt.msgs.Pose;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import geometry_msgs.msg.Pose;
 
 public class DrivingProgressView extends androidx.appcompat.widget.AppCompatImageView {
     private static final int WIDTH_STRIDE = 200;

@@ -1,7 +1,7 @@
 package com.example.remotecontrollsystem.ui.view;
 
 import android.content.Context;
-import android.graphics.Color;
+
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -13,10 +13,10 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.remotecontrollsystem.ros.data.MapInfo;
+
 import com.example.remotecontrollsystem.ui.util.GestureUtil;
 
-import nav_msgs.msg.OccupancyGrid;
+
 
 public class MapFrameLayout extends FrameLayout {
     private GestureDetector gestureDetector;
@@ -43,7 +43,7 @@ public class MapFrameLayout extends FrameLayout {
         addView(new GridMapView(getContext()));
         addView(new NavigationView(getContext()));
 
-        MapInfo.getInstance().observeMap(occupancyGrid -> {
+/*        MapInfo.getInstance().observeMap(occupancyGrid -> {
             getLayoutParams().width = occupancyGrid.getInfo().getWidth();
             getLayoutParams().height = occupancyGrid.getInfo().getHeight();
 
@@ -68,7 +68,7 @@ public class MapFrameLayout extends FrameLayout {
 
             setX((parent.getWidth() - width) / 2.0f);
             setY((parent.getHeight() - height) / 2.0f);
-        });
+        });*/
     }
 
     private void settingGestures() {

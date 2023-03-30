@@ -3,24 +3,11 @@ package com.example.remotecontrollsystem.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.remotecontrollsystem.R;
-import com.example.remotecontrollsystem.ros.data.MapInfo;
-import com.example.remotecontrollsystem.ros.node.SubNode;
-import com.example.remotecontrollsystem.ros.util.RosMath;
-
-import org.ros2.rcljava.consumers.Consumer;
-import org.ros2.rcljava.subscription.Subscription;
-
-import geometry_msgs.msg.Pose;
-import nav_msgs.msg.OccupancyGrid;
-
 public class NavigationView extends androidx.appcompat.widget.AppCompatImageView {
-    private Subscription<Pose> subscription;
 
     private static final int DEFAULT_ICON_SIZE = 20;
 
@@ -38,10 +25,10 @@ public class NavigationView extends androidx.appcompat.widget.AppCompatImageView
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        init();
+//        init();
     }
 
-    private void init() {
+/*    private void init() {
         setImageResource(R.drawable.icon_navigation);
         getLayoutParams().width = DEFAULT_ICON_SIZE;
         getLayoutParams().height = DEFAULT_ICON_SIZE;
@@ -88,5 +75,5 @@ public class NavigationView extends androidx.appcompat.widget.AppCompatImageView
         setX(navX);
         setY(navY);
         setRotation(degree);
-    }
+    }*/
 }

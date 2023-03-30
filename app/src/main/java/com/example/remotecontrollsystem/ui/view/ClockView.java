@@ -118,8 +118,14 @@ public class ClockView extends View {
 
         canvas.drawPath(path, minTimerPaint);
 
-        String hourText = sec / 3600 + "시간";
-        String minText = sec / 60 + "분";
+        int hour = sec / 3600;
+        String hourText = hour + "시간";
+        String minText;
+        if (hour > 0) {
+            minText = sec / 60 + "분";
+        } else {
+            minText = (sec - 3600 * hour) / 60 + "분";
+        }
         canvas.drawText(hourText, centerX, centerY + getFontMetrics() - textPaint.getTextSize() / 2, textPaint);
         canvas.drawText(minText, centerX, centerY + getFontMetrics() + textPaint.getTextSize() / 2, textPaint);
     }

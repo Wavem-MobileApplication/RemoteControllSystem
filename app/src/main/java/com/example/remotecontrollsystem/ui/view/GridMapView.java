@@ -6,17 +6,12 @@ import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.remotecontrollsystem.ros.data.MapInfo;
-import com.example.remotecontrollsystem.ros.node.SubNode;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.ros2.rcljava.client.Client;
 
 import java.nio.ByteBuffer;
 import java.time.Duration;
@@ -29,10 +24,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import nav_msgs.msg.OccupancyGrid;
-import nav_msgs.srv.GetMap;
-import nav_msgs.srv.GetMap_Request;
-import nav_msgs.srv.GetMap_Response;
+
 
 public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
     private static final String TAG = GridMapView.class.getSimpleName();
@@ -40,15 +32,15 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
 
     public GridMapView(@NonNull Context context) {
         super(context);
-        init();
+//        init();
     }
 
     public GridMapView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
+//        init();
     }
 
-    @Override
+/*    @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
     }
@@ -139,6 +131,6 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
         bitmap.copyPixelsFromBuffer(buffer);
 
         return bitmap;
-    }
+    }*/
 
 }
