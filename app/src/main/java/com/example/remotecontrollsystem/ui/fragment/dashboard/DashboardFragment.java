@@ -15,6 +15,7 @@ import com.example.remotecontrollsystem.ui.view.MapFrameLayout;
 
 
 public class DashboardFragment extends Fragment {
+    private static final String FRAGMENT_TAG = "대시보드";
     private FragmentDashboardBinding binding;
 
     public static DashboardFragment newInstance(int num) {
@@ -37,6 +38,8 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
+
+        binding.getRoot().setTag(FRAGMENT_TAG);
 
         binding.frameMapMain.addView(new MapFrameLayout(getContext()));
         binding.frameCameraFrontMain.addView(new CameraView(getContext()));

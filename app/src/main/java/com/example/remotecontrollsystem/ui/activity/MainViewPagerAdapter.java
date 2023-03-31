@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.remotecontrollsystem.ui.fragment.dashboard.DashboardFragment;
+import com.example.remotecontrollsystem.ui.fragment.setting.SettingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class MainViewPagerAdapter extends FragmentStateAdapter {
     private void init() {
         fragmentList = new ArrayList<>();
         fragmentList.add(DashboardFragment.newInstance(0));
+        fragmentList.add(SettingFragment.newInstance(1));
     }
 
     @NonNull
@@ -48,5 +50,15 @@ public class MainViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public int getItemCount() {
         return fragmentList.size();
+    }
+
+    public List<String> getFragmentsNameList() {
+        List<String> fragNameList = new ArrayList<>();
+
+        for (int i = 0; i < fragNameList.size(); i++) {
+            fragNameList.add(fragmentList.get(i).getTag());
+        }
+
+        return fragNameList;
     }
 }

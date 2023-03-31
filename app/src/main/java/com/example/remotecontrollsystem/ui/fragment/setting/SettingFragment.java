@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 
 import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.FragmentSettingBinding;
+import com.example.remotecontrollsystem.ui.fragment.setting.adapter.SettingViewPagerAdapter;
 
 
 public class SettingFragment extends Fragment {
+    private static final String FRAGMENT_TAG = "환경설정";
     private FragmentSettingBinding binding;
 
     public static SettingFragment newInstance(int num) {
@@ -35,11 +37,16 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSettingBinding.inflate(inflater, container, false);
+        binding.getRoot().setTag(FRAGMENT_TAG);
 
-
+        init();
 
         return binding.getRoot();
     }
 
-
+    private void init() {
+        SettingViewPagerAdapter viewPagerAdapter = new SettingViewPagerAdapter(this);
+        binding.viewPagerSetting.setAdapter(viewPagerAdapter);
+        binding.viewPagerSetting.setUserInputEnabled(false);
+    }
 }

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:background="@color/color_contents_background"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/tv_data_name"
@@ -11,8 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="기능명"
-        android:textColor="@color/black"
+        android:layout_marginBottom="8dp"
+        android:text="@string/function_name_ko"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/tl_topic_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,11 +23,15 @@
         android:id="@+id/tl_topic_name"
         style="?attr/textInputOutlinedStyle"
         android:layout_width="0dp"
+        app:boxBackgroundColor="@color/white"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:hint="토픽명"
+        android:layout_marginBottom="8dp"
+        android:hint="@string/topic_name_ko"
+        app:hintTextColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tl_message_type"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_data_name">
@@ -33,7 +40,7 @@
             android:id="@+id/et_topic_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Topic Name" />
+            android:text="@string/topic_name" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -45,7 +52,9 @@
         android:layout_marginEnd="16dp"
         android:clickable="false"
         android:focusable="false"
-        android:hint="메시지 타입"
+        android:hint="@string/message_type_ko"
+        app:boxBackgroundColor="@color/white"
+        app:hintTextColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/tl_topic_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tl_topic_name"
@@ -55,6 +64,6 @@
             android:id="@+id/et_message_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Message Type" />
+            android:text="@string/message_type" />
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
