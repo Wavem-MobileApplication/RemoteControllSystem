@@ -1,6 +1,7 @@
 package com.example.remotecontrollsystem.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -17,6 +18,11 @@ import com.example.remotecontrollsystem.model.utils.RoomConverter;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 @Database(entities = {Topic.class}, version = 1, exportSchema = false)
 @TypeConverters(RoomConverter.class)
 public abstract class DataStorage extends RoomDatabase {
@@ -28,7 +34,10 @@ public abstract class DataStorage extends RoomDatabase {
     public static synchronized DataStorage getInstance(final Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
-                    DataStorage.class, "RCSDatabase").fallbackToDestructiveMigration().build();
+                    DataStorage.class, "RCSDatabase")
+                    .addCallback(roomCallback)
+                    .fallbackToDestructiveMigration()
+                    .build();
         }
 
         return instance;
@@ -38,8 +47,7 @@ public abstract class DataStorage extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            InitializeDatabase initializeDatabase = new InitializeDatabase();
-            initializeDatabase.settingDefaultTopics(instance.topicDao());
+            new InitializeDatabase().settingDefaultTopics(instance.topicDao());
         }
     };
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.List;
 
 
 public class TopicEditFragment extends Fragment {
+    private static final String TAG = TopicEditFragment.class.getSimpleName();
     private FragmentTopicEditBinding binding;
 
     private TopicViewModel topicViewModel;
@@ -71,6 +73,9 @@ public class TopicEditFragment extends Fragment {
     private final Observer<List<Topic>> allTopicObserver = new Observer<List<Topic>>() {
         @Override
         public void onChanged(List<Topic> topics) {
+            for (Topic topic : topics) {
+                Log.d(TAG, topic.getFuncName());
+            }
            rvAdapter.setTopicList(topics);
         }
     };

@@ -17,7 +17,7 @@ import io.reactivex.rxjava3.core.Completable;
 @Dao
 public interface TopicDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Completable insert(Topic topic);
+    void insert(Topic topic);
 
     @Update
     Completable update(Topic topic);

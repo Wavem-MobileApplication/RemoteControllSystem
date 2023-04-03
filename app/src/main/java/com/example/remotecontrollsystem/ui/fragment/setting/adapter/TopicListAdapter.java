@@ -32,6 +32,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Topic topic = topicList.get(position);
+        holder.binding.tvDataName.setText(topic.getFuncName());
         holder.binding.etTopicName.setText(topic.getMessage().getName());
         holder.binding.etMessageType.setText(topic.getMessage().getMessage_type());
     }

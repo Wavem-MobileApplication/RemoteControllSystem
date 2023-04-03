@@ -3,6 +3,7 @@ package com.example.remotecontrollsystem.model.entity;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessageDefinition;
@@ -18,10 +19,12 @@ public class Topic {
     public Topic() {
     }
 
+    @Ignore
     public Topic(String funcName) {
         this.funcName = funcName;
     }
 
+    @Ignore
     public Topic(String funcName, RosMessageDefinition message) {
         this.funcName = funcName;
         this.message = message;

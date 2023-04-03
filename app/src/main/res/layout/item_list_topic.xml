@@ -38,6 +38,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_topic_name"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/topic_name" />
@@ -64,6 +65,8 @@
             android:id="@+id/et_message_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:focusable="false"
             android:text="@string/message_type" />
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

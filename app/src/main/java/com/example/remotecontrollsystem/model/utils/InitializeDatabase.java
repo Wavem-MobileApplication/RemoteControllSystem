@@ -1,29 +1,45 @@
 package com.example.remotecontrollsystem.model.utils;
 
+import android.util.Log;
+
 import com.example.remotecontrollsystem.model.dao.TopicDao;
 import com.example.remotecontrollsystem.model.entity.Topic;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessageDefinition;
+import com.example.remotecontrollsystem.mqtt.utils.Constants;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class InitializeDatabase {
 
     public void settingDefaultTopics(TopicDao topicDao) {
+        Disposable backgroundTask = Observable.fromCallable(() -> {
 //        topicDao.insert(getDefaultMap());
 //        topicDao.insert(getDefaultRobotPose());
-        topicDao.insert(getDefaultScan());
-        topicDao.insert(getDefaultTF());
-        topicDao.insert(getDefaultTFStatic());
-        topicDao.insert(getDefaultCmdVelSub());
-        topicDao.insert(getDefaultOdom());
-        topicDao.insert(getDefaultGlobalPlan());
-        topicDao.insert(getDefaultLocalPlan());
+                    topicDao.insert(getDefaultScan());
+                    topicDao.insert(getDefaultTF());
+                    topicDao.insert(getDefaultTFStatic());
+                    topicDao.insert(getDefaultCmdVelSub());
+                    topicDao.insert(getDefaultOdom());
+                    topicDao.insert(getDefaultGlobalPlan());
+                    topicDao.insert(getDefaultLocalPlan());
 
 
-        topicDao.insert(getDefaultCmdVelPub());
-        topicDao.insert(getDefaultInitialPose());
+                    topicDao.insert(getDefaultCmdVelPub());
+                    topicDao.insert(getDefaultInitialPose());
+                    return true;
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((result) -> {
+                    Log.d("Finish", "Insert Main Topics");
+                });
     }
 
     private Topic getDefaultMap() {
-        Topic topic = new Topic("지도");
+        Topic topic = new Topic(Constants.MAP);
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/map", "nav_msgs/msg/OccupancyGrid", 1, true);
         topic.setMessage(msg);
@@ -32,7 +48,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultRobotPose() {
-        Topic topic = new Topic("차량 위치");
+        Topic topic = new Topic(Constants.ROBOT_POSE);
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/robot_pose", "geometry_msgs/msg/Pose");
         topic.setMessage(msg);
@@ -41,7 +57,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultScan() {
-        Topic topic = new Topic("라이다 센서");
+        Topic topic = new Topic(Constants.LASER_SCAN);
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/scan", "sensor_msgs/msg/LaserScan");
         topic.setMessage(msg);
@@ -50,7 +66,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultTFStatic() {
-        Topic topic = new Topic("정적 기준 좌표");
+        Topic topic = new Topic(Constants.TF_STATIC);
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/tf_static", "tf2_msgs/msg/TFMessage");
         topic.setMessage(msg);
@@ -59,7 +75,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultTF() {
-        Topic topic = new Topic("동적 기준 좌표");
+        Topic topic = new Topic(Constants.TF);
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/tf", "tf2_msgs/msg/TFMessage");
         topic.setMessage(msg);
@@ -68,7 +84,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultCmdVelSub() {
-        Topic topic = new Topic("차량 속도");
+        Topic topic = new Topic(Constants.CMD_VEL_SUB);
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/cmd_vel", "geometry_msgs/msg/Twist");
         topic.setMessage(msg);
@@ -77,7 +93,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultCmdVelPub() {
-        Topic topic = new Topic("수동 제어");
+        Topic topic = new Topic(Constants.CMD_VEL_PUB);
         RosMessageDefinition msg =
                 RosMessageDefinition.PUB("/cmd_vel", "geometry_msgs/msg/Twist");
         topic.setMessage(msg);
@@ -86,7 +102,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultOdom() {
-        Topic topic = new Topic("위치/이동 정보");
+        Topic topic = new Topic(Constants.ODOM);
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/odom", "nav_msgs/msg/Odometry");
         topic.setMessage(msg);
@@ -95,7 +111,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultGlobalPlan() {
-        Topic topic = new Topic("예상 주행 경로");
+        Topic topic = new Topic(Constants.GLOBAL_PLAN);
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/transformed_global_plan", "nav_msgs/msg/Path");
         topic.setMessage(msg);
@@ -104,7 +120,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultLocalPlan() {
-        Topic topic = new Topic("목표 주행 경로");
+        Topic topic = new Topic(Constants.LOCAL_PLAN);
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/local_plan", "nav_msgs/msg/Path");
         topic.setMessage(msg);
@@ -113,9 +129,9 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultInitialPose() {
-        Topic topic = new Topic("차량 위치 갱신");
+        Topic topic = new Topic(Constants.INITIAL_POSE);
         RosMessageDefinition msg =
-                RosMessageDefinition.SUB("/initialpose", "geometry_msgs/msg/PoseWithCovarianceStamped");
+                RosMessageDefinition.PUB("/initialpose", "geometry_msgs/msg/PoseWithCovarianceStamped");
         topic.setMessage(msg);
 
         return topic;
