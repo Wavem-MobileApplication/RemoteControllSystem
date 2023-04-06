@@ -58,7 +58,6 @@ public class BatteryView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        init();
         updateUI(88.4f);
     }
 
@@ -104,6 +103,7 @@ public class BatteryView extends View {
 
         float centerX = getPivotX();
         float centerY = getPivotY();
+        float textSize = textPaint.getTextSize();
 
         float radius = (getWidth() - STROKE_WIDTH * 2) / 2;
         canvas.drawCircle(centerX, centerY, radius, circlePaint); // Draw background white ring.
@@ -120,8 +120,11 @@ public class BatteryView extends View {
             int remainTime = (int) (maxOperationTime * (battery / 100));
             String hour = remainTime / 60 + "시간";
             String min = remainTime % 60 + "분";
-            canvas.drawText(hour, centerX, centerY + getFontMetrics() - textPaint.getTextSize() / 2, textPaint);
-            canvas.drawText(min, centerX, centerY + getFontMetrics() + textPaint.getTextSize() / 2, textPaint);
+            canvas.drawText(hour, centerX, centerY + getFontMetrics() - textSize / 2, textPaint);
+            canvas.drawText(min, centerX, centerY + getFontMetrics() + textSize / 2, textPaint);
         }
+
+        Log.d("뷰 크기", String.valueOf(getWidth()));
+        Log.d("텍스트 사이즈", String.valueOf(textPaint.getTextSize()));
     }
 }

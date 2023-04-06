@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tv_destination_num"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="8dp"
@@ -30,9 +30,12 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="8dp"
         android:hint="@string/pose_x"
+        android:textColorHint="@color/color_text_light_gray"
+        app:boxBackgroundColor="@color/white"
+        style="?attr/textInputOutlinedStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textInputLayout2"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/tv_destination_num"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -50,6 +53,9 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="8dp"
         android:hint="@string/pose_y"
+        android:textColorHint="@color/color_text_light_gray"
+        app:boxBackgroundColor="@color/white"
+        style="?attr/textInputOutlinedStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textInputLayout3"
         app:layout_constraintStart_toEndOf="@+id/textInputLayout"
@@ -70,6 +76,9 @@
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="8dp"
         android:hint="@string/pose_z"
+        android:textColorHint="@color/color_text_light_gray"
+        app:boxBackgroundColor="@color/white"
+        style="?attr/textInputOutlinedStyle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textInputLayout4"
         app:layout_constraintStart_toEndOf="@+id/textInputLayout2"
@@ -83,6 +92,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout4"
+        style="?attr/textInputOutlinedStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -90,8 +100,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:hint="@string/pose_w"
+        android:textColorHint="@color/color_text_light_gray"
+        app:boxBackgroundColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_delete_destination"
         app:layout_constraintStart_toEndOf="@+id/textInputLayout3"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -100,4 +112,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/btn_delete_destination"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:scaleType="fitCenter"
+        android:background="@drawable/ripple_click_button_white_no_padding"
+        android:src="@drawable/icon_delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

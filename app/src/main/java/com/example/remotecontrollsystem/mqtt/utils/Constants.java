@@ -12,4 +12,6 @@ public class Constants {
     public static final String GLOBAL_PLAN = "예상 주행 경로";
     public static final String LOCAL_PLAN = "목표 주행 경로";
     public static final String INITIAL_POSE = "차량 위치 갱신";
+    public static final String NAVIGATE_TO_POSE = "자율주행";
+    public static final String GET_MAP = "지도 불러오기";
 }

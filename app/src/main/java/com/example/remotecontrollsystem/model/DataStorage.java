@@ -11,9 +11,14 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.example.remotecontrollsystem.model.dao.RouteDao;
 import com.example.remotecontrollsystem.model.dao.TopicDao;
+import com.example.remotecontrollsystem.model.dao.WaypointDao;
+import com.example.remotecontrollsystem.model.entity.Route;
 import com.example.remotecontrollsystem.model.entity.Topic;
+import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.model.utils.InitializeDatabase;
+import com.example.remotecontrollsystem.model.utils.LambdaTask;
 import com.example.remotecontrollsystem.model.utils.RoomConverter;
 
 import java.util.List;
@@ -23,7 +28,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-@Database(entities = {Topic.class}, version = 1, exportSchema = false)
+@Database(entities = {Topic.class, Waypoint.class, Route.class}, version = 1, exportSchema = false)
 @TypeConverters(RoomConverter.class)
 public abstract class DataStorage extends RoomDatabase {
     private static final String TAG = DataStorage.class.getSimpleName();
@@ -53,8 +58,10 @@ public abstract class DataStorage extends RoomDatabase {
 
     // Dao Methods
     public abstract TopicDao topicDao();
+    public abstract WaypointDao waypointDao();
+    public abstract RouteDao routeDao();
 
-    // Topic Method
+    // Topic Methods
     public void addTopic(Topic topic) {
         topicDao().insert(topic);
     }
@@ -73,5 +80,47 @@ public abstract class DataStorage extends RoomDatabase {
 
     public LiveData<List<Topic>> getAllTopics() {
         return topicDao().getAllTopics();
+    }
+
+    // Waypoint Methods
+    public void addWaypoint(Waypoint waypoint) {
+        new LambdaTask(() -> waypointDao().insert(waypoint)).dispose();
+    }
+
+    public void removeWaypoint(Waypoint waypoint) {
+        new LambdaTask(() -> waypointDao().delete(waypoint)).dispose();
+    }
+
+    public void updateWaypoint(Waypoint waypoint) {
+        new LambdaTask(() -> waypointDao().update(waypoint)).dispose();
+    }
+
+    public LiveData<Waypoint> getWaypoint(int id) {
+        return waypointDao().getWaypoint(id);
+    }
+
+    public LiveData<List<Waypoint>> getAllWaypoint() {
+        return waypointDao().getAllWaypoints();
+    }
+
+    // Route Methods
+    public void addRoute(Route route) {
+        new LambdaTask(() -> routeDao().insert(route));
+    }
+
+    public void removeRoute(Route route) {
+        new LambdaTask(() -> routeDao().delete(route));
+    }
+
+    public void updateRoute(Route route) {
+        new LambdaTask(() -> routeDao().update(route));
+    }
+
+    public LiveData<Route> getRoute(int id) {
+        return routeDao().getRoute(id);
+    }
+
+    public LiveData<List<Route>> getAllRoutes() {
+        return routeDao().getAllRoutes();
     }
 }

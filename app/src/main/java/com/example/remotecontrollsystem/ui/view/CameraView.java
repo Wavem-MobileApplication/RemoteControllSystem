@@ -14,6 +14,11 @@ import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.util.VLCVideoLayout;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class CameraView extends VLCVideoLayout {
     private static final String TAG = CameraView.class.getSimpleName();
     private static final String RTSP_URL = "rtsp://camera-shuttle:1234@192.168.0.56:9000/";
@@ -36,7 +41,7 @@ public class CameraView extends VLCVideoLayout {
     }
 
     private void init() {
-        Log.d(TAG, "Init RTSP Camera View");
+        Log.d(TAG, "Try to connect RTSP Camera View");
         libVlc = new LibVLC(getContext());
         mediaPlayer = new MediaPlayer(libVlc);
 

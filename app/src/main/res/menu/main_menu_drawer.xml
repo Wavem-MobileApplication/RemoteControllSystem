@@ -6,6 +6,12 @@
         <item
             android:id="@+id/dashboard_menu"
             android:title="@string/dashboard" />
+        <item
+            android:id="@+id/manual_control_menu"
+            android:title="수동조작"/>
+        <item
+            android:id="@+id/route_menu"
+            android:title="주행 경로 설정"/>
     </group>
     <group
         android:id="@+id/group_setting"

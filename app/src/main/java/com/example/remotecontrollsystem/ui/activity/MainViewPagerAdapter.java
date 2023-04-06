@@ -8,6 +8,8 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.remotecontrollsystem.ui.fragment.dashboard.DashboardFragment;
+import com.example.remotecontrollsystem.ui.fragment.manualcontrol.ManualControlFragment;
+import com.example.remotecontrollsystem.ui.fragment.route.RouteFragment;
 import com.example.remotecontrollsystem.ui.fragment.setting.SettingFragment;
 
 import java.util.ArrayList;
@@ -34,7 +36,9 @@ public class MainViewPagerAdapter extends FragmentStateAdapter {
     private void init() {
         fragmentList = new ArrayList<>();
         fragmentList.add(DashboardFragment.newInstance(0));
-        fragmentList.add(SettingFragment.newInstance(1));
+        fragmentList.add(ManualControlFragment.newInstance(1));
+        fragmentList.add(RouteFragment.newInstance(2));
+        fragmentList.add(SettingFragment.newInstance(3));
     }
 
     @NonNull

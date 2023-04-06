@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/iv_waypoint_icon"
+        android:id="@+id/tv_waypoint_num"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginStart="8dp"
@@ -14,7 +14,7 @@
         android:text="1"
         android:textAlignment="center"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_waypoint_name_static"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
@@ -31,7 +31,7 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btn_sign_up_waypoint"
-        app:layout_constraintStart_toEndOf="@+id/iv_waypoint_icon"
+        app:layout_constraintStart_toEndOf="@+id/tv_waypoint_num"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton

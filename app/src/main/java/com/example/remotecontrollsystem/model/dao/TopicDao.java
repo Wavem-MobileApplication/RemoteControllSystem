@@ -20,10 +20,10 @@ public interface TopicDao {
     void insert(Topic topic);
 
     @Update
-    Completable update(Topic topic);
+    void update(Topic topic);
 
     @Delete
-    Completable delete(Topic topic);
+    void delete(Topic topic);
 
     @Query("SELECT * FROM topic_table WHERE funcName = :funcName")
     LiveData<Topic> getTopic(String funcName);

@@ -18,4 +18,9 @@
     <string name="setting_enviroment">환경설정</string>
     <string name="dashboard">대시보드</string>
     <string name="setting_message_ko">메시지 설정</string>
+    <string name="no_title_ko">제목 없음</string>
+    <string name="pose_x">X좌표</string>
+    <string name="pose_y">Y좌표</string>
+    <string name="pose_z">Z좌표</string>
+    <string name="pose_w">W좌표</string>
 </resources>

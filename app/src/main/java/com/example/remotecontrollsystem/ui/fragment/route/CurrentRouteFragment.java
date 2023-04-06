@@ -3,64 +3,67 @@ package com.example.remotecontrollsystem.ui.fragment.route;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.remotecontrollsystem.R;
+import com.example.remotecontrollsystem.databinding.FragmentCurrentRouteBinding;
+import com.example.remotecontrollsystem.model.entity.Route;
+import com.example.remotecontrollsystem.model.viewmodel.RouteViewModel;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CurrentRouteFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CurrentRouteFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public CurrentRouteFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CurrentRouteFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CurrentRouteFragment newInstance(String param1, String param2) {
-        CurrentRouteFragment fragment = new CurrentRouteFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private FragmentCurrentRouteBinding binding;
+    private RouteViewModel routeViewModel;
+    private CurrentRouteListAdapter rvAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_current_route, container, false);
+        binding = FragmentCurrentRouteBinding.inflate(inflater, container, false);
+
+        init();
+        settingClickEvents();
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        routeViewModel.getCurrentRoute().observe(requireActivity(), currentRouteObserver);
+    }
+
+    private void init() {
+        // Initialize RecyclerView
+        rvAdapter = new CurrentRouteListAdapter();
+        binding.rvCurrentRoute.setLayoutManager(new LinearLayoutManager(requireContext(),
+                LinearLayoutManager.HORIZONTAL, false));
+        binding.rvCurrentRoute.setHasFixedSize(true);
+        binding.rvCurrentRoute.setAdapter(rvAdapter);
+
+        // Initialize ViewModel
+        routeViewModel = new ViewModelProvider(requireActivity()).get(RouteViewModel.class);
+    }
+
+    private void settingClickEvents() {
+        binding.btnResetCurrentRoute.setOnClickListener(view -> routeViewModel.clearCurrentRoute());
+    }
+
+    private Observer<Route> currentRouteObserver = new Observer<Route>() {
+        @Override
+        public void onChanged(Route route) {
+            rvAdapter.setWaypointList(route.getWaypointList());
+        }
+    };
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        routeViewModel.getCurrentRoute().removeObserver(currentRouteObserver);
     }
 }

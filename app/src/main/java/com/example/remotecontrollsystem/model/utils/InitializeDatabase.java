@@ -29,6 +29,10 @@ public class InitializeDatabase {
 
                     topicDao.insert(getDefaultCmdVelPub());
                     topicDao.insert(getDefaultInitialPose());
+
+                    topicDao.insert(getDefaultNavigateToPose());
+
+                    topicDao.insert(getDefaultGetMap());
                     return true;
                 })
                 .subscribeOn(Schedulers.io())
@@ -132,6 +136,26 @@ public class InitializeDatabase {
         Topic topic = new Topic(Constants.INITIAL_POSE);
         RosMessageDefinition msg =
                 RosMessageDefinition.PUB("/initialpose", "geometry_msgs/msg/PoseWithCovarianceStamped");
+        topic.setMessage(msg);
+
+        return topic;
+    }
+
+    private Topic  getDefaultNavigateToPose() {
+        Topic topic = new Topic(Constants.NAVIGATE_TO_POSE);
+        RosMessageDefinition msg = RosMessageDefinition.GOAL(
+                "/navigate_to_pose", "nav2_msgs/action/NavigateToPose",
+                "nav2_msgs/action/NavigateToPose_Goal", "nav2_msgs/action/NavigateToPose_Feedback",
+                "nav2_msgs/action/NavigateToPose_Response", 1, false);
+        topic.setMessage(msg);
+
+        return topic;
+    }
+
+    private Topic getDefaultGetMap() {
+        Topic topic = new Topic(Constants.GET_MAP);
+        RosMessageDefinition msg = RosMessageDefinition.CALL("/map_server/map", "nav_msgs/srv/GetMap",
+                "nav_msgs/srv/GetMap_Request", "nav_msgs/srv/GetMap_Response", 1, true);
         topic.setMessage(msg);
 
         return topic;

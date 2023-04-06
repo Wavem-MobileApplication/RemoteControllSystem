@@ -4,10 +4,13 @@ import android.util.Log;
 
 import com.example.remotecontrollsystem.model.entity.Topic;
 import com.example.remotecontrollsystem.mqtt.data.MessagePublisher;
+import com.example.remotecontrollsystem.mqtt.listener.FeedbackListener;
+import com.example.remotecontrollsystem.mqtt.listener.ResponseListener;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessageDefinition;
 import com.example.remotecontrollsystem.mqtt.utils.TopicType;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -28,6 +31,9 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class Mqtt {
     private static final String TAG = Mqtt.class.getSimpleName();
     private static final String CLIENT_NAME = "rcs_mqtt_client";
+    private static final String REQUEST = "/request";
+    private static final String FEEDBACK = "/feedback";
+    private static final String RESPONSE = "/response";
 
     private static Mqtt instance;
     private MqttClient client;
@@ -81,7 +87,7 @@ public class Mqtt {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((result) -> {
                     if (result) {
-                        publishMqttMessage("ros_message_init", rosMessageInitData, 1, true);
+                        publishRosMessageInit(rosMessageInitData);
                         startSubscribeMqttTopics();
                     }
                 });
@@ -112,13 +118,30 @@ public class Mqtt {
         rosMessageInitData = defList;
     }
 
-    public void publishMqttMessage(String topicName, Object message, int qos, boolean retained) {
-        byte[] payload = new Gson().toJson(message).getBytes();
-        try {
-            client.publish(topicName, payload, qos, retained);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void publishRosMessageInit(List<RosMessageDefinition> rosMessageInitData) {
+        if (client.isConnected()) {
+            String message = new Gson().toJson(rosMessageInitData);
+            byte[] payload = message.getBytes();
+            try {
+                client.publish("ros_message_init", payload, 1, true);
+            } catch (MqttException e) {
+                throw new RuntimeException(e);
+            }
         }
+    }
+
+    public void publishMqttMessage(String topicName, Object message, int qos, boolean retained) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("mode", "pub");
+            jsonObject.add("data", new Gson().toJsonTree(message));
+            String data = jsonObject.toString();
+            byte[] payload = data.getBytes();
+
+            try {
+                client.publish(topicName, payload, qos, retained);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
     public MessagePublisher getMqttMessageListener(String funcName) {
@@ -134,6 +157,50 @@ public class Mqtt {
                 Log.d(TAG, "Add topic to HashMap -> " + topicName);
                 topicMap.put(funcName, topic.getMessage());
             }
+        }
+    }
+
+    public void sendActionRequest(RosMessageDefinition messageDefinition, String data, FeedbackListener feedbackListener, ResponseListener responseListener) {
+        try {
+            int qos = messageDefinition.getQos();
+            boolean retained = messageDefinition.isRetained();
+
+            String feedbackName = messageDefinition.getName() + FEEDBACK;
+            client.subscribe(feedbackName, 0, (topic, message) -> {
+                feedbackListener.onReceive(message.toString());
+            });
+
+            String responseName = messageDefinition.getName() + RESPONSE;
+            client.subscribe(responseName, qos, (topic, message) -> {
+                responseListener.onReceive(message.toString());
+                client.unsubscribe(feedbackName);
+                client.unsubscribe(responseName);
+            });
+
+            String requestName = messageDefinition.getName() + REQUEST;
+            byte[] payload = data.getBytes();
+            client.publish(requestName, payload, messageDefinition.getQos(), messageDefinition.isRetained());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendServiceRequest(RosMessageDefinition messageDefinition, String data, ResponseListener responseListener) {
+        try {
+            int qos = messageDefinition.getQos();
+            boolean retained = messageDefinition.isRetained();
+
+            String responseName = messageDefinition.getName() + RESPONSE;
+            client.subscribe(responseName, qos, (topic, message) -> {
+                responseListener.onReceive(message.toString());
+                client.unsubscribe(responseName);
+            });
+
+            String requestName = messageDefinition.getName() + REQUEST;
+            byte[] payload = data.getBytes();
+            client.publish(requestName, payload, qos, retained);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
