@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.ActivityMainBinding;
 import com.example.remotecontrollsystem.model.entity.Topic;
+import com.example.remotecontrollsystem.model.utils.DataManager;
 import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
 import com.example.remotecontrollsystem.mqtt.Mqtt;
 import com.example.remotecontrollsystem.mqtt.msgs.Twist;
@@ -96,6 +97,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void settingUtils() {
-        JoystickUtil.getInstance().setActivity(this);
+        DataManager.setInstance(this);
     }
 }

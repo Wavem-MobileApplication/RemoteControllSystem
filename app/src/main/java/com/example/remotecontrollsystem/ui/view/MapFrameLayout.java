@@ -1,21 +1,25 @@
 package com.example.remotecontrollsystem.ui.view;
 
 import android.content.Context;
-
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-
+import com.example.remotecontrollsystem.mqtt.Mqtt;
+import com.example.remotecontrollsystem.mqtt.data.MessagePublisher;
+import com.example.remotecontrollsystem.mqtt.data.Observer;
+import com.example.remotecontrollsystem.mqtt.msgs.OccupancyGrid;
+import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.example.remotecontrollsystem.ui.util.GestureUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 
 
 public class MapFrameLayout extends FrameLayout {
@@ -43,32 +47,17 @@ public class MapFrameLayout extends FrameLayout {
         addView(new GridMapView(getContext()));
         addView(new NavigationView(getContext()));
 
-/*        MapInfo.getInstance().observeMap(occupancyGrid -> {
-            getLayoutParams().width = occupancyGrid.getInfo().getWidth();
-            getLayoutParams().height = occupancyGrid.getInfo().getHeight();
-
-            View parent = (View) getParent();
-            float width = getLayoutParams().width;
-            float height = getLayoutParams().height;
-            float scale;
-            if (width >= height) {
-                Log.d("사이즈-부모", String.valueOf(parent.getWidth()));
-                Log.d("사이즈-자식", String.valueOf(width));
-                scale = parent.getWidth() / width;
-            } else {
-                Log.d("사이즈-부모", String.valueOf(parent.getHeight()));
-                Log.d("사이즈-자식", String.valueOf(height));
-                scale = parent.getHeight() / height;
+        MessagePublisher publisher = Mqtt.getInstance().getMqttMessageListener(WidgetType.MAP.getType());
+        publisher.attach(new Observer() {
+            @Override
+            public void update(String message) {
+                Type type = new TypeToken<OccupancyGrid>() {}.getType();
+                OccupancyGrid occupancyGrid = new Gson().fromJson(message, type);
+                getLayoutParams().width = occupancyGrid.getInfo().getWidth();
+                getLayoutParams().height = occupancyGrid.getInfo().getHeight();
+                requestLayout();
             }
-
-            Log.d("사이즈-스케일", String.valueOf(scale));
-
-            setScaleX(scale);
-            setScaleY(scale);
-
-            setX((parent.getWidth() - width) / 2.0f);
-            setY((parent.getHeight() - height) / 2.0f);
-        });*/
+        });
     }
 
     private void settingGestures() {

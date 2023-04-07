@@ -34,7 +34,6 @@ public class Mqtt {
     private static final String REQUEST = "/request";
     private static final String FEEDBACK = "/feedback";
     private static final String RESPONSE = "/response";
-
     private static Mqtt instance;
     private MqttClient client;
     private HashMap<String, RosMessageDefinition> topicMap; // Key: FuncName, Value: topicName
@@ -96,15 +95,42 @@ public class Mqtt {
     private void startSubscribeMqttTopics() throws MqttException {
         for (Map.Entry<String, RosMessageDefinition> entry : topicMap.entrySet()) {
             String topicName = entry.getValue().getName();
+            String type = entry.getValue().getType();
             int qos = entry.getValue().getQos();
 
-            Log.d(TAG, "Subscribe -> " + topicName);
-            client.subscribe(topicName, qos, new IMqttMessageListener() {
-                @Override
-                public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    topicDataPublisherMap.get(entry.getKey()).postValue(message.toString());
-                }
-            });
+            if (type.equals(TopicType.SUB)) {
+                Log.d(TAG, "Subscribe -> " + topicName);
+                client.subscribe(topicName, qos, new IMqttMessageListener() {
+                    @Override
+                    public void messageArrived(String topic, MqttMessage message) throws Exception {
+                        topicDataPublisherMap.get(entry.getKey()).postValue(message.toString());
+                    }
+                });
+            } else if (type.equals(TopicType.GOAL)) {
+                Log.d(TAG, "Subscribe -> " + topicName + FEEDBACK);
+                client.subscribe(topicName + FEEDBACK, qos, new IMqttMessageListener() {
+                    @Override
+                    public void messageArrived(String topic, MqttMessage message) throws Exception {
+                        topicDataPublisherMap.get(entry.getKey()).postValue(message.toString());
+                    }
+                });
+
+                Log.d(TAG, "Subscribe -> " + topicName + RESPONSE);
+                client.subscribe(topicName + RESPONSE, qos, new IMqttMessageListener() {
+                    @Override
+                    public void messageArrived(String topic, MqttMessage message) throws Exception {
+                        topicDataPublisherMap.get(entry.getKey()).postValue(message.toString());
+                    }
+                });
+            } else if (type.equals(TopicType.CALL)) {
+                Log.d(TAG, "Subscribe -> " + topicName + RESPONSE);
+                client.subscribe(topicName + RESPONSE, qos, new IMqttMessageListener() {
+                    @Override
+                    public void messageArrived(String topic, MqttMessage message) throws Exception {
+                        topicDataPublisherMap.get(entry.getKey()).postValue(message.toString());
+                    }
+                });
+            }
         }
 
     }
@@ -156,11 +182,17 @@ public class Mqtt {
             if (topic.getMessage().getType().equals(TopicType.SUB)) {
                 Log.d(TAG, "Add topic to HashMap -> " + topicName);
                 topicMap.put(funcName, topic.getMessage());
+            } else if (topic.getMessage().getType().equals(TopicType.GOAL)) {
+                topicMap.put(funcName, topic.getMessage());
+/*                String feedbackName = funcName + FEEDBACK;
+                String responseName = funcName + RESPONSE;
+                topicMap.put(feedbackName, topic.getMessage());
+                topicMap.put(responseName, topic.getMessage());*/
             }
         }
     }
 
-    public void sendActionRequest(RosMessageDefinition messageDefinition, String data, FeedbackListener feedbackListener, ResponseListener responseListener) {
+/*    public void sendActionRequest(RosMessageDefinition messageDefinition, String data, FeedbackListener feedbackListener, ResponseListener responseListener) {
         try {
             int qos = messageDefinition.getQos();
             boolean retained = messageDefinition.isRetained();
@@ -191,16 +223,24 @@ public class Mqtt {
             boolean retained = messageDefinition.isRetained();
 
             String responseName = messageDefinition.getName() + RESPONSE;
+            Log.d("Mqtt_Subscribe", messageDefinition.getName());
             client.subscribe(responseName, qos, (topic, message) -> {
                 responseListener.onReceive(message.toString());
                 client.unsubscribe(responseName);
             });
 
             String requestName = messageDefinition.getName() + REQUEST;
-            byte[] payload = data.getBytes();
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("mode", "call");
+            jsonObject.addProperty("data", data);
+            String call = jsonObject.toString();
+            byte[] payload = call.getBytes();
+
+            Log.d("Mqtt_Publish", messageDefinition.getName());
             client.publish(requestName, payload, qos, retained);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

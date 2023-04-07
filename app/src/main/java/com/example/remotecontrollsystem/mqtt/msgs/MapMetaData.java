@@ -5,7 +5,7 @@ public class MapMetaData {
     float resolution;
     int width;
     int height;
-    Pose  origin;
+    Pose origin;
 
     public MapMetaData() {
         map_load_time = new Time();

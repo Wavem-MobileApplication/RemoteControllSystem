@@ -5,7 +5,7 @@ import android.util.Log;
 import com.example.remotecontrollsystem.model.dao.TopicDao;
 import com.example.remotecontrollsystem.model.entity.Topic;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessageDefinition;
-import com.example.remotecontrollsystem.mqtt.utils.Constants;
+import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -43,7 +43,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultMap() {
-        Topic topic = new Topic(Constants.MAP);
+        Topic topic = new Topic(WidgetType.MAP.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/map", "nav_msgs/msg/OccupancyGrid", 1, true);
         topic.setMessage(msg);
@@ -52,7 +52,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultRobotPose() {
-        Topic topic = new Topic(Constants.ROBOT_POSE);
+        Topic topic = new Topic(WidgetType.ROBOT_POSE.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/robot_pose", "geometry_msgs/msg/Pose");
         topic.setMessage(msg);
@@ -61,7 +61,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultScan() {
-        Topic topic = new Topic(Constants.LASER_SCAN);
+        Topic topic = new Topic(WidgetType.LASER_SCAN.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/scan", "sensor_msgs/msg/LaserScan");
         topic.setMessage(msg);
@@ -70,7 +70,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultTFStatic() {
-        Topic topic = new Topic(Constants.TF_STATIC);
+        Topic topic = new Topic(WidgetType.TF_STATIC.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/tf_static", "tf2_msgs/msg/TFMessage");
         topic.setMessage(msg);
@@ -79,7 +79,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultTF() {
-        Topic topic = new Topic(Constants.TF);
+        Topic topic = new Topic(WidgetType.TF.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/tf", "tf2_msgs/msg/TFMessage");
         topic.setMessage(msg);
@@ -88,7 +88,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultCmdVelSub() {
-        Topic topic = new Topic(Constants.CMD_VEL_SUB);
+        Topic topic = new Topic(WidgetType.CMD_VEL_SUB.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/cmd_vel", "geometry_msgs/msg/Twist");
         topic.setMessage(msg);
@@ -97,7 +97,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultCmdVelPub() {
-        Topic topic = new Topic(Constants.CMD_VEL_PUB);
+        Topic topic = new Topic(WidgetType.CMD_VEL_PUB.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.PUB("/cmd_vel", "geometry_msgs/msg/Twist");
         topic.setMessage(msg);
@@ -106,7 +106,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultOdom() {
-        Topic topic = new Topic(Constants.ODOM);
+        Topic topic = new Topic(WidgetType.ODOM.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/odom", "nav_msgs/msg/Odometry");
         topic.setMessage(msg);
@@ -115,7 +115,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultGlobalPlan() {
-        Topic topic = new Topic(Constants.GLOBAL_PLAN);
+        Topic topic = new Topic(WidgetType.GLOBAL_PLAN.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/transformed_global_plan", "nav_msgs/msg/Path");
         topic.setMessage(msg);
@@ -124,7 +124,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultLocalPlan() {
-        Topic topic = new Topic(Constants.LOCAL_PLAN);
+        Topic topic = new Topic(WidgetType.LOCAL_PLAN.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/local_plan", "nav_msgs/msg/Path");
         topic.setMessage(msg);
@@ -133,7 +133,7 @@ public class InitializeDatabase {
     }
 
     private Topic getDefaultInitialPose() {
-        Topic topic = new Topic(Constants.INITIAL_POSE);
+        Topic topic = new Topic(WidgetType.INITIAL_POSE.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.PUB("/initialpose", "geometry_msgs/msg/PoseWithCovarianceStamped");
         topic.setMessage(msg);
@@ -142,20 +142,20 @@ public class InitializeDatabase {
     }
 
     private Topic  getDefaultNavigateToPose() {
-        Topic topic = new Topic(Constants.NAVIGATE_TO_POSE);
+        Topic topic = new Topic(WidgetType.NAVIGATE_TO_POSE.getType());
         RosMessageDefinition msg = RosMessageDefinition.GOAL(
                 "/navigate_to_pose", "nav2_msgs/action/NavigateToPose",
                 "nav2_msgs/action/NavigateToPose_Goal", "nav2_msgs/action/NavigateToPose_Feedback",
-                "nav2_msgs/action/NavigateToPose_Response", 1, false);
+                "nav2_msgs/action/NavigateToPose_Response", 0, false);
         topic.setMessage(msg);
 
         return topic;
     }
 
     private Topic getDefaultGetMap() {
-        Topic topic = new Topic(Constants.GET_MAP);
+        Topic topic = new Topic(WidgetType.GET_MAP.getType());
         RosMessageDefinition msg = RosMessageDefinition.CALL("/map_server/map", "nav_msgs/srv/GetMap",
-                "nav_msgs/srv/GetMap_Request", "nav_msgs/srv/GetMap_Response", 1, true);
+                "nav_msgs/srv/GetMap_Request", "nav_msgs/srv/GetMap_Response", 0, true);
         topic.setMessage(msg);
 
         return topic;
