@@ -47,8 +47,8 @@ public class MapFrameLayout extends FrameLayout {
         addView(new GridMapView(getContext()));
         addView(new NavigationView(getContext()));
 
-        MessagePublisher publisher = Mqtt.getInstance().getMqttMessageListener(WidgetType.MAP.getType());
-        publisher.attach(new Observer() {
+//        MessagePublisher publisher = Mqtt.getInstance().getMqttMessageListener(WidgetType.MAP.getType());
+/*        publisher.attach(new Observer() {
             @Override
             public void update(String message) {
                 Type type = new TypeToken<OccupancyGrid>() {}.getType();
@@ -57,7 +57,7 @@ public class MapFrameLayout extends FrameLayout {
                 getLayoutParams().height = occupancyGrid.getInfo().getHeight();
                 requestLayout();
             }
-        });
+        });*/
     }
 
     private void settingGestures() {

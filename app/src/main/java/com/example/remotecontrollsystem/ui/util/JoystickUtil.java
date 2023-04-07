@@ -28,7 +28,7 @@ public class JoystickUtil {
 
     private void publishCmdVel() {
         if (topicName != null && !topicName.isEmpty()) {
-            Mqtt.getInstance().publishMqttMessage(topicName, twist, 0, false);
+//            Mqtt.getInstance().publishMqttMessage(topicName, twist, 0, false);
         }
     }
 

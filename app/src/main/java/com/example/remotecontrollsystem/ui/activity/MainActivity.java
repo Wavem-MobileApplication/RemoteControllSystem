@@ -89,9 +89,8 @@ public class MainActivity extends AppCompatActivity {
         topicViewModel.getAllTopics().observe(MainActivity.this, new Observer<List<Topic>>() {
             @Override
             public void onChanged(List<Topic> topics) {
-                Mqtt.getInstance().setRosMessageInitData(topics);
-                Mqtt.getInstance().connectToMqttServer("tcp://192.168.0.187:1883");
                 Mqtt.getInstance().setTopicList(topics);
+                Mqtt.getInstance().connectToMqttServer("tcp://192.168.0.187:1883");
             }
         });
     }
