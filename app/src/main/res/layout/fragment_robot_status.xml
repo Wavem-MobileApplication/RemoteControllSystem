@@ -48,7 +48,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.example.remotecontrollsystem.ui.view.BatteryView
+        <com.example.remotecontrollsystem.ui.view.status.BatteryView
             android:id="@+id/battery_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -88,7 +88,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.example.remotecontrollsystem.ui.view.ClockView
+        <com.example.remotecontrollsystem.ui.view.status.ClockView
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -126,7 +126,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.example.remotecontrollsystem.ui.view.DrivingDistanceTextView
+        <com.example.remotecontrollsystem.ui.view.status.DrivingDistanceTextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center"

@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.7" />
 
-    <com.example.remotecontrollsystem.ui.view.LinearJoystickView
+    <com.example.remotecontrollsystem.ui.view.move.LinearJoystickView
         android:id="@+id/linearJoystickView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -30,7 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/frame_front_camera_manual" />
 
-    <com.example.remotecontrollsystem.ui.view.AngularJoystickView
+    <com.example.remotecontrollsystem.ui.view.move.AngularJoystickView
         android:id="@+id/angularJoystickView"
         android:layout_width="0dp"
         android:layout_height="0dp"

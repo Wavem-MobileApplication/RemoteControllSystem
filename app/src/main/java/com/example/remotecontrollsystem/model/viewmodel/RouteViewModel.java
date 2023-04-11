@@ -64,6 +64,12 @@ public class RouteViewModel extends AndroidViewModel {
         currentRoute.postValue(route);
     }
 
+    public void removeWaypointToCurrentRoute(Waypoint waypoint) {
+        Route route = currentRoute.getValue();
+        route.getWaypointList().remove(waypoint);
+        currentRoute.postValue(route);
+    }
+
     public LiveData<Route> getCurrentRoute() {
         return currentRoute;
     }

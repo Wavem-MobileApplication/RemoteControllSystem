@@ -1,4 +1,4 @@
-package com.example.remotecontrollsystem.ui.view;
+package com.example.remotecontrollsystem.ui.view.move;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,7 +10,7 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-public class EStopButton extends View {
+public class EStartButton extends View {
     private static final String TAG = EStopButton.class.getSimpleName();
 
     private static int MARGIN = 10;
@@ -20,12 +20,12 @@ public class EStopButton extends View {
     private Paint ringPaint;
     private Paint textPaint;
 
-    public EStopButton(Context context) {
+    public EStartButton(Context context) {
         super(context);
         init();
     }
 
-    public EStopButton(Context context, @Nullable AttributeSet attrs) {
+    public EStartButton(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -39,7 +39,7 @@ public class EStopButton extends View {
     private void init() {
         circlePaint = new Paint();
         circlePaint.setStyle(Paint.Style.FILL);
-        circlePaint.setColor(Color.parseColor("#FC2947"));
+        circlePaint.setColor(Color.parseColor("#00b050"));
 
         ringPaint = new Paint();
         ringPaint.setStyle(Paint.Style.STROKE);
@@ -76,6 +76,6 @@ public class EStopButton extends View {
 
         canvas.drawCircle(centerX, centerY, radius, circlePaint);
         canvas.drawCircle(centerX, centerY , ringRadius, ringPaint);
-        canvas.drawText("STOP", centerX, centerY + getFontMetrics(), textPaint);
+        canvas.drawText("START", centerX, centerY + getFontMetrics(), textPaint);
     }
 }

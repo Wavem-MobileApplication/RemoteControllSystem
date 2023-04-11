@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,9 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.FragmentRouteBinding;
+import com.example.remotecontrollsystem.model.entity.Route;
 import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.model.viewmodel.RouteViewModel;
 import com.example.remotecontrollsystem.model.viewmodel.WaypointViewModel;
+import com.example.remotecontrollsystem.ui.util.GoalManager;
+import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
 
 import java.util.List;
 
@@ -72,6 +76,9 @@ public class RouteFragment extends Fragment {
         // Initialize ViewModel
         waypointViewModel = new ViewModelProvider(requireActivity()).get(WaypointViewModel.class);
         routeViewModel = new ViewModelProvider(requireActivity()).get(RouteViewModel.class);
+
+        // Add Views
+        binding.frameMapRoute.addView(new MapFrameLayout(requireContext(), (AppCompatActivity) requireActivity()));
     }
 
     private void settingRecyclerItemClickEvents() {
@@ -105,6 +112,11 @@ public class RouteFragment extends Fragment {
 
             WaypointDialogFragment dialog = new WaypointDialogFragment();
             dialog.show(getParentFragmentManager(), "waypoint_add_dialog");
+        });
+
+        binding.btnStartDrive.setOnClickListener(view -> {
+            Route route = routeViewModel.getCurrentRoute().getValue();
+            GoalManager.getInstance().startRouteDriving(route);
         });
     }
 

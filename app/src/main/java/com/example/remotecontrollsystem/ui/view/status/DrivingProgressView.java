@@ -1,4 +1,4 @@
-package com.example.remotecontrollsystem.ui.view;
+package com.example.remotecontrollsystem.ui.view.status;
 
 import android.content.Context;
 import android.graphics.Bitmap;

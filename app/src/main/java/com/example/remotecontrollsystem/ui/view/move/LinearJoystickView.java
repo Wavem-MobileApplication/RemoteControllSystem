@@ -1,4 +1,4 @@
-package com.example.remotecontrollsystem.ui.view;
+package com.example.remotecontrollsystem.ui.view.move;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -13,20 +13,20 @@ import androidx.annotation.Nullable;
 import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.ui.util.JoystickUtil;
 
-public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImageView {
-    private static final String TAG = AngularJoystickView.class.getSimpleName();
+public class LinearJoystickView extends androidx.appcompat.widget.AppCompatImageView {
+    private static final String TAG = LinearJoystickView.class.getSimpleName();
+
     private Paint joystickPaint;
     private float joystickRadius;
-    private float posX;
+    private float posY;
     private float maxVel = 0.45f;
 
-
-    public AngularJoystickView(Context context) {
+    public LinearJoystickView(Context context) {
         super(context);
         init();
     }
 
-    public AngularJoystickView(Context context, @Nullable AttributeSet attrs) {
+    public LinearJoystickView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -34,57 +34,61 @@ public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImag
     private void init() {
         joystickPaint = new Paint();
         joystickPaint.setColor(Color.parseColor("#ed1c24"));
-        setBackgroundResource(R.drawable.icon_joystick_angular);
+        joystickPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        setBackgroundResource(R.drawable.icon_joystick_linear);
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         joystickRadius = (float) (getWidth() * 0.25 / 2);
-        moveTo(getWidth() / 2f);
+        moveTo(getHeight() / 2f);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float eventX = event.getX();
-        float polarX = convertPxToPolar(eventX);
-        posX = convertPolarToPx(polarX);
+        float eventY = event.getY();
+        float polarY = convertPxToPolar(eventY);
+        posY = convertPolarToPx(polarY);
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                moveTo(posX);
+                moveTo(posY);
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.d("폴라", String.valueOf(convertPxToPolar(posX)));
-                moveTo(posX);
-                JoystickUtil.getInstance().publishAngularVel(polarX * maxVel);
+                Log.d("폴라Y", String.valueOf(polarY));
+                moveTo(posY);
+                JoystickUtil.getInstance().publishLinearVel(-polarY * maxVel);
                 break;
             case MotionEvent.ACTION_UP:
-                moveTo(getWidth() / 2f);
-                JoystickUtil.getInstance().publishAngularVel(0);
+                moveTo(getHeight() / 2f);
+                JoystickUtil.getInstance().publishLinearVel(0);
                 break;
         }
+
         return true;
     }
 
-    private float convertPxToPolar(float x) {
-        float centerX = getWidth() / 2f;
-        float polarX = Math.min(1, (x - centerX) / centerX);
-        if (polarX < -1) {
-            polarX = -1;
+    private float convertPxToPolar(float y) {
+        float centerY = getHeight() / 2f;
+        float polarY = Math.min(1, (y - centerY) / centerY);
+
+        if (polarY < -1) {
+            polarY = -1;
         }
-        return polarX;
+        
+        return polarY;
     }
 
-    private float convertPolarToPx(float x) {
-        float centerX = getWidth() / 2f;
-        float px = x * centerX + centerX;
+    private float convertPolarToPx(float y) {
+        float centerY = getHeight() / 2f;
+        float py = y * centerY + centerY;
 
-        return px;
+        return py;
     }
 
-    private void moveTo(float x) {
-        posX = x;
+    private void moveTo(float y) {
+        posY = y;
         invalidate();
     }
 
@@ -100,6 +104,6 @@ public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImag
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawCircle(posX, getHeight() / 2f, joystickRadius, joystickPaint);
+        canvas.drawCircle(getWidth() / 2f, posY, joystickRadius, joystickPaint);
     }
 }

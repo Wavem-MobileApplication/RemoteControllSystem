@@ -89,7 +89,7 @@
         app:layout_constraintStart_toEndOf="@+id/frag_robot_status"
         app:layout_constraintTop_toBottomOf="@+id/frame_map_main" >
 
-        <com.example.remotecontrollsystem.ui.view.EStopButton
+        <com.example.remotecontrollsystem.ui.view.move.EStopButton
             android:id="@+id/EStopButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -102,7 +102,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/EStartButton" />
 
-        <com.example.remotecontrollsystem.ui.view.EStartButton
+        <com.example.remotecontrollsystem.ui.view.move.EStartButton
             android:id="@+id/EStartButton"
             android:layout_width="0dp"
             android:layout_height="0dp"

@@ -155,7 +155,7 @@ public class InitializeDatabase {
     private Topic getDefaultGetMap() {
         Topic topic = new Topic(WidgetType.GET_MAP.getType());
         RosMessageDefinition msg = RosMessageDefinition.CALL("/map_server/map", "nav_msgs/srv/GetMap",
-                "nav_msgs/srv/GetMap_Request", "nav_msgs/srv/GetMap_Response", 0, true);
+                "nav_msgs/srv/GetMap_Request", "nav_msgs/srv/GetMap_Response", 0, false);
         topic.setMessage(msg);
 
         return topic;

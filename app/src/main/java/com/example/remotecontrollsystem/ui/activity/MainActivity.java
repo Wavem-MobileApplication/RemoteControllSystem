@@ -1,7 +1,6 @@
 package com.example.remotecontrollsystem.ui.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,14 +9,9 @@ import androidx.lifecycle.Observer;
 import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.ActivityMainBinding;
 import com.example.remotecontrollsystem.model.entity.Topic;
-import com.example.remotecontrollsystem.model.utils.DataManager;
 import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
 import com.example.remotecontrollsystem.mqtt.Mqtt;
-import com.example.remotecontrollsystem.mqtt.msgs.Twist;
-import com.example.remotecontrollsystem.ui.util.JoystickUtil;
 import com.example.remotecontrollsystem.ui.util.ToastMessage;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import java.util.List;
 
@@ -90,12 +84,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Topic> topics) {
                 Mqtt.getInstance().setTopicList(topics);
-                Mqtt.getInstance().connectToMqttServer("tcp://192.168.0.187:1883");
+                Mqtt.getInstance().connectToMqttServer("tcp://192.168.0.119:1883");
             }
         });
     }
 
     private void settingUtils() {
-        DataManager.setInstance(this);
+        Mqtt.getInstance().setTopicViewModel(topicViewModel);
     }
 }

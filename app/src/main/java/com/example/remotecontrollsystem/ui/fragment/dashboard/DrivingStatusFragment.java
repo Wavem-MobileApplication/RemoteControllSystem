@@ -8,9 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.FragmentDrivingStatusBinding;
-import com.example.remotecontrollsystem.ui.view.DrivingProgressView;
+import com.example.remotecontrollsystem.ui.view.status.DrivingProgressView;
 
 public class DrivingStatusFragment extends Fragment {
     private FragmentDrivingStatusBinding binding;

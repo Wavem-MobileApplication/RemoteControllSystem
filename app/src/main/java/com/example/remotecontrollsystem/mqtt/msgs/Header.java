@@ -6,7 +6,7 @@ public class Header {
 
     public Header() {
         this.stamp = new Time();
-        this.frame_id = "";
+        this.frame_id = "map";
     }
 
     public Header(Time stamp, String frame_id) {

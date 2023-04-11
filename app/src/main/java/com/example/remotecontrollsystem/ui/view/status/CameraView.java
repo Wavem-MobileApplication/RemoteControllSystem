@@ -1,4 +1,4 @@
-package com.example.remotecontrollsystem.ui.view;
+package com.example.remotecontrollsystem.ui.view.status;
 
 import android.content.Context;
 import android.net.Uri;
@@ -13,11 +13,6 @@ import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.util.VLCVideoLayout;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class CameraView extends VLCVideoLayout {
     private static final String TAG = CameraView.class.getSimpleName();
@@ -37,7 +32,7 @@ public class CameraView extends VLCVideoLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        init();
+//        init();
     }
 
     private void init() {
@@ -66,10 +61,14 @@ public class CameraView extends VLCVideoLayout {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        mediaPlayer.stop();
-        mediaPlayer.detachViews();
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+            mediaPlayer.detachViews();
+            mediaPlayer.release();
+        }
 
-        mediaPlayer.release();
-        libVlc.release();
+        if (libVlc != null && libVlc.retain()) {
+            libVlc.release();
+        }
     }
 }

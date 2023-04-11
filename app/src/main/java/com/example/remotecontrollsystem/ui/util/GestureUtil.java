@@ -7,8 +7,6 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
-import com.example.remotecontrollsystem.ui.view.MapFrameLayout;
-
 public class GestureUtil {
 
     public class GestureListener extends GestureDetector.SimpleOnGestureListener {
