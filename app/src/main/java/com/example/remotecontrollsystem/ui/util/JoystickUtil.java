@@ -29,7 +29,7 @@ public class JoystickUtil {
     }
 
     public void publishAngularVel(float x) {
-        twist.getAngular().setZ(x);
+        twist.getAngular().setZ(-x);
         publishCmdVel();
     }
 }

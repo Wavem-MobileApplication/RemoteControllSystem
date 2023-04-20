@@ -3,6 +3,7 @@ package com.example.remotecontrollsystem.ui.view.map;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,7 +65,7 @@ public class NavigationView extends androidx.appcompat.widget.AppCompatImageView
         mapPublisher.attach(new Observer() {
             @Override
             public void update(String message) {
-                GetMap_Response response = GetMap_Response.fromJson(message);
+                GetMap_Response response = new Gson().fromJson(message, GetMap_Response.class);
 
                 resolution = response.getMap().getInfo().getResolution();
                 originX = response.getMap().getInfo().getOrigin().getPosition().getX();

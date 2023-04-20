@@ -17,8 +17,8 @@ public class LaserScan {
     private float scan_time;
     private float range_min;
     private float range_max;
-    private double[] ranges;
-    private double[] intensities;
+    private Map<String, Float> ranges;
+    private Map<String, Float> intensities;
 
     public LaserScan() {
         this.header = new Header();
@@ -88,46 +88,19 @@ public class LaserScan {
         this.range_max = range_max;
     }
 
-    public double[] getRanges() {
+    public Map<String, Float> getRanges() {
         return ranges;
     }
 
-    public void setRanges(double[] ranges) {
+    public void setRanges(Map<String, Float> ranges) {
         this.ranges = ranges;
     }
 
-    public double[] getIntensities() {
+    public Map<String, Float> getIntensities() {
         return intensities;
     }
 
-    public void setIntensities(double[] intensities) {
+    public void setIntensities(Map<String, Float> intensities) {
         this.intensities = intensities;
-    }
-
-    public static LaserScan fromJson(String jsonData) {
-        LaserScan laserScan = new LaserScan();
-        Gson gson = new Gson();
-
-        JsonObject jsonObject = gson.fromJson(jsonData, JsonObject.class);
-        Header header = gson.fromJson(jsonObject.get("header"), Header.class);
-
-        Map<String, Double> rangesMap = gson.fromJson(jsonObject.get("ranges"), Map.class);
-        double[] rangesArr = new double[rangesMap.size()]; // 배열의 크기를 지정
-        int i = 0;
-        for (Double value : rangesMap.values()) {
-            rangesArr[i++] = (value != null) ? value : Double.NaN; // null값이면 Double.NaN으로 대체
-        }
-
-        laserScan.setHeader(header);
-        laserScan.setAngle_min(jsonObject.get("angle_min").getAsFloat());
-        laserScan.setAngle_max(jsonObject.get("angle_max").getAsFloat());
-        laserScan.setAngle_increment(jsonObject.get("angle_increment").getAsFloat());
-        laserScan.setTime_increment(jsonObject.get("time_increment").getAsFloat());
-        laserScan.setScan_time(jsonObject.get("scan_time").getAsFloat());
-        laserScan.setRange_min(jsonObject.get("range_min").getAsFloat());
-        laserScan.setRange_max(jsonObject.get("range_max").getAsFloat());
-        laserScan.setRanges(rangesArr);
-
-        return laserScan;
     }
 }

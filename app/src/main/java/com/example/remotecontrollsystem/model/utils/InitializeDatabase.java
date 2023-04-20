@@ -17,7 +17,7 @@ public class InitializeDatabase {
     public void settingDefaultTopics(TopicDao topicDao) {
         Disposable backgroundTask = Observable.fromCallable(() -> {
 //        topicDao.insert(getDefaultMap());
-//        topicDao.insert(getDefaultRobotPose());
+                    topicDao.insert(getDefaultRobotPose());
                     topicDao.insert(getDefaultScan());
                     topicDao.insert(getDefaultTF());
                     topicDao.insert(getDefaultTFStatic());

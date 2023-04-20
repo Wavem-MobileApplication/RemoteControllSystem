@@ -2,15 +2,16 @@ package com.example.remotecontrollsystem.mqtt.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MessagePublisher implements Subject{
     private static final String TAG = MessagePublisher.class.getSimpleName();
     private static final String DEFAULT_DATA = "Default";
-    private final List<Observer> observerList = new ArrayList<>();
+    private final CopyOnWriteArrayList<Observer> observerList = new CopyOnWriteArrayList<>();
     private String oldData = DEFAULT_DATA;
 
     @Override
-    public void attach(Observer observer) {
+    public synchronized void attach(Observer observer) {
         if (!oldData.equals(DEFAULT_DATA)) {
             observer.update(oldData);
         }
@@ -18,7 +19,7 @@ public class MessagePublisher implements Subject{
     }
 
     @Override
-    public void detach(Observer observer) {
+    public synchronized void detach(Observer observer) {
         observerList.remove(observer);
     }
 
@@ -26,9 +27,6 @@ public class MessagePublisher implements Subject{
     public void postValue(String message) {
         oldData = message;
 
-/*        for (int i = 0; i < observerList.size(); i++) {
-            observerList.get(i).update(message);
-        }*/
         for (Observer observer : observerList) {
             observer.update(message);
         }

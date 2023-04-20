@@ -1,6 +1,7 @@
 package com.example.remotecontrollsystem.ui.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +12,11 @@ import com.example.remotecontrollsystem.databinding.ActivityMainBinding;
 import com.example.remotecontrollsystem.model.entity.Topic;
 import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
 import com.example.remotecontrollsystem.mqtt.Mqtt;
+import com.example.remotecontrollsystem.ui.dialog.DefaultDialog;
+import com.example.remotecontrollsystem.ui.dialog.MqttConnectFragment;
 import com.example.remotecontrollsystem.ui.util.ToastMessage;
+
+import org.videolan.libvlc.Dialog;
 
 import java.util.List;
 
@@ -76,6 +81,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void settingClickEvents() {
         binding.btnMenuMain.setOnClickListener(view -> binding.navigationDrawer.open());
+
+        binding.btnConnection.setOnClickListener(view -> {
+            MqttConnectFragment dialog = new MqttConnectFragment();
+            dialog.show(getSupportFragmentManager(), "MqttConnectFragment");
+        });
+
+        binding.btnLogo.setOnClickListener(view -> {
+            DefaultDialog dialog = new DefaultDialog(MainActivity.this);
+            dialog.setText("다이얼로그 테스트");
+            dialog.setPositiveButtonClickListener(() -> Log.d("Positive", "Onclick"));
+            dialog.setNegativeButtonClickListener(() -> Log.d("Negative", "OnClick"));
+            dialog.show();
+        });
     }
 
     private void settingMqttViewModel() {
@@ -84,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Topic> topics) {
                 Mqtt.getInstance().setTopicList(topics);
-                Mqtt.getInstance().connectToMqttServer("tcp://192.168.0.119:1883");
             }
         });
     }

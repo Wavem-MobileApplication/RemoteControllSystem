@@ -1,8 +1,8 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
 public class Pose {
-    Point position;
-    Quaternion orientation;
+    private Point position;
+    private Quaternion orientation;
 
     public Pose() {
         this.position = new Point();

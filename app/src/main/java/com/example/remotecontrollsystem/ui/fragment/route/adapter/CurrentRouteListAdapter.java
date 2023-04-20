@@ -1,4 +1,4 @@
-package com.example.remotecontrollsystem.ui.fragment.route;
+package com.example.remotecontrollsystem.ui.fragment.route.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

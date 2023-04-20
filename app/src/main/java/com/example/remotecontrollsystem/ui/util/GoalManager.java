@@ -43,13 +43,15 @@ public class GoalManager {
     }
 
     public void startRouteDriving(Route route) {
-        this.route = route;
-        this.waypoint = route.getWaypointList().get(waypointNum);
-        this.isDrivable = true;
+        if (!route.getWaypointList().isEmpty()) {
+            this.route = route;
+            this.waypoint = route.getWaypointList().get(waypointNum);
+            this.isDrivable = true;
 
-        NavigateToPose_Request request = new NavigateToPose_Request();
-        request.getPose().setPose(waypoint.getPoseList().get(poseNum));
-        sendGoal(request);
+            NavigateToPose_Request request = new NavigateToPose_Request();
+            request.getPose().setPose(waypoint.getPoseList().get(poseNum));
+            sendGoal(request);
+        }
     }
 
     private void sendGoal(NavigateToPose_Request request) {

@@ -23,7 +23,7 @@ public class GetMap_Response {
         this.map = map;
     }
 
-    public static GetMap_Response fromJson(String jsonData) {
+/*    public static GetMap_Response fromJson(String jsonData) {
         GetMap_Response response = new GetMap_Response();
         Gson gson = new Gson();
 
@@ -33,5 +33,5 @@ public class GetMap_Response {
         response.setMap(map);
 
         return response;
-    }
+    }*/
 }

@@ -19,7 +19,7 @@ public class Route {
     private List<Waypoint> waypointList;
 
     public Route() {
-        name = "제목 없음";
+        name = "새 주행 경로";
         waypointList = new ArrayList<>();
     }
 

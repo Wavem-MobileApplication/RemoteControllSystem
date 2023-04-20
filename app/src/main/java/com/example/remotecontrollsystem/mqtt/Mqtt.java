@@ -1,5 +1,6 @@
 package com.example.remotecontrollsystem.mqtt;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.example.remotecontrollsystem.R;
@@ -8,8 +9,10 @@ import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
 import com.example.remotecontrollsystem.mqtt.data.MessagePublisher;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessageDefinition;
 import com.example.remotecontrollsystem.mqtt.utils.TopicType;
+import com.example.remotecontrollsystem.ui.util.ToastMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -18,6 +21,8 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +60,7 @@ public class Mqtt {
         topicMap = new HashMap<>();
     }
 
-    public void connectToMqttServer(String address) {
-
+    public void connectToMqttServer(Context context, String address) {
         Disposable backgroundTask = Observable.fromCallable(() -> {
             try {
                 Log.d(TAG, "Try to connect mqtt server");
@@ -68,7 +72,6 @@ public class Mqtt {
                 }
 
                 MqttConnectOptions connOpts = new MqttConnectOptions();
-                connOpts.setConnectionTimeout(5000);
 
                 client = new MqttClient(address, CLIENT_NAME, null);
                 client.connect(connOpts);
@@ -79,16 +82,10 @@ public class Mqtt {
                         Log.d("Connection Lost", cause.getMessage());
                         cause.printStackTrace();
                     }
-
                     @Override
-                    public void messageArrived(String topic, MqttMessage message) throws Exception {
-
-                    }
-
+                    public void messageArrived(String topic, MqttMessage message) throws Exception {}
                     @Override
-                    public void deliveryComplete(IMqttDeliveryToken token) {
-
-                    }
+                    public void deliveryComplete(IMqttDeliveryToken token) {}
                 });
 
                 return true;
@@ -100,12 +97,25 @@ public class Mqtt {
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe((result) -> {
             if (result) {
                 Log.d(TAG, "Success to connect MQTT server...");
+                ToastMessage.showToast(context, "차량에 연결하였습니다.");
+                sendRosMessageInit();
                 startToSubscribe();
             } else {
                 Log.d(TAG, "Failed to connect MQTT server...");
+                ToastMessage.showToast(context, "차량 연결에 실패하였습니다.");
             }
         });
 
+    }
+
+    private void sendRosMessageInit() throws MqttException {
+        List<RosMessageDefinition> msgDefList = new ArrayList<>();
+        for (Map.Entry<String, RosMessageDefinition> entry : topicMap.entrySet()) {
+            msgDefList.add(entry.getValue());
+        }
+
+        byte[] payload = new Gson().toJson(msgDefList).getBytes();
+        client.publish("ros_message_init", payload, 0, false);
     }
 
     private void startToSubscribe() {

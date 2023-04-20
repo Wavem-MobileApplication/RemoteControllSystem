@@ -1,4 +1,4 @@
-package com.example.remotecontrollsystem.ui.fragment.route;
+package com.example.remotecontrollsystem.ui.fragment.route.adapter;
 
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -167,7 +167,6 @@ public class DestinationListAdapter extends RecyclerView.Adapter<DestinationList
 
     protected class ViewHolder extends RecyclerView.ViewHolder {
         ItemListDestinationBinding binding;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             binding = ItemListDestinationBinding.bind(itemView);

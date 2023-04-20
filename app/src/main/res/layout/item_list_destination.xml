@@ -40,6 +40,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_pose_x"
+            android:singleLine="true"
+            android:inputType="numberDecimal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -63,6 +65,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_pose_y"
+            android:singleLine="true"
+            android:inputType="numberDecimal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -86,6 +90,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_ori_z"
+            android:singleLine="true"
+            android:inputType="numberDecimal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -109,6 +115,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_ori_w"
+            android:singleLine="true"
+            android:inputType="numberDecimal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -123,5 +131,6 @@
         android:src="@drawable/icon_delete"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@null" />
 </androidx.constraintlayout.widget.ConstraintLayout>

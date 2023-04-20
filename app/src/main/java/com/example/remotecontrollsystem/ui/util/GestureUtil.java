@@ -1,5 +1,6 @@
 package com.example.remotecontrollsystem.ui.util;
 
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -7,37 +8,84 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
+import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
+import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
+
 public class GestureUtil {
 
     public class GestureListener extends GestureDetector.SimpleOnGestureListener {
-        private FrameLayout layout;
+        private MapFrameLayout layout;
         private float moveX = 0;
         private float moveY = 0;
 
-        public GestureListener(FrameLayout layout) {
+        private float parentWidth;
+        private float parentHeight;
+
+        public GestureListener(MapFrameLayout layout) {
             this.layout = layout;
         }
 
         @Override
         public boolean onDown(@NonNull MotionEvent e) {
+            parentWidth = ((FrameLayout) layout.getParent()).getWidth();
+            parentHeight = ((FrameLayout) layout.getParent()).getHeight();
+
             moveX = layout.getX() - e.getRawX();
             moveY = layout.getY() - e.getRawY();
+
             return true;
         }
 
         @Override
+        public void onLongPress(@NonNull MotionEvent e) {
+            super.onLongPress(e);
+            layout.startPoseJoystick(e);
+        }
+
+        @Override
         public boolean onScroll(@NonNull MotionEvent e1, @NonNull MotionEvent e2, float distanceX, float distanceY) {
-            layout.setX(e2.getRawX() + moveX);
-            layout.setY(e2.getRawY() + moveY);
+            float newX = e2.getRawX() + moveX;
+            float newY = e2.getRawY() + moveY;
+
+            float scaleX = layout.getScaleX();
+            float scaleY = layout.getScaleY();
+            float width = layout.getWidth();
+            float height = layout.getHeight();
+
+            float scaledWidth = width * scaleX;
+            float scaledHeight = height * scaleY;
+            float originX = (scaledWidth - width) * 0.5f;
+            float originY = (scaledHeight - height) * 0.5f;
+
+            float minX = -scaledWidth * 0.5f + originX;
+            float minY = -scaledHeight * 0.5f + originY;
+            float maxX = parentWidth - scaledWidth * 0.5f + originX;
+            float maxY = parentHeight - scaledHeight * 0.5f + originY;
+
+            if (newX < minX) {
+                newX = minX;
+            } else if (newX > maxX) {
+                newX = maxX;
+            }
+
+            if (newY < minY) {
+                newY = minY;
+            } else if (newY > maxY) {
+                newY = maxY;
+            }
+
+            layout.setX(newX);
+            layout.setY(newY);
+
             return false;
         }
     }
 
     public class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-        private FrameLayout layout;
+        private MapFrameLayout layout;
         private float mScale;
 
-        public ScaleListener(FrameLayout layout) {
+        public ScaleListener(MapFrameLayout layout) {
             this.layout = layout;
             mScale = 1.0f;
         }
@@ -58,11 +106,11 @@ public class GestureUtil {
         }
     }
 
-    public GestureListener getGestureListener(FrameLayout layout) {
+    public GestureListener getGestureListener(MapFrameLayout layout) {
         return new GestureListener(layout);
     }
 
-    public ScaleListener getScaleListener(FrameLayout layout) {
+    public ScaleListener getScaleListener(MapFrameLayout layout) {
         return new ScaleListener(layout);
     }
 }

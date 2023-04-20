@@ -7,34 +7,34 @@ public class Quaternion {
     double w;
 
     public double getX() {
-        return x;
+        return Math.round(x * 10000.0) / 10000.0;
     }
 
     public void setX(double x) {
-        this.x = x;
+        this.x = Math.round(x * 10000.0) / 10000.0;
     }
 
     public double getY() {
-        return y;
+        return Math.round(y * 10000.0) / 10000.0;
     }
 
     public void setY(double y) {
-        this.y = y;
+        this.y = Math.round(y * 10000.0) / 10000.0;
     }
 
     public double getZ() {
-        return z;
+        return Math.round(z * 10000.0) / 10000.0;
     }
 
     public void setZ(double z) {
-        this.z = z;
+        this.z = Math.round(z * 10000.0) / 10000.0;
     }
 
     public double getW() {
-        return w;
+        return Math.round(w * 10000.0) / 10000.0;
     }
 
     public void setW(double w) {
-        this.w = w;
+        this.w = Math.round(w * 10000.0) / 10000.0;
     }
 }

@@ -105,7 +105,7 @@ public abstract class DataStorage extends RoomDatabase {
 
     // Route Methods
     public void addRoute(Route route) {
-        new LambdaTask(() -> routeDao().insert(route));
+        new LambdaTask(() -> routeDao().insert(route)).dispose();
     }
 
     public void removeRoute(Route route) {

@@ -11,10 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.FragmentCurrentRouteBinding;
 import com.example.remotecontrollsystem.model.entity.Route;
 import com.example.remotecontrollsystem.model.viewmodel.RouteViewModel;
+import com.example.remotecontrollsystem.ui.fragment.route.adapter.CurrentRouteListAdapter;
+import com.example.remotecontrollsystem.ui.util.ToastMessage;
 
 public class CurrentRouteFragment extends Fragment {
     private FragmentCurrentRouteBinding binding;
@@ -51,7 +52,23 @@ public class CurrentRouteFragment extends Fragment {
     }
 
     private void settingClickEvents() {
-        binding.btnResetCurrentRoute.setOnClickListener(view -> routeViewModel.clearCurrentRoute());
+        binding.btnResetCurrentRoute.setOnClickListener(view -> {
+            routeViewModel.clearCurrentRoute();
+        });
+
+        binding.btnSaveCurrentRoute.setOnClickListener(view -> {
+            boolean isSuccess = routeViewModel.saveCurrentRoute();
+            if (isSuccess) {
+                ToastMessage.showToast(getContext(), "주행 경로를 저장하였습니다.");
+            } else {
+                ToastMessage.showToast(getContext(), "주행 경로 저장에 실패하였습니다.");
+            }
+        });
+
+        binding.btnOpenRoutes.setOnClickListener(view -> {
+            RouteDialogFragment dialog = new RouteDialogFragment();
+            dialog.show(requireActivity().getSupportFragmentManager(), "RouteDialogFragment");
+        });
     }
 
     private Observer<Route> currentRouteObserver = new Observer<Route>() {

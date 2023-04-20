@@ -1,6 +1,5 @@
 package com.example.remotecontrollsystem.ui.fragment.route;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -19,16 +18,14 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
 
 import com.example.remotecontrollsystem.databinding.FragmentWaypointDialogBinding;
 import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.model.viewmodel.WaypointViewModel;
 import com.example.remotecontrollsystem.mqtt.msgs.Pose;
+import com.example.remotecontrollsystem.ui.fragment.route.adapter.DestinationListAdapter;
 import com.example.remotecontrollsystem.ui.util.DialogUtil;
 import com.example.remotecontrollsystem.ui.util.TextWatcherImpl;
 import com.example.remotecontrollsystem.ui.util.ToastMessage;
@@ -91,8 +88,8 @@ public class WaypointDialogFragment extends DialogFragment {
 
         // Adjust dialog size
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
-        params.width = (int) (displaySize.x * 0.6);
-        params.height = (int) (displaySize.y * 0.6);
+        params.width = (int) (displaySize.x * 0.7);
+        params.height = (int) (displaySize.y * 0.7);
         getDialog().getWindow().setAttributes(params);
     }
 

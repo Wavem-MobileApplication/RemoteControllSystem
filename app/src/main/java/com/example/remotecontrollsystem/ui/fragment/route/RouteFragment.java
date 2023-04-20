@@ -17,7 +17,9 @@ import com.example.remotecontrollsystem.model.entity.Route;
 import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.model.viewmodel.RouteViewModel;
 import com.example.remotecontrollsystem.model.viewmodel.WaypointViewModel;
+import com.example.remotecontrollsystem.ui.fragment.route.adapter.WaypointListAdapter;
 import com.example.remotecontrollsystem.ui.util.GoalManager;
+import com.example.remotecontrollsystem.ui.util.ToastMessage;
 import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
 
 import java.util.List;
@@ -83,7 +85,11 @@ public class RouteFragment extends Fragment {
 
     private void settingRecyclerItemClickEvents() {
         rvAdapter.setSignupClickListener((position, waypoint) -> {
-            routeViewModel.addWaypointToCurrentRoute(waypoint);
+            if (waypoint.getPoseList() != null && !waypoint.getPoseList().isEmpty()) {
+                routeViewModel.addWaypointToCurrentRoute(waypoint);
+            } else {
+                ToastMessage.showToast(getContext(), "빈 경유지 목록입니다.");
+            }
         });
 
         rvAdapter.setEditClickListener((position, waypoint) -> {
@@ -108,7 +114,11 @@ public class RouteFragment extends Fragment {
 
     private void settingClickEvents() {
         binding.btnAddWaypoint.setOnClickListener(view -> {
-            waypointViewModel.selectEditedWaypoint(new Waypoint());
+            Waypoint waypoint = waypointViewModel.getNewWaypoint().getValue();
+            if (waypoint == null) {
+                waypoint = new Waypoint();
+            }
+            waypointViewModel.selectEditedWaypoint(waypoint);
 
             WaypointDialogFragment dialog = new WaypointDialogFragment();
             dialog.show(getParentFragmentManager(), "waypoint_add_dialog");

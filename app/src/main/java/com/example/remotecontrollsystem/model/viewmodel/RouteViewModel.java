@@ -70,6 +70,28 @@ public class RouteViewModel extends AndroidViewModel {
         currentRoute.postValue(route);
     }
 
+    public boolean saveCurrentRoute() {
+        try {
+            Route route = currentRoute.getValue();
+
+            if (route.getWaypointList().isEmpty()) {
+                return false;
+            }
+
+            if (route.getName() == null || route.getName().isEmpty()) {
+                route.setName("새 주행 경로");
+            }
+
+            addRoute(route); // Save current route
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
     public LiveData<Route> getCurrentRoute() {
         return currentRoute;
     }

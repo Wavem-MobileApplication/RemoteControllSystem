@@ -1,5 +1,7 @@
 package com.example.remotecontrollsystem.mqtt.utils;
 
+import android.util.Log;
+
 import com.example.remotecontrollsystem.mqtt.msgs.Quaternion;
 
 public class RosMath {
@@ -10,6 +12,9 @@ public class RosMath {
         double cosy_cosp = 1 - 2 * (wPoint * wPoint);
         float yaw = (float) Math.atan2(siny_cosp, cosy_cosp);
         float yawInt = (float) Math.toDegrees(yaw);
+
+        Log.d("Radian", String.valueOf(yaw));
+        Log.d("Degree", String.valueOf(yawInt));
         return -yawInt;
     }
 
