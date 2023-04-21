@@ -1,6 +1,6 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class Pose {
+public class Pose extends RosMessage{
     private Point position;
     private Quaternion orientation;
 

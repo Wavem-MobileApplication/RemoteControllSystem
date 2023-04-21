@@ -1,14 +1,9 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-public class LaserScan {
+public class LaserScan extends RosMessage{
     private Header header;
     private float angle_min;
     private float angle_max;

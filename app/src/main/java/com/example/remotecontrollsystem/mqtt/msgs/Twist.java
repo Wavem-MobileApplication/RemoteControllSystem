@@ -1,6 +1,6 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class Twist {
+public class Twist extends RosMessage{
     Vector3 linear;
     Vector3 angular;
 

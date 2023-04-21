@@ -3,17 +3,13 @@ package com.example.remotecontrollsystem.mqtt;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.remotecontrollsystem.BuildConfig;
-import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.model.entity.Topic;
-import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
 import com.example.remotecontrollsystem.mqtt.data.MessagePublisher;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessageDefinition;
 import com.example.remotecontrollsystem.mqtt.utils.TopicType;
 import com.example.remotecontrollsystem.ui.util.ToastMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -22,7 +18,6 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +36,7 @@ public class Mqtt {
     public static final String RESPONSE = "/response";
     private static Mqtt instance;
     private MqttClient client;
-    private TopicViewModel topicViewModel;
+
     private HashMap<String, MessagePublisher> messagePublishers;
     private HashMap<String, RosMessageDefinition> topicMap;
 
@@ -242,9 +237,5 @@ public class Mqtt {
     public MessagePublisher getMessagePublisher(String widgetName) {
         createMessagePublisher(widgetName);
         return messagePublishers.get(widgetName);
-    }
-
-    public void setTopicViewModel(TopicViewModel topicViewModel) {
-        this.topicViewModel = topicViewModel;
     }
 }

@@ -1,6 +1,6 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class Odometry {
+public class Odometry extends RosMessage{
     Header header;
     String child_frame_id;
     PoseWithCovariance pose;

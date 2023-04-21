@@ -1,6 +1,6 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class NavigateToPose_Response {
+public class NavigateToPose_Response extends RosMessage {
     private String result;
     private int code;
 

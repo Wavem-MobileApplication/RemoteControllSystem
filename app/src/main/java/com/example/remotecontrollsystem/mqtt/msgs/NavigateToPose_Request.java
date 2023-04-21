@@ -1,6 +1,6 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class NavigateToPose_Request {
+public class NavigateToPose_Request extends RosMessage{
     private PoseStamped pose;
     private String behavior_tree;
 

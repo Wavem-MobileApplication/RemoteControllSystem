@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OccupancyGrid {
+public class OccupancyGrid extends RosMessage{
     Header header;
     MapMetaData info;
     Map<String, Integer> data;

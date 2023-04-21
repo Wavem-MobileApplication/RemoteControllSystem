@@ -1,9 +1,6 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class TFMessage {
+public class TFMessage extends RosMessage{
     private TransformStamped[] transforms;
 
     public TFMessage() {

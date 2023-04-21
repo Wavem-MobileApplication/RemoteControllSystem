@@ -1,6 +1,6 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class NavigateToPose_FeedBack {
+public class NavigateToPose_FeedBack extends RosMessage {
     PoseStamped current_pose;
     Duration navigation_time;
     int number_of_recoveries;
