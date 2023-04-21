@@ -1,6 +1,13 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class Quaternion {
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class Quaternion implements Serializable {
     double x;
     double y;
     double z;
@@ -36,5 +43,19 @@ public class Quaternion {
 
     public void setW(double w) {
         this.w = Math.round(w * 10000.0) / 10000.0;
+    }
+
+    public static byte[] serialize(Quaternion quaternion) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(out);
+        os.writeObject(quaternion);
+
+        return out.toByteArray();
+    }
+
+    public static Quaternion deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+        ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+        ObjectInputStream is = new ObjectInputStream(in);
+        return (Quaternion) is.readObject();
     }
 }

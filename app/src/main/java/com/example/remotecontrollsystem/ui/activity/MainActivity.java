@@ -13,12 +13,15 @@ import com.example.remotecontrollsystem.databinding.ActivityMainBinding;
 import com.example.remotecontrollsystem.model.entity.Topic;
 import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
 import com.example.remotecontrollsystem.mqtt.Mqtt;
+import com.example.remotecontrollsystem.mqtt.msgs.Quaternion;
 import com.example.remotecontrollsystem.ui.dialog.DefaultDialog;
 import com.example.remotecontrollsystem.ui.dialog.MqttConnectFragment;
 import com.example.remotecontrollsystem.ui.util.ToastMessage;
 
 import org.videolan.libvlc.Dialog;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("경로", BuildConfig.APPLICATION_ID);
 
     }
+
 
     private void init() {
         // Initialize ViewPager2
