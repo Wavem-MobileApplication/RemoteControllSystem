@@ -3,6 +3,7 @@ package com.example.remotecontrollsystem.ui.view.status;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
@@ -40,7 +41,7 @@ public class DrivingDistanceTextView extends androidx.appcompat.widget.AppCompat
     private void init() {
         setTextAlignment(TEXT_ALIGNMENT_CENTER);
         setTextColor(getResources().getColor(R.color.color_text_sky_blue));
-        odomPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.ROBOT_POSE.getType());
+        odomPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.ODOM.getType());
         gson = new Gson();
     }
 
@@ -71,12 +72,13 @@ public class DrivingDistanceTextView extends androidx.appcompat.widget.AppCompat
                 double distance = Math.sqrt(x * x + y * y);
 
                 mileage += distance;
+                Log.d("Mileage", String.valueOf(mileage));
             }
 
             preX = newX;
             preY = newY;
 
-            String formattedNum = String.format(Locale.KOREA, "%.2f Km", mileage / 1000);
+            String formattedNum = String.format(Locale.KOREA, "%.2f km", mileage / 1000);
             setText(formattedNum);
         }
     };
@@ -84,6 +86,6 @@ public class DrivingDistanceTextView extends androidx.appcompat.widget.AppCompat
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        odomPublisher.detach(odomObserver);
+//        odomPublisher.detach(odomObserver);
     }
 }

@@ -53,7 +53,7 @@ public class MqttConnectFragment extends DialogFragment {
         binding.btnMqttConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Mqtt.getInstance().connectToMqttServer(requireContext(), binding.btnMqttConnect.getText().toString());
+                Mqtt.getInstance().connectToMqttServer(requireContext(), binding.etMqttAddress.getText().toString());
                 saveMqttIpAddress();
             }
         });

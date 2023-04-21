@@ -67,11 +67,11 @@ public class DefaultDialog extends Dialog {
         this.text = text;
     }
 
-    public void setPositiveButtonClickListener(OnPositiveButtonClickListener positiveButtonClickListener) {
+    public void setOnPositiveButtonClickListener(OnPositiveButtonClickListener positiveButtonClickListener) {
         this.positiveButtonClickListener = positiveButtonClickListener;
     }
 
-    public void setNegativeButtonClickListener(OnNegativeButtonClickListener negativeButtonClickListener) {
+    public void setOnNegativeButtonClickListener(OnNegativeButtonClickListener negativeButtonClickListener) {
         this.negativeButtonClickListener = negativeButtonClickListener;
     }
 

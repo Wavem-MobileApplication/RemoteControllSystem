@@ -1,8 +1,10 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
+import java.util.Map;
+
 public class TwistWithCovariance {
     Twist twist;
-    double[] covariance;
+    Map<String, Double> covariance;
 
     public TwistWithCovariance() {
         this.twist = new Twist();
@@ -16,11 +18,11 @@ public class TwistWithCovariance {
         this.twist = twist;
     }
 
-    public double[] getCovariance() {
+    public Map<String, Double> getCovariance() {
         return covariance;
     }
 
-    public void setCovariance(double[] covariance) {
+    public void setCovariance(Map<String, Double> covariance) {
         this.covariance = covariance;
     }
 }

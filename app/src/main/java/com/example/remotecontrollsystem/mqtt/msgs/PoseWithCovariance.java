@@ -1,8 +1,10 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
+import java.util.Map;
+
 public class PoseWithCovariance {
     Pose pose;
-    double[] covariance;
+    Map<String, Double> covariance;
 
     public PoseWithCovariance() {
         this.pose = new Pose();
@@ -16,11 +18,11 @@ public class PoseWithCovariance {
         this.pose = pose;
     }
 
-    public double[] getCovariance() {
+    public Map<String, Double> getCovariance() {
         return covariance;
     }
 
-    public void setCovariance(double[] covariance) {
+    public void setCovariance(Map<String, Double> covariance) {
         this.covariance = covariance;
     }
 }

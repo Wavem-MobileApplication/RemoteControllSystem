@@ -111,11 +111,11 @@ public class LaserScanView extends View {
     private Observer mapObserver = new Observer() {
         @Override
         public void update(String message) {
-            GetMap_Response response = new Gson().fromJson(message, GetMap_Response.class);
+/*            GetMap_Response response = new Gson().fromJson(message, GetMap_Response.class);
 
             resolution = response.getMap().getInfo().getResolution();
             originX = (float) response.getMap().getInfo().getOrigin().getPosition().getX();
-            originY = (float) response.getMap().getInfo().getOrigin().getPosition().getY();
+            originY = (float) response.getMap().getInfo().getOrigin().getPosition().getY();*/
         }
     };
 

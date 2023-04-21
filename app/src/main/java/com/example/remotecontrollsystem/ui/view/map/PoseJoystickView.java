@@ -151,8 +151,8 @@ public class PoseJoystickView extends View {
     private Observer mapObserver = new Observer() {
         @Override
         public void update(String message) {
-            GetMap_Response response = new Gson().fromJson(message, GetMap_Response.class);
-            resolution = response.getMap().getInfo().getResolution();
+/*            GetMap_Response response = new Gson().fromJson(message, GetMap_Response.class);
+            resolution = response.getMap().getInfo().getResolution();*/
         }
     };
 

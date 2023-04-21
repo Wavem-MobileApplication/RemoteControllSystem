@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 
 import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.FragmentManualControlBinding;
+import com.example.remotecontrollsystem.mqtt.data.Observer;
+import com.example.remotecontrollsystem.mqtt.msgs.Odometry;
+import com.google.gson.Gson;
 
 
 public class ManualControlFragment extends Fragment {
@@ -36,10 +39,17 @@ public class ManualControlFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentManualControlBinding.inflate(inflater, container, false);
 
-
-
         return binding.getRoot();
     }
 
+    private void init() {
 
+    }
+
+    private Observer odomObserver = new Observer() {
+        @Override
+        public void update(String message) {
+            Odometry odometry = new Gson().fromJson(message, Odometry.class);
+        }
+    };
 }

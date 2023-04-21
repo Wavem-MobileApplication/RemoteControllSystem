@@ -66,7 +66,7 @@ public class GoalFrameView extends FrameLayout {
 
         routeViewModel.getCurrentRoute().observe(activity, currentRouteObserver);
         waypointViewModel.getNewWaypoint().observe(activity, newWaypointObserver);
-        mapResponse.attach(mapResponseObserver);
+        mapResponse.attach(mapObserver);
     }
 
     private Observer<Route> currentRouteObserver = new Observer<Route>() {
@@ -118,7 +118,7 @@ public class GoalFrameView extends FrameLayout {
         }
     }
 
-    private final com.example.remotecontrollsystem.mqtt.data.Observer mapResponseObserver = message -> {
+    private final com.example.remotecontrollsystem.mqtt.data.Observer mapObserver = message -> {
         GetMap_Response response = new Gson().fromJson(message, GetMap_Response.class);
 
         resolution = response.getMap().getInfo().getResolution();
@@ -129,6 +129,6 @@ public class GoalFrameView extends FrameLayout {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         routeViewModel.getCurrentRoute().removeObserver(currentRouteObserver);
-        mapResponse.detach(mapResponseObserver);
+        mapResponse.detach(mapObserver);
     }
 }

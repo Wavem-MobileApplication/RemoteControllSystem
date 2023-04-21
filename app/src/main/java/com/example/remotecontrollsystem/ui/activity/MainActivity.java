@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
+import com.example.remotecontrollsystem.BuildConfig;
 import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.ActivityMainBinding;
 import com.example.remotecontrollsystem.model.entity.Topic;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         settingClickEvents();
         settingMqttViewModel();
         settingUtils();
+
+        Log.d("경로", BuildConfig.APPLICATION_ID);
 
     }
 
@@ -85,14 +88,6 @@ public class MainActivity extends AppCompatActivity {
         binding.btnConnection.setOnClickListener(view -> {
             MqttConnectFragment dialog = new MqttConnectFragment();
             dialog.show(getSupportFragmentManager(), "MqttConnectFragment");
-        });
-
-        binding.btnLogo.setOnClickListener(view -> {
-            DefaultDialog dialog = new DefaultDialog(MainActivity.this);
-            dialog.setText("다이얼로그 테스트");
-            dialog.setPositiveButtonClickListener(() -> Log.d("Positive", "Onclick"));
-            dialog.setNegativeButtonClickListener(() -> Log.d("Negative", "OnClick"));
-            dialog.show();
         });
     }
 

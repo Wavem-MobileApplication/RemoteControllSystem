@@ -3,11 +3,9 @@ package com.example.remotecontrollsystem.ui.view.map;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.JsonReader;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,13 +17,14 @@ import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.OccupancyGrid;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.google.gson.Gson;
+import com.google.gson.internal.GsonBuildConfig;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
@@ -50,6 +49,8 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
     private void init() {
         responsePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
         responsePublisher.attach(responseObserver);
+
+        post(() -> setClickable(false));
 
         setOnClickListener(view -> {
             Log.d(TAG,  "onClick");
@@ -94,6 +95,7 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
     }
 
     private Observer responseObserver = message -> {
+/*
         GetMap_Response response = new Gson().fromJson(message, GetMap_Response.class);
         try {
             Bitmap bitmap = convertOccupancyGridToBitmap(response.getMap());
@@ -106,5 +108,8 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
             e.printStackTrace();
             Log.d(TAG, "Failed to draw map...");
         }
+*/
+
+        Log.d("맵", message);
     };
 }

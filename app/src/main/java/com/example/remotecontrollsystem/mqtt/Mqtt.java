@@ -3,6 +3,7 @@ package com.example.remotecontrollsystem.mqtt;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.remotecontrollsystem.BuildConfig;
 import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.model.entity.Topic;
 import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
@@ -63,7 +64,7 @@ public class Mqtt {
     public void connectToMqttServer(Context context, String address) {
         Disposable backgroundTask = Observable.fromCallable(() -> {
             try {
-                Log.d(TAG, "Try to connect mqtt server");
+                Log.d(TAG, "Try to connect mqtt server -> " + address);
 
                 // If MqttClient is already connected, disconnect client
                 if (client != null && client.isConnected()) {
@@ -119,7 +120,7 @@ public class Mqtt {
     }
 
     private void startToSubscribe() {
-
+        Gson gson = new Gson();
         for (Map.Entry<String, RosMessageDefinition> entry : topicMap.entrySet()) {
             String funcName = entry.getKey();
             String type = entry.getValue().getType();
@@ -152,7 +153,6 @@ public class Mqtt {
                 e.printStackTrace();
             }
         }
-
     }
 
     public void setTopicList(List<Topic> topicList) {
@@ -202,7 +202,7 @@ public class Mqtt {
             Log.d(funcName, topicName);
 
             client.publish(topicName, payload, qos, retained);
-        } catch (MqttException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
