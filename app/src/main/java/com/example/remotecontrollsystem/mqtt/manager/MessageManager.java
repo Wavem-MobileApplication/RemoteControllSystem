@@ -21,7 +21,7 @@ import java.util.Map;
 public class MessageManager {
     public static Map<String, Class<? extends RosMessage>> classMap;
 
-    public MessageManager() {
+    static {
         classMap = new HashMap<>();
 
         classMap.put(WidgetType.MAP.getType(), OccupancyGrid.class);

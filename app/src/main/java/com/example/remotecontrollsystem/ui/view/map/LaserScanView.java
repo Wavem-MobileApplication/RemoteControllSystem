@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -19,7 +20,6 @@ import com.example.remotecontrollsystem.mqtt.msgs.TFMessage;
 import com.example.remotecontrollsystem.mqtt.msgs.TransformStamped;
 import com.example.remotecontrollsystem.mqtt.utils.RosMath;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
-import com.google.gson.Gson;
 
 import java.util.Map;
 
@@ -38,6 +38,7 @@ public class LaserScanView extends View {
     private float resolution = 0.05f; // Map resolution
 
     private Paint paint;
+    private Paint testPaint;
 
     public LaserScanView(Context context) {
         super(context);
@@ -53,6 +54,10 @@ public class LaserScanView extends View {
         paint = new Paint();
         paint.setStrokeWidth(STROKE);
         paint.setColor(Color.parseColor("#00AAFF"));
+
+        testPaint = new Paint();
+        testPaint.setStrokeWidth(STROKE * 10);
+        testPaint.setColor(Color.RED);
     }
 
     @Override
@@ -64,10 +69,10 @@ public class LaserScanView extends View {
     }
 
     private void startObserve() {
-        MessagePublisher scanPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.LASER_SCAN.getType());
-        MessagePublisher mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
-        MessagePublisher robotPosePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.ROBOT_POSE.getType());
-        MessagePublisher tfPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.TF_STATIC.getType());
+        MessagePublisher<LaserScan> scanPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.LASER_SCAN.getType());
+        MessagePublisher<GetMap_Response> mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
+        MessagePublisher<Pose> robotPosePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.ROBOT_POSE.getType());
+        MessagePublisher<TFMessage> tfPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.TF_STATIC.getType());
 
         scanPublisher.attach(scanObserver);
         mapPublisher.attach(mapObserver);
@@ -75,23 +80,23 @@ public class LaserScanView extends View {
         tfPublisher.attach(tfObserver);
     }
 
-    private Observer scanObserver = new Observer() {
+    private final Observer<LaserScan> scanObserver = new Observer<LaserScan>() {
         @Override
-        public void update(String message) {
+        public void update(LaserScan message) {
             try {
-                LaserScan scan = new Gson().fromJson(message, LaserScan.class);
-                frameId = scan.getHeader().getFrame_id();
+                frameId = message.getHeader().getFrame_id();
 
-                int length = scan.getRanges().size();
-                float angleMin = scan.getAngle_min();
-                float angleIncrement = scan.getAngle_increment();
-                Map<String, Float> data = scan.getRanges();
+                int length = message.getRanges().size();
+                float angleMin = message.getAngle_min();
+                float angleIncrement = message.getAngle_increment();
+                Map<String, Float> data = message.getRanges();
 
                 scanX = new float[length];
                 scanY = new float[length];
 
                 for (int i = 0; i < length; i++) {
-                    float laserRadian = (float) (angleMin + angleIncrement * i - radian - tfRadian + Math.PI);
+                    float laserRadian = (float) (angleMin + angleIncrement * i - radian + tfRadian);
+//                    float laserRadian = (float) (angleMin + angleIncrement * i - radian + tfRadian + Math.PI);
                     if (data.get(String.valueOf(i)) == null) {
                         scanX[i] = Float.NaN;
                         scanY[i] = Float.NaN;
@@ -108,37 +113,34 @@ public class LaserScanView extends View {
         }
     };
 
-    private Observer mapObserver = new Observer() {
+    private final Observer<GetMap_Response> mapObserver = new Observer<GetMap_Response>() {
         @Override
-        public void update(String message) {
-/*            GetMap_Response response = new Gson().fromJson(message, GetMap_Response.class);
-
-            resolution = response.getMap().getInfo().getResolution();
-            originX = (float) response.getMap().getInfo().getOrigin().getPosition().getX();
-            originY = (float) response.getMap().getInfo().getOrigin().getPosition().getY();*/
+        public void update(GetMap_Response message) {
+            if (message != null) {
+                resolution = message.getMap().getInfo().getResolution();
+                originX = (float) message.getMap().getInfo().getOrigin().getPosition().getX();
+                originY = (float) message.getMap().getInfo().getOrigin().getPosition().getY();
+            }
         }
     };
 
-    private Observer robotPoseObserver = new Observer() {
+    private final Observer<Pose> robotPoseObserver = new Observer<Pose>() {
         @Override
-        public void update(String message) {
-            Pose pose = new Gson().fromJson(message, Pose.class);
-
-            poseX = (float) (pose.getPosition().getX() + originX) / resolution;
-            poseY = (float) (pose.getPosition().getY() + originY) / resolution;
-            radian = RosMath.QuaternionToRadian(pose.getOrientation());
+        public void update(Pose message) {
+            poseX = (float) (message.getPosition().getX() + originX) / resolution;
+            poseY = (float) (message.getPosition().getY() + originY) / resolution;
+            radian = RosMath.QuaternionToRadian(message.getOrientation());
         }
     };
 
-    private Observer tfObserver = new Observer() {
+    private final Observer<TFMessage> tfObserver = new Observer<TFMessage>() {
         @Override
-        public void update(String message) {
-            TFMessage tf = new Gson().fromJson(message, TFMessage.class);
-            for (int i = 0; i < tf.getTransforms().length; i++) {
-                TransformStamped transForm = tf.getTransforms()[i];
+        public void update(TFMessage message) {
+            for (int i = 0; i < message.getTransforms().length; i++) {
+                TransformStamped transForm = message.getTransforms()[i];
                 if (transForm.getChild_frameId().equals(frameId)) {
-                    tfX = (float) transForm.getTransform().getTranslation().getX();
-                    tfY = (float) transForm.getTransform().getTranslation().getY();
+                    tfX = (float) transForm.getTransform().getTranslation().getX() / resolution;
+                    tfY = (float) transForm.getTransform().getTranslation().getY() / resolution;
                     tfRadian = RosMath.QuaternionToRadian(transForm.getTransform().getRotation());
                 }
             }
@@ -151,7 +153,7 @@ public class LaserScanView extends View {
 
         if (scanX != null) {
             for (int i = 0; i < scanX.length; i += STROKE) {
-                canvas.drawPoint(scanX[i] + poseX + tfX, scanY[i] + poseY + tfY, paint);
+                canvas.drawPoint(scanX[i] + poseX - tfX, scanY[i] + poseY - tfY, paint);
             }
         }
     }

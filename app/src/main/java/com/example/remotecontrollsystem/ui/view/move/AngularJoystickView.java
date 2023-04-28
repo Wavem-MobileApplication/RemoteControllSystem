@@ -55,7 +55,6 @@ public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImag
                 moveTo(posX);
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.d("폴라", String.valueOf(convertPxToPolar(posX)));
                 moveTo(posX);
                 JoystickUtil.getInstance().publishAngularVel(polarX * maxVel);
                 break;

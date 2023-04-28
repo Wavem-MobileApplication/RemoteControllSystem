@@ -1,28 +1,16 @@
 package com.example.remotecontrollsystem.ui.view.map;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.remotecontrollsystem.mqtt.Mqtt;
-import com.example.remotecontrollsystem.mqtt.data.MessagePublisher;
-import com.example.remotecontrollsystem.mqtt.data.Observer;
-import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
-import com.example.remotecontrollsystem.mqtt.msgs.OccupancyGrid;
-import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.example.remotecontrollsystem.ui.util.GestureUtil;
-import com.google.gson.Gson;
 
 
 public class MapFrameLayout extends FrameLayout {

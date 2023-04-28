@@ -1,18 +1,23 @@
 package com.example.remotecontrollsystem.ui.view.status;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.util.VLCVideoLayout;
+
 
 public class CameraView extends VLCVideoLayout {
     private static final String TAG = CameraView.class.getSimpleName();
@@ -20,6 +25,8 @@ public class CameraView extends VLCVideoLayout {
 
     private MediaPlayer mediaPlayer;
     private LibVLC libVlc;
+    private TextView textView;
+    private ProgressBar progressBar;
 
     public CameraView(@NonNull Context context) {
         super(context);
@@ -32,27 +39,67 @@ public class CameraView extends VLCVideoLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-//        init();
+        init();
+
+        if (progressBar == null) {
+            progressBar = new ProgressBar(getContext());
+            progressBar.post(() -> {
+                LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                layoutParams.gravity = Gravity.CENTER;
+                layoutParams.width = getWidth() / 3;
+                layoutParams.height = getHeight() / 3;
+                progressBar.setLayoutParams(layoutParams);
+            });
+        }
+
+        if (textView == null) {
+            textView =  new TextView(getContext());
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            textView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
+            textView.setGravity(Gravity.CENTER_VERTICAL);
+            textView.setTextColor(Color.WHITE);
+        }
     }
 
     private void init() {
         Log.d(TAG, "Try to connect RTSP Camera View");
         libVlc = new LibVLC(getContext());
         mediaPlayer = new MediaPlayer(libVlc);
-
-        settingRtspConnection();
+        mediaPlayer.attachViews(this, null, false, false);
     }
 
-    private void settingRtspConnection() {
+    public void settingRtspConnection(String url) {
         Log.d(TAG, "Setting RTSP Camera Connection");
-
-        mediaPlayer.attachViews(this, null, false, false);
-
-        Media media = new Media(libVlc, Uri.parse(RTSP_URL));
+        Media media = new Media(libVlc, Uri.parse(url));
         media.setHWDecoderEnabled(true, false);
         media.addOption(":network-caching=600");
 
+        addView(progressBar);
+
         mediaPlayer.setMedia(media);
+        mediaPlayer.setEventListener(event -> {
+            switch (event.type) {
+                case MediaPlayer.Event.Vout:
+                    removeView(textView);
+                    removeView(progressBar);
+                    break;
+                case MediaPlayer.Event.EncounteredError:
+                    textView.setText("연결에 실패하였습니다.\n네트워크를 확인해주세요.");
+                    removeView(progressBar);
+                    removeView(textView);
+                    addView(textView);
+                    break;
+                case MediaPlayer.Event.EndReached:
+                    Log.d("연결", "EndReached");
+                    removeAllViews();
+                    post(() -> {
+                        textView.setText("카메라와의 연결이 끊겼습니다.\n네트워크를 확인해주세요.");
+                        addView(textView);
+                    });
+                    break;
+            }
+        });
+
         media.release(); // Release media. Because mediaPlayer was set media.
         mediaPlayer.play();
     }

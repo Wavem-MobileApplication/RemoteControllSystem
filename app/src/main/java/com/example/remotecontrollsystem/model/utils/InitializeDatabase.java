@@ -45,7 +45,7 @@ public class InitializeDatabase {
     private Topic getDefaultMap() {
         Topic topic = new Topic(WidgetType.MAP.getType());
         RosMessageDefinition msg =
-                RosMessageDefinition.SUB("/map", "nav_msgs/msg/OccupancyGrid", 1, true);
+                RosMessageDefinition.SUB("/map", "nav_msgs/msg/OccupancyGrid", 0, false);
         topic.setMessage(msg);
 
         return topic;

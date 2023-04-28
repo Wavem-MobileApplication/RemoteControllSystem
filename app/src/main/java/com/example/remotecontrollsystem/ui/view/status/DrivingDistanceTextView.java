@@ -14,19 +14,16 @@ import com.example.remotecontrollsystem.mqtt.Mqtt;
 import com.example.remotecontrollsystem.mqtt.data.MessagePublisher;
 import com.example.remotecontrollsystem.mqtt.data.Observer;
 import com.example.remotecontrollsystem.mqtt.msgs.Odometry;
-import com.example.remotecontrollsystem.mqtt.msgs.Pose;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
-import com.google.gson.Gson;
 
 import java.util.Locale;
 
 public class DrivingDistanceTextView extends androidx.appcompat.widget.AppCompatTextView {
 
-    private MessagePublisher odomPublisher;
-    private Gson gson;
+    private MessagePublisher<Odometry> odomPublisher;
 
-    private double preX, preY;
-    private double mileage = 0f;
+    private double preX, preY; // 직전 odom x, y 데이터
+    private double mileage = 0f; // 총 주행 거리
 
     public DrivingDistanceTextView(@NonNull Context context) {
         super(context);
@@ -42,7 +39,6 @@ public class DrivingDistanceTextView extends androidx.appcompat.widget.AppCompat
         setTextAlignment(TEXT_ALIGNMENT_CENTER);
         setTextColor(getResources().getColor(R.color.color_text_sky_blue));
         odomPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.ODOM.getType());
-        gson = new Gson();
     }
 
     @Override
@@ -55,27 +51,26 @@ public class DrivingDistanceTextView extends androidx.appcompat.widget.AppCompat
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         setText("0.0km");
-        setTextSize(TypedValue.COMPLEX_UNIT_PX, getWidth() / 2 / 3);
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, getWidth() / 2f / 3f);
         setTypeface(Typeface.DEFAULT_BOLD);
     }
 
-    Observer odomObserver = new Observer() {
+    private final Observer<Odometry> odomObserver = new Observer<Odometry>() {
         @Override
-        public void update(String message) {
-            Odometry odometry = gson.fromJson(message, Odometry.class);
-            double newX = Math.abs(odometry.getPose().getPose().getPosition().getX());
+        public void update(Odometry odometry) {
+            double newX = Math.abs(odometry.getPose().getPose().getPosition().getX()); // 새로 들어온 데이터
             double newY = Math.abs(odometry.getPose().getPose().getPosition().getY());
 
-            if (preX != newX && preY != newY) {
-                double x = Math.abs(newX - preX);
+            if (preX != newX && preY != newY) { // 직전 데이터와 현재 데이터가 다를시에만 거리 합산
+                double x = Math.abs(newX - preX); // 직전 데이터와 현재 데이터의 차
                 double y = Math.abs(newY - preY);
-                double distance = Math.sqrt(x * x + y * y);
+                double distance = Math.sqrt(x * x + y * y); // 두 점 사이의 거리 공식으로 거리 계산
 
-                mileage += distance;
+                mileage += distance; // 계산한 거리 mileage에 누적
                 Log.d("Mileage", String.valueOf(mileage));
             }
 
-            preX = newX;
+            preX = newX; // 직전 데이터 현재 데이터로 업데이트
             preY = newY;
 
             String formattedNum = String.format(Locale.KOREA, "%.2f km", mileage / 1000);

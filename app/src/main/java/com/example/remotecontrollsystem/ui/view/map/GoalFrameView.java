@@ -1,11 +1,6 @@
 package com.example.remotecontrollsystem.ui.view.map;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.util.Log;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -23,7 +18,6 @@ import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.Pose;
 import com.example.remotecontrollsystem.mqtt.utils.RosMath;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
-import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.Map;
@@ -31,10 +25,10 @@ import java.util.Map;
 
 public class GoalFrameView extends FrameLayout {
     private static final String TAG = GoalFrameView.class.getSimpleName();
-    private AppCompatActivity activity;
-    private RouteViewModel routeViewModel;
-    private WaypointViewModel waypointViewModel;
-    private MessagePublisher mapResponse;
+    private final AppCompatActivity activity;
+    private final RouteViewModel routeViewModel;
+    private final WaypointViewModel waypointViewModel;
+    private final MessagePublisher<GetMap_Response> mapResponse;
 
     private float resolution = 0.05f;
     private boolean isLongClicked = false;
@@ -69,7 +63,7 @@ public class GoalFrameView extends FrameLayout {
         mapResponse.attach(mapObserver);
     }
 
-    private Observer<Route> currentRouteObserver = new Observer<Route>() {
+    private final Observer<Route> currentRouteObserver = new Observer<Route>() {
         @Override
         public void onChanged(Route route) {
             curRoute = route;
@@ -77,7 +71,7 @@ public class GoalFrameView extends FrameLayout {
         }
     };
 
-    private Observer<Waypoint> newWaypointObserver = new Observer<Waypoint>() {
+    private final Observer<Waypoint> newWaypointObserver = new Observer<Waypoint>() {
         @Override
         public void onChanged(Waypoint waypoint) {
             curWaypoint = waypoint;
@@ -118,11 +112,11 @@ public class GoalFrameView extends FrameLayout {
         }
     }
 
-    private final com.example.remotecontrollsystem.mqtt.data.Observer mapObserver = message -> {
-        GetMap_Response response = new Gson().fromJson(message, GetMap_Response.class);
-
-        resolution = response.getMap().getInfo().getResolution();
-        updateFlags();
+    private final com.example.remotecontrollsystem.mqtt.data.Observer<GetMap_Response> mapObserver = message -> {
+        if (message != null) {
+            resolution = message.getMap().getInfo().getResolution();
+            updateFlags();
+        }
     };
 
     @Override

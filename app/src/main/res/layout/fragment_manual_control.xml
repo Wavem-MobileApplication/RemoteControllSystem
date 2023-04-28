@@ -43,7 +43,7 @@
         app:layout_constraintTop_toBottomOf="@+id/frame_front_camera_manual" />
 
     <FrameLayout
-        android:id="@+id/frame_camera_rear_manual"
+        android:id="@+id/frame_rear_camera_manual"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -69,7 +69,7 @@
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/angularJoystickView"
-        app:layout_constraintStart_toEndOf="@+id/frame_camera_rear_manual"
+        app:layout_constraintStart_toEndOf="@+id/frame_rear_camera_manual"
         app:layout_constraintTop_toBottomOf="@+id/frame_front_camera_manual">
 
     </FrameLayout>
@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/text_background"
-            android:text="1.2m/s"
+            android:text="0.0m/s"
             android:textAlignment="center"
             android:textColor="@color/color_text_sky_blue"
             android:textSize="24sp"
@@ -130,7 +130,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/text_background"
-            android:text="0.4m/s"
+            android:text="0.0m/s"
             android:textAlignment="center"
             android:textColor="@color/color_text_sky_blue"
             android:textSize="24sp"
@@ -163,16 +163,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_linear_max_vel"
+        <EditText
+            android:id="@+id/et_linear_max_vel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/text_background"
-            android:text="1.5m/s"
+            android:text="0.0"
             android:textAlignment="center"
             android:textColor="@color/color_text_sky_blue"
             android:textSize="24sp"
+            android:inputType="numberDecimal"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -189,15 +190,16 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_linear_max_vel" />
+            app:layout_constraintTop_toBottomOf="@+id/et_linear_max_vel" />
 
-        <TextView
-            android:id="@+id/tv_angular_max_vel"
+        <EditText
+            android:id="@+id/et_angular_max_vel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/text_background"
-            android:text="0.8m/s"
+            android:text="0.0"
+            android:inputType="numberDecimal"
             android:textAlignment="center"
             android:textColor="@color/color_text_sky_blue"
             android:textSize="24sp"

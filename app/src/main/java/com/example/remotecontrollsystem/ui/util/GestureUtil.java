@@ -1,6 +1,5 @@
 package com.example.remotecontrollsystem.ui.util;
 
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -8,10 +7,10 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
-import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
 
 public class GestureUtil {
+    private static final float BOUNDARY_PERCENT = 0.2f;
 
     public class GestureListener extends GestureDetector.SimpleOnGestureListener {
         private MapFrameLayout layout;
@@ -57,10 +56,10 @@ public class GestureUtil {
             float originX = (scaledWidth - width) * 0.5f;
             float originY = (scaledHeight - height) * 0.5f;
 
-            float minX = -scaledWidth * 0.5f + originX;
-            float minY = -scaledHeight * 0.5f + originY;
-            float maxX = parentWidth - scaledWidth * 0.5f + originX;
-            float maxY = parentHeight - scaledHeight * 0.5f + originY;
+            float minX = -scaledWidth * (1f - BOUNDARY_PERCENT) + originX;
+            float minY = -scaledHeight * (1f - BOUNDARY_PERCENT) + originY;
+            float maxX = parentWidth - scaledWidth * BOUNDARY_PERCENT + originX;
+            float maxY = parentHeight - scaledHeight * BOUNDARY_PERCENT + originY;
 
             if (newX < minX) {
                 newX = minX;

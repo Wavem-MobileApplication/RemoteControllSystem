@@ -20,7 +20,7 @@ public class RosMath {
 
     public static float QuaternionToAngular(double z, double w) {
         double siny_cosp = 2 * (w * z);
-        double cosy_cosp = 1 - 2 * (w * z);
+        double cosy_cosp = 1 - 2 * (w * w);
         float yaw = (float) Math.atan2(siny_cosp, cosy_cosp);
         float yawInt = (float) Math.toDegrees(yaw);
         return -yawInt;

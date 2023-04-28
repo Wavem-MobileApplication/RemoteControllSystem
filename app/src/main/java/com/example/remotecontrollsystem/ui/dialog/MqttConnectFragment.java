@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
-
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -16,12 +12,14 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 
-import com.example.remotecontrollsystem.R;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.remotecontrollsystem.databinding.FragmentMqttConnectBinding;
 import com.example.remotecontrollsystem.mqtt.Mqtt;
+import com.example.remotecontrollsystem.viewmodel.ConnectionViewModel;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -29,14 +27,24 @@ public class MqttConnectFragment extends DialogFragment {
     private static final String IP_ARRAY_TAG = "mqttIpArray";
     private static final String IP_TAG = "mqttIp";
     private static final String LAST_USED_IP_TAG = "mqttLastUsedIp";
+    private static final String RTSP_ARRAY_TAG = "rtspArray";
+    private static final String RTSP_URL_TAG = "rtspUrl";
+    private static final String LAST_USED_FRONT_URL_TAG = "rtspLastUsedFrontUrl";
+    private static final String LAST_USED_REAR_URL_TAG = "rtspLastUsedRearUrl";
+
     private FragmentMqttConnectBinding binding;
+    private ConnectionViewModel connectionViewModel;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentMqttConnectBinding.inflate(inflater, container, false);
 
+        connectionViewModel = new ViewModelProvider(requireActivity()).get(ConnectionViewModel.class);
+
         restoreMqttIpAddress();
+        restoreRtspUrls();
         settingClickEvents();
 
         return binding.getRoot();
@@ -47,22 +55,28 @@ public class MqttConnectFragment extends DialogFragment {
         super.onResume();
 
         adjustDialogSize();
+        requireDialog().setCancelable(false);
     }
 
     private void settingClickEvents() {
-        binding.btnMqttConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Mqtt.getInstance().connectToMqttServer(requireContext(), binding.etMqttAddress.getText().toString());
-                saveMqttIpAddress();
-            }
+        binding.btnMqttConnect.setOnClickListener(view -> {
+            Mqtt.getInstance().connectToMqttServer(requireContext(), binding.etMqttAddress.getText().toString());
+            saveMqttIpAddressPreference();
         });
-        binding.btnExitMqttDialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
+
+        binding.btnRtspFrontConnect.setOnClickListener(view -> {
+            String url = binding.etRtspFrontUrl.getText().toString();
+            connectionViewModel.changeRtspFrontUrl(url);
+            saveRtspUrlPreference(url);
         });
+
+        binding.btnRtspRearConnect.setOnClickListener(view -> {
+            String url = binding.etRtspRearUrl.getText().toString();
+            connectionViewModel.changeRtspRearUrl(url);
+            saveRtspUrlPreference(url);
+        });
+
+        binding.btnExitMqttDialog.setOnClickListener(view -> dismiss());
     }
 
     private void adjustDialogSize() {
@@ -78,14 +92,14 @@ public class MqttConnectFragment extends DialogFragment {
         getDialog().getWindow().setAttributes(params);
     }
 
-    protected void saveMqttIpAddress() {
+    protected void saveMqttIpAddressPreference() {
         SharedPreferences pref = requireActivity().getSharedPreferences(IP_ARRAY_TAG, Context.MODE_PRIVATE);
 
         Set<String> savedIpAddresses = pref.getStringSet(IP_TAG, new LinkedHashSet<>()); // Get saved ip addresses
         Set<String> modifiedIpAddresses = new LinkedHashSet<>(savedIpAddresses); // Copy saved ip addresses to new addresses array
         modifiedIpAddresses.add(binding.etMqttAddress.getText().toString()); // Get ip addresses which will be added to shared preferences
 
-        Log.d("Save Instance", Arrays.toString(modifiedIpAddresses.toArray(new String[modifiedIpAddresses.size()])));
+        Log.d("Save IP Address", Arrays.toString(modifiedIpAddresses.toArray(new String[modifiedIpAddresses.size()])));
 
         SharedPreferences.Editor editor = pref.edit();
         editor.putStringSet(IP_TAG, modifiedIpAddresses);
@@ -100,12 +114,49 @@ public class MqttConnectFragment extends DialogFragment {
         String lastUsedIp = pref.getString(LAST_USED_IP_TAG, "tcp://10.223.188.12:1883");
         String[] savedIpArr = savedIpAddresses.toArray(new String[savedIpAddresses.size()]);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+        ArrayAdapter<String> ipAdapter = new ArrayAdapter<>(requireContext(),
                 android.R.layout.simple_dropdown_item_1line, savedIpArr);
 
-        Log.d("Arrays", Arrays.toString(savedIpArr));
+        Log.d("IP Arrays", Arrays.toString(savedIpArr));
 
-        binding.etMqttAddress.setAdapter(adapter);
+        binding.etMqttAddress.setAdapter(ipAdapter);
         binding.etMqttAddress.setText(lastUsedIp);
+    }
+
+    protected void restoreRtspUrls() {
+        SharedPreferences pref = requireActivity().getSharedPreferences(RTSP_ARRAY_TAG, Context.MODE_PRIVATE);
+
+        Set<String> savedRtspUrls = pref.getStringSet(RTSP_URL_TAG, new LinkedHashSet<>());
+        String[] savedUrlArr = savedRtspUrls.toArray(new String[savedRtspUrls.size()]);
+
+        ArrayAdapter<String> urlAdapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_dropdown_item_1line, savedUrlArr);
+
+        binding.etRtspFrontUrl.setAdapter(urlAdapter);
+        binding.etRtspRearUrl.setAdapter(urlAdapter);
+
+        Log.d("URL Arrays", Arrays.toString(savedUrlArr));
+
+        String lastUsedFrontUrl =  pref.getString(LAST_USED_FRONT_URL_TAG, "rtsp://192.168.30.5:1883/rcs");
+        String lastUsedRearUrl = pref.getString(LAST_USED_REAR_URL_TAG, "rtsp://192.168.30.5:1883/rcs");
+
+        binding.etRtspFrontUrl.setText(lastUsedFrontUrl);
+        binding.etRtspRearUrl.setText(lastUsedRearUrl);
+    }
+
+    protected void saveRtspUrlPreference(String rtspUrl) {
+        SharedPreferences pref = requireContext().getSharedPreferences(RTSP_ARRAY_TAG, Context.MODE_PRIVATE);
+
+        Set<String> savedUrlAddress = pref.getStringSet(RTSP_URL_TAG, new LinkedHashSet<>());
+        Set<String> modifiedUrlAddresses = new LinkedHashSet<>(savedUrlAddress);
+        modifiedUrlAddresses.add(rtspUrl);
+
+        Log.d("Save URL", Arrays.toString(modifiedUrlAddresses.toArray(new String[modifiedUrlAddresses.size()])));
+
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putStringSet(RTSP_URL_TAG, modifiedUrlAddresses);
+        editor.putString(LAST_USED_FRONT_URL_TAG, binding.etRtspFrontUrl.getText().toString());
+        editor.putString(LAST_USED_REAR_URL_TAG, binding.etRtspRearUrl.getText().toString());
+        editor.apply();
     }
 }

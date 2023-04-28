@@ -1,17 +1,11 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import java.util.HashMap;
 import java.util.Map;
 
-public class OccupancyGrid extends RosMessage{
+public class OccupancyGrid extends RosMessage {
     Header header;
     MapMetaData info;
-    Map<String, Integer> data;
+    int[] data;
 
     public OccupancyGrid() {
         header = new Header();
@@ -34,11 +28,11 @@ public class OccupancyGrid extends RosMessage{
         this.info = info;
     }
 
-    public Map<String, Integer> getData() {
+    public int[] getData() {
         return data;
     }
 
-    public void setData(Map<String, Integer> data) {
+    public void setData(int[] data) {
         this.data = data;
     }
 }

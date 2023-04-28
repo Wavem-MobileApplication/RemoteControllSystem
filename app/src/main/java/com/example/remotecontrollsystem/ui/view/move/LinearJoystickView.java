@@ -56,7 +56,6 @@ public class LinearJoystickView extends androidx.appcompat.widget.AppCompatImage
                 moveTo(posY);
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.d("폴라Y", String.valueOf(polarY));
                 moveTo(posY);
                 JoystickUtil.getInstance().publishLinearVel(-polarY * maxVel);
                 break;

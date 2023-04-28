@@ -10,7 +10,6 @@ import com.example.remotecontrollsystem.mqtt.msgs.NavigateToPose_Request;
 import com.example.remotecontrollsystem.mqtt.msgs.NavigateToPose_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessageDefinition;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
-import com.google.gson.Gson;
 
 public class GoalManager {
     private static GoalManager instance;
@@ -59,20 +58,16 @@ public class GoalManager {
                 WidgetType.NAVIGATE_TO_POSE.getType(), request, 1, false);
     }
 
-    private final Observer feedbackObserver = new Observer() {
+    private final Observer<NavigateToPose_FeedBack> feedbackObserver = new Observer<NavigateToPose_FeedBack>() {
         @Override
-        public void update(String message) {
-            NavigateToPose_FeedBack feedBack = new Gson().fromJson(message, NavigateToPose_FeedBack.class);
-
+        public void update(NavigateToPose_FeedBack message) {
             // TODO -> waypoint 데이터 업데이트 전 완료된 waypoint 반환 하여 UI 업데이트 하게끔 추가.
         }
     };
 
-    private final Observer responseObserver = new Observer() {
+    private final Observer<NavigateToPose_Response> responseObserver = new Observer<NavigateToPose_Response>() {
         @Override
-        public void update(String message) {
-            NavigateToPose_Response response = new Gson().fromJson(message, NavigateToPose_Response.class);
-            
+        public void update(NavigateToPose_Response message) {
             poseNum++;
             if ((poseNum >= waypoint.getPoseList().size())) {
                 poseNum = 0;
@@ -94,5 +89,4 @@ public class GoalManager {
             }
         }
     };
-
 }

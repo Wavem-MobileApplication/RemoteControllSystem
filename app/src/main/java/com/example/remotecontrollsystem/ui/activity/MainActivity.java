@@ -1,11 +1,15 @@
 package com.example.remotecontrollsystem.ui.activity;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remotecontrollsystem.BuildConfig;
 import com.example.remotecontrollsystem.R;
@@ -34,9 +38,7 @@ public class MainActivity extends AppCompatActivity {
         settingMqttViewModel();
 
         Log.d("경로", BuildConfig.APPLICATION_ID);
-
     }
-
 
     private void init() {
         // Initialize ViewPager2
@@ -89,12 +91,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void settingMqttViewModel() {
-        topicViewModel = new TopicViewModel(getApplication());
+        topicViewModel = new ViewModelProvider(this).get(TopicViewModel.class);
         topicViewModel.getAllTopics().observe(MainActivity.this, new Observer<List<Topic>>() {
             @Override
             public void onChanged(List<Topic> topics) {
                 Mqtt.getInstance().setTopicList(topics);
             }
         });
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View focusView = getCurrentFocus();
+        if (focusView != null) {
+            Rect rect = new Rect();
+            focusView.getGlobalVisibleRect(rect);
+            int x = (int) ev.getX(), y = (int) ev.getY();
+            if (!rect.contains(x, y)) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null)
+                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                focusView.clearFocus();
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

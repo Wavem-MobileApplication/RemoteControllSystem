@@ -20,7 +20,7 @@
         app:layout_constraintWidth_percent="0.6" />
 
     <FrameLayout
-        android:id="@+id/frame_camera_front_main"
+        android:id="@+id/front_camera_main_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -28,13 +28,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
         android:background="@color/material_dynamic_neutral95"
-        app:layout_constraintBottom_toTopOf="@+id/frame_camera_rear_main"
+        app:layout_constraintBottom_toTopOf="@+id/rear_camera_main_view"
         app:layout_constraintEnd_toStartOf="@+id/frame_map_main"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
-        android:id="@+id/frame_camera_rear_main"
+        android:id="@+id/rear_camera_main_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -44,12 +44,11 @@
         app:layout_constraintBottom_toBottomOf="@+id/frame_map_main"
         app:layout_constraintEnd_toStartOf="@+id/frame_map_main"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frame_camera_front_main" />
+        app:layout_constraintTop_toBottomOf="@+id/front_camera_main_view" />
 
     <fragment
         android:id="@+id/frame_robot_status"
         android:name="com.example.remotecontrollsystem.ui.fragment.dashboard.DrivingStatusFragment"
-        tools:layout="@layout/fragment_driving_status"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -58,8 +57,9 @@
         android:background="@color/material_dynamic_neutral95"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frame_map_main"
         app:layout_constraintWidth_percent="0.45"
-        app:layout_constraintTop_toBottomOf="@+id/frame_camera_rear_main" />
+        tools:layout="@layout/fragment_driving_status" />
 
     <fragment
         android:layout_width="0dp"

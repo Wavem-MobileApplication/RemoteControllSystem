@@ -19,7 +19,6 @@ import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.Pose;
 import com.example.remotecontrollsystem.mqtt.utils.RosMath;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
-import com.google.gson.Gson;
 
 public class PoseJoystickView extends View {
     private static final String TAG = PoseJoystickView.class.getSimpleName();
@@ -148,11 +147,12 @@ public class PoseJoystickView extends View {
         waypointViewModel.addPoseToNewWaypoint(pose);
     }
 
-    private Observer mapObserver = new Observer() {
+    private final Observer<GetMap_Response> mapObserver = new Observer<GetMap_Response>() {
         @Override
-        public void update(String message) {
-/*            GetMap_Response response = new Gson().fromJson(message, GetMap_Response.class);
-            resolution = response.getMap().getInfo().getResolution();*/
+        public void update(GetMap_Response response) {
+            if (response != null) {
+                resolution = response.getMap().getInfo().getResolution();
+            }
         }
     };
 
