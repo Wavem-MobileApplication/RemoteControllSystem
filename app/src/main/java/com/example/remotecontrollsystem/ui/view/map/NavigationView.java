@@ -104,7 +104,7 @@ public class NavigationView extends androidx.appcompat.widget.AppCompatImageView
     }
 
     public void updateMap() {
-        
+
     }
 
     public void updateRobotPose() {
