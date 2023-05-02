@@ -1,6 +1,7 @@
 package com.example.remotecontrollsystem.mqtt;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.example.remotecontrollsystem.model.entity.Topic;
@@ -17,8 +18,7 @@ import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -28,11 +28,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public class Mqtt {
     private static final String TAG = Mqtt.class.getSimpleName();
@@ -41,7 +40,7 @@ public class Mqtt {
     public static final String FEEDBACK = "/feedback";
     public static final String RESPONSE = "/response";
     private static Mqtt instance;
-    private MqttClient client;
+    private MqttAndroidClient client;
 
     private HashMap<String, MessagePublisher<RosMessage>> messagePublishers;
     private HashMap<String, RosMessageDefinition> topicMap;
@@ -63,65 +62,47 @@ public class Mqtt {
     }
 
     public void connectToMqttServer(Context context, String address) {
-        Disposable backgroundTask = Observable.fromCallable(() -> {
-            try {
-                Log.d(TAG, "Try to connect mqtt server -> " + address);
+        Log.d(TAG, "Try to connect mqtt server -> " + address);
 
-                // If MqttClient is already connected, disconnect client
-                if (client != null && client.isConnected()) {
-                    client.disconnect();
-                    client = null;
-                }
-
-                MqttConnectOptions connOpts = new MqttConnectOptions();
-
-//                client = new MqttAndroidClient(context, address, CLIENT_NAME);
-                client = new MqttClient(address, CLIENT_NAME, null);
-
-//                IMqttToken token = client.connect(connOpts);
-/*                token.setActionCallback(new IMqttActionListener() {
-                    @Override
-                    public void onSuccess(IMqttToken asyncActionToken) {
-
-                    }
-
-                    @Override
-                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-
-                    }
-                });*/
-
-                client.setCallback(new MqttCallback() {
-                    @Override
-                    public void connectionLost(Throwable cause) {
-                        Log.d("Connection Lost", cause.getMessage());
-                        cause.printStackTrace();
-                    }
-                    @Override
-                    public void messageArrived(String topic, MqttMessage message) throws Exception {}
-                    @Override
-                    public void deliveryComplete(IMqttDeliveryToken token) {}
-                });
-
-                client.connect();
-
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                return false;
+        client = new MqttAndroidClient(context, address, CLIENT_NAME);
+        client.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {}
+            @Override
+            public void connectionLost(Throwable cause) {
+                ToastMessage.showToast(context, "차량과 연결이 끊겼습니다.");
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe((result) -> {
-            if (result) {
-                Log.d(TAG, "Success to connect MQTT server...");
-                ToastMessage.showToast(context, "차량에 연결하였습니다.");
-                sendRosMessageInit();
-                startToSubscribe();
-            } else {
-                Log.d(TAG, "Failed to connect MQTT server...");
-                ToastMessage.showToast(context, "차량 연결에 실패하였습니다.");
-            }
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {}
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {}
         });
+
+        MqttConnectOptions connOpts = new MqttConnectOptions();
+        connOpts.setCleanSession(true);
+        connOpts.setConnectionTimeout(5000);
+
+        try {
+            client.connect(connOpts, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    ToastMessage.showToast(context, "차량과 연결되었습니다.");
+
+                    try {
+                        sendRosMessageInit();
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    }
+                    startToSubscribe();
+                }
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    ToastMessage.showToast(context, "차량 연결에 실패했습니다.");
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendRosMessageInit() throws MqttException {
@@ -137,11 +118,14 @@ public class Mqtt {
     }
 
     private void startToSubscribe() {
+        float interval = 200;
+
         ArrayList<String> topicFilters = new ArrayList<>();
         ArrayList<Integer> qosFilters = new ArrayList<>();
         ArrayList<IMqttMessageListener> listeners = new ArrayList<>();
 
         for (Map.Entry<String, RosMessageDefinition> entry : topicMap.entrySet()) {
+            final long[] preTime = {0};
             String funcName = entry.getKey();
             String type = entry.getValue().getType();
             String topicName = entry.getValue().getName();
@@ -152,8 +136,14 @@ public class Mqtt {
                     topicFilters.add(topicName);
                     qosFilters.add(qos);
                     listeners.add((topic, message) -> {
-                        RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName);
-                        messagePublishers.get(funcName).postValue(rosMessage);
+                        long currentTime = System.currentTimeMillis();
+
+                        if (currentTime - preTime[0] > interval) {
+                            Log.d(topic, message.toString());
+                            RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName);
+                            messagePublishers.get(funcName).postValue(rosMessage);
+                            preTime[0] = currentTime;
+                        }
                     });
                     break;
                 case TopicType.CALL:
@@ -168,8 +158,13 @@ public class Mqtt {
                     topicFilters.add(topicName + FEEDBACK);
                     qosFilters.add(qos);
                     listeners.add((topic, message) -> {
-                        RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + FEEDBACK);
-                        messagePublishers.get(funcName + FEEDBACK).postValue(rosMessage);
+                        long currentTime = System.currentTimeMillis();
+
+                        if (currentTime - preTime[0] > interval) {
+                            RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + FEEDBACK);
+                            messagePublishers.get(funcName + FEEDBACK).postValue(rosMessage);
+                            preTime[0] = currentTime;
+                        }
                     });
 
                     topicFilters.add(topicName + RESPONSE);

@@ -108,4 +108,10 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
             }
         }
     };
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        responsePublisher.detach(mapObserver);
+    }
 }

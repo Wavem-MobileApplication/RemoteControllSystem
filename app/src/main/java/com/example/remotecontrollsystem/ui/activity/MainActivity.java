@@ -19,12 +19,14 @@ import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
 import com.example.remotecontrollsystem.mqtt.Mqtt;
 import com.example.remotecontrollsystem.ui.dialog.MqttConnectFragment;
 import com.example.remotecontrollsystem.ui.util.ToastMessage;
+import com.example.remotecontrollsystem.viewmodel.ConnectionViewModel;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private TopicViewModel topicViewModel;
+    private ConnectionViewModel connectionViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +98,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<Topic> topics) {
                 Mqtt.getInstance().setTopicList(topics);
+            }
+        });
+
+        connectionViewModel = new ViewModelProvider(this).get(ConnectionViewModel.class);
+        connectionViewModel.getMqttUrl().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String url) {
+                Mqtt.getInstance().connectToMqttServer(getApplicationContext(), url);
             }
         });
     }
