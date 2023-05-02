@@ -1,27 +1,18 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-import android.util.Log;
-
-import com.example.remotecontrollsystem.mqtt.Mqtt;
 import com.example.remotecontrollsystem.mqtt.manager.MessageManager;
-import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.google.gson.Gson;
 
 public class RosMessage {
-    private final Gson gson;
-
-    public RosMessage() {
-        gson = new Gson();
-    }
 
     public String toJson(Object message) {
-        return gson.toJson(message);
+        return new Gson().toJson(message);
     }
 
     public RosMessage fromJson(String json, String widgetType) {
 /*        if (widgetType.equals(WidgetType.LASER_SCAN.getType())) {
             Log.d("LaserScan", json);
         }*/
-        return gson.fromJson(json, MessageManager.getMessageClassFromWidgetType(widgetType));
+        return new Gson().fromJson(json, MessageManager.getMessageClassFromWidgetType(widgetType));
     }
 }
