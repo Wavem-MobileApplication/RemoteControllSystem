@@ -151,8 +151,8 @@ public class ManualControlFragment extends Fragment {
             String linear = String.format(Locale.KOREA, "%.2f m/s", linearVel);
             String angular = String.format(Locale.KOREA, "%.2f m/s", angularVel);
 
-            binding.tvCurrentLinearVel.setText(linear);
-            binding.tvCurrentAngularVel.setText(angular);
+            binding.tvCurrentLinearVel.post(() -> binding.tvCurrentLinearVel.setText(linear));
+            binding.tvCurrentAngularVel.post(() -> binding.tvCurrentAngularVel.setText(angular));
         }
     };
 

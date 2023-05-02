@@ -1,5 +1,6 @@
 package com.example.remotecontrollsystem.mqtt.data;
 
+import com.example.remotecontrollsystem.model.utils.LambdaTask;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessage;
 
 import java.util.ArrayList;

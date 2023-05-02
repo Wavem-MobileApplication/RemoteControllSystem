@@ -73,14 +73,16 @@ public class DrivingDistanceTextView extends androidx.appcompat.widget.AppCompat
             preX = newX; // 직전 데이터 현재 데이터로 업데이트
             preY = newY;
 
-            String formattedNum = String.format(Locale.KOREA, "%.2f km", mileage / 1000);
-            setText(formattedNum);
+            String formattedNum = String.format(Locale.KOREA, "%.2fkm", mileage / 1000);
+            if (formattedNum != null && !formattedNum.isEmpty()) {
+                post(() -> setText(formattedNum));
+            }
         }
     };
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-//        odomPublisher.detach(odomObserver);
+        odomPublisher.detach(odomObserver);
     }
 }

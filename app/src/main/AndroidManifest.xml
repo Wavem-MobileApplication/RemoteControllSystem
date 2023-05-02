@@ -18,6 +18,9 @@
         android:theme="@style/Theme.RemoteControllSystem"
         tools:targetApi="31">
 
+        <service android:name="org.eclipse.paho.android.service.MqttService" >
+        </service>
+
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true">

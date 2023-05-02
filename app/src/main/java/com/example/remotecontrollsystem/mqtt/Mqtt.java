@@ -12,8 +12,11 @@ import com.example.remotecontrollsystem.ui.util.ToastMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -72,8 +75,21 @@ public class Mqtt {
 
                 MqttConnectOptions connOpts = new MqttConnectOptions();
 
+//                client = new MqttAndroidClient(context, address, CLIENT_NAME);
                 client = new MqttClient(address, CLIENT_NAME, null);
-                client.connect(connOpts);
+
+//                IMqttToken token = client.connect(connOpts);
+/*                token.setActionCallback(new IMqttActionListener() {
+                    @Override
+                    public void onSuccess(IMqttToken asyncActionToken) {
+
+                    }
+
+                    @Override
+                    public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+
+                    }
+                });*/
 
                 client.setCallback(new MqttCallback() {
                     @Override
@@ -86,6 +102,8 @@ public class Mqtt {
                     @Override
                     public void deliveryComplete(IMqttDeliveryToken token) {}
                 });
+
+                client.connect();
 
                 return true;
             } catch (Exception e) {
