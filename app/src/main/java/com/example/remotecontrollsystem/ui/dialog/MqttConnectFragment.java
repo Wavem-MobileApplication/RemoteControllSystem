@@ -16,8 +16,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remotecontrollsystem.databinding.FragmentMqttConnectBinding;
-import com.example.remotecontrollsystem.mqtt.Mqtt;
-import com.example.remotecontrollsystem.viewmodel.ConnectionViewModel;
+import com.example.remotecontrollsystem.ui.viewmodel.ConnectionViewModel;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -159,5 +158,12 @@ public class MqttConnectFragment extends DialogFragment {
         editor.putString(LAST_USED_FRONT_URL_TAG, binding.etRtspFrontUrl.getText().toString());
         editor.putString(LAST_USED_REAR_URL_TAG, binding.etRtspRearUrl.getText().toString());
         editor.apply();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        binding = null;
     }
 }

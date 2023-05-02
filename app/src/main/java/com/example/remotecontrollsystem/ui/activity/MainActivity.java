@@ -18,8 +18,7 @@ import com.example.remotecontrollsystem.model.entity.Topic;
 import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
 import com.example.remotecontrollsystem.mqtt.Mqtt;
 import com.example.remotecontrollsystem.ui.dialog.MqttConnectFragment;
-import com.example.remotecontrollsystem.ui.util.ToastMessage;
-import com.example.remotecontrollsystem.viewmodel.ConnectionViewModel;
+import com.example.remotecontrollsystem.ui.viewmodel.ConnectionViewModel;
 
 import java.util.List;
 
@@ -65,9 +64,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-
-        // Initialize ToastMessage
-        ToastMessage.setContext(getApplicationContext());
     }
 
     private void settingWindowFullScreen() {
@@ -125,5 +121,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

@@ -139,7 +139,7 @@ public class Mqtt {
                         long currentTime = System.currentTimeMillis();
 
                         if (currentTime - preTime[0] > interval) {
-                            Log.d(topic, message.toString());
+//                            Log.d(topic, message.toString());
                             RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName);
                             messagePublishers.get(funcName).postValue(rosMessage);
                             preTime[0] = currentTime;

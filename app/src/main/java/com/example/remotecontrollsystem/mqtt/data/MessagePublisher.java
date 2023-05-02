@@ -18,17 +18,10 @@ public class MessagePublisher<T extends RosMessage> implements Subject<T> {
     private final CopyOnWriteArrayList<Observer<T>> observerList = new CopyOnWriteArrayList<>();
     private T oldData;
 
-    private ThreadPoolExecutor mExecutor;
-
-    public MessagePublisher() {
-        mExecutor = new ThreadPoolExecutor(2, 4, 20L,
-                TimeUnit.SECONDS, new LinkedBlockingDeque<Runnable>(20));
-    }
-
     @Override
     public synchronized void attach(Observer<T> observer) {
         if (oldData != null) {
-            mExecutor.execute(() -> observer.update(oldData));
+            observer.update(oldData);
         }
         observerList.add(observer);
     }
@@ -41,10 +34,8 @@ public class MessagePublisher<T extends RosMessage> implements Subject<T> {
     @Override
     public void postValue(T message) {
         oldData = message;
-        mExecutor.execute(() -> {
-            for (Observer<T> observer : observerList) {
-                observer.update(message);
-            }
-        });
+        for (Observer<T> observer : observerList) {
+            observer.update(message);
+        }
     }
 }

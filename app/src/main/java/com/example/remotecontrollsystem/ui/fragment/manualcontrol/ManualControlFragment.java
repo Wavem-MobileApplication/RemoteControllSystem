@@ -23,7 +23,7 @@ import com.example.remotecontrollsystem.mqtt.msgs.Odometry;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
 import com.example.remotecontrollsystem.ui.view.status.CameraView;
-import com.example.remotecontrollsystem.viewmodel.ConnectionViewModel;
+import com.example.remotecontrollsystem.ui.viewmodel.ConnectionViewModel;
 
 import java.util.Locale;
 
@@ -194,5 +194,11 @@ public class ManualControlFragment extends Fragment {
 
         linearMaxVel.postValue(linear);
         angularMaxVel.postValue(angular);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

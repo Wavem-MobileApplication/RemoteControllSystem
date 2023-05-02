@@ -1,6 +1,7 @@
 package com.example.remotecontrollsystem.ui.view.map;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -57,6 +58,7 @@ public class GoalFrameView extends FrameLayout {
         super.onAttachedToWindow();
 
         setClickable(false);
+        Log.d(TAG, "onAttachToWindow");
 
         routeViewModel.getCurrentRoute().observe(activity, currentRouteObserver);
         waypointViewModel.getNewWaypoint().observe(activity, newWaypointObserver);
@@ -122,6 +124,7 @@ public class GoalFrameView extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        Log.d(TAG, "onDetachedFromWindow");
         routeViewModel.getCurrentRoute().removeObserver(currentRouteObserver);
         mapResponse.detach(mapObserver);
     }

@@ -53,7 +53,7 @@ public class CameraView extends VLCVideoLayout {
         }
 
         if (textView == null) {
-            textView =  new TextView(getContext());
+            textView = new TextView(getContext());
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             textView.setTextAlignment(TEXT_ALIGNMENT_CENTER);
             textView.setGravity(Gravity.CENTER_VERTICAL);
@@ -108,13 +108,15 @@ public class CameraView extends VLCVideoLayout {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+
+
+        if (mediaPlayer != null && !mediaPlayer.isReleased()) {
             mediaPlayer.stop();
             mediaPlayer.detachViews();
             mediaPlayer.release();
         }
 
-        if (libVlc != null && libVlc.retain()) {
+        if (libVlc != null && !libVlc.isReleased()) {
             libVlc.release();
         }
     }

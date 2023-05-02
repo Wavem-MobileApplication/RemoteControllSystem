@@ -14,9 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.remotecontrollsystem.databinding.FragmentDashboardBinding;
 import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
 import com.example.remotecontrollsystem.ui.view.status.CameraView;
-import com.example.remotecontrollsystem.viewmodel.ConnectionViewModel;
-
-import org.videolan.libvlc.Dialog;
+import com.example.remotecontrollsystem.ui.viewmodel.ConnectionViewModel;
 
 
 public class DashboardFragment extends Fragment {
@@ -103,5 +101,12 @@ public class DashboardFragment extends Fragment {
         Log.d("대시보드", "Pause");
         connectionViewModel.getRtspFrontUrl().removeObserver(frontUrlObserver);
         connectionViewModel.getRtspRearUrl().removeObserver(rearUrlObserver);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        connectionViewModel = null;
     }
 }

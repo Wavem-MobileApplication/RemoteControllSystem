@@ -82,4 +82,10 @@ public class DefaultDialog extends Dialog {
     public interface OnNegativeButtonClickListener {
         void onClick();
     }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        binding = null;
+    }
 }
