@@ -1,9 +1,11 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
 
+import com.google.gson.Gson;
+
 import java.util.Map;
 
-public class LaserScan extends RosMessage{
+public class LaserScan extends RosMessage {
     private Header header;
     private float angle_min;
     private float angle_max;
@@ -97,5 +99,10 @@ public class LaserScan extends RosMessage{
 
     public void setIntensities(Map<String, Float> intensities) {
         this.intensities = intensities;
+    }
+
+    @Override
+    public RosMessage fromJson(String json) {
+        return new Gson().fromJson(json, LaserScan.class);
     }
 }

@@ -1,6 +1,8 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class NavigateToPose_Request extends RosMessage{
+import com.google.gson.Gson;
+
+public class NavigateToPose_Request extends RosMessage {
     private PoseStamped pose;
     private String behavior_tree;
 
@@ -23,5 +25,10 @@ public class NavigateToPose_Request extends RosMessage{
 
     public void setBehavior_tree(String behavior_tree) {
         this.behavior_tree = behavior_tree;
+    }
+
+    @Override
+    public RosMessage fromJson(String json) {
+        return new Gson().fromJson(json, NavigateToPose_Request.class);
     }
 }

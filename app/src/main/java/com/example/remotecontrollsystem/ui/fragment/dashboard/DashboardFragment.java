@@ -12,9 +12,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remotecontrollsystem.databinding.FragmentDashboardBinding;
+import com.example.remotecontrollsystem.mqtt.msgs.Pose;
+import com.example.remotecontrollsystem.mqtt.msgs.RosMessage;
+import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
 import com.example.remotecontrollsystem.ui.view.status.CameraView;
 import com.example.remotecontrollsystem.viewmodel.ConnectionViewModel;
+import com.example.remotecontrollsystem.viewmodel.MqttSubViewModel;
 
 import org.videolan.libvlc.Dialog;
 
@@ -22,6 +26,8 @@ import org.videolan.libvlc.Dialog;
 public class DashboardFragment extends Fragment {
     private static final String FRAGMENT_TAG = "대시보드";
     private FragmentDashboardBinding binding;
+
+    private MqttSubViewModel mqttSubViewModel;
     private ConnectionViewModel connectionViewModel;
 
     public static DashboardFragment newInstance(int num) {
@@ -47,6 +53,7 @@ public class DashboardFragment extends Fragment {
         binding.getRoot().setTag(FRAGMENT_TAG);
 
         connectionViewModel = new ViewModelProvider(requireActivity()).get(ConnectionViewModel.class);
+        mqttSubViewModel = new ViewModelProvider(requireActivity()).get(MqttSubViewModel.class);
 
         init();
         settingCameras();
@@ -57,14 +64,25 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        settingCameras();
+//        settingCameras();
         Log.d("대시보드", "Resume");
     }
 
     private void init() {
         MapFrameLayout mapFrameLayout = new MapFrameLayout(requireContext(), (AppCompatActivity) requireActivity());
         binding.frameMapMain.addView(mapFrameLayout);
+
+        mqttSubViewModel.getRosMessagePublisher(WidgetType.ROBOT_POSE.getType()).observe(requireActivity(), robotPoseObserver);
     }
+
+    private final Observer<RosMessage> robotPoseObserver = new Observer<RosMessage>() {
+        @Override
+        public void onChanged(RosMessage rosMessage) {
+            if (rosMessage instanceof Pose) {
+                Pose pose = (Pose) rosMessage;
+            }
+        }
+    };
 
     private void settingCameras() {
         connectionViewModel.getRtspFrontUrl().observe(requireActivity(), frontUrlObserver);

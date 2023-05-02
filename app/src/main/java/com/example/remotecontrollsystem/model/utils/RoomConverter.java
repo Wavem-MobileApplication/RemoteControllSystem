@@ -1,7 +1,8 @@
 package com.example.remotecontrollsystem.model.utils;
 
+import android.util.Log;
+
 import androidx.room.ProvidedTypeConverter;
-import androidx.room.RawQuery;
 import androidx.room.TypeConverter;
 
 import com.example.remotecontrollsystem.model.entity.Waypoint;
@@ -39,7 +40,10 @@ public class RoomConverter {
 
     @TypeConverter
     public static String fromPoseToJson(List<Pose> poseList) {
-        return new Gson().toJson(poseList);
+        Type type = new TypeToken<List<Pose>>() {}.getType();
+        String json = new Gson().toJson(poseList, type);
+        Log.d("Parse Pose List", json);
+        return json;
     }
 
     @TypeConverter

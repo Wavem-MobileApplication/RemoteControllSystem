@@ -76,12 +76,12 @@ public class WaypointDialogFragment extends DialogFragment {
         waypointViewModel = new ViewModelProvider(requireActivity()).get(WaypointViewModel.class);
 
         // Initialize no navigation bar setting
-        DialogUtil.settingNoNavigationBarScreen(getDialog());
+        DialogUtil.settingNoNavigationBarScreen(requireDialog());
     }
 
     private void adjustDialogSize() {
         // Get device's size
-        WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) requireActivity().getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         Point displaySize = new Point();
         display.getSize(displaySize);

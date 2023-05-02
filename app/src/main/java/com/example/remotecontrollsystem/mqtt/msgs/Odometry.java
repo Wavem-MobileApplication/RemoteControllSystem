@@ -1,6 +1,8 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class Odometry extends RosMessage{
+import com.google.gson.Gson;
+
+public class Odometry extends RosMessage {
     Header header;
     String child_frame_id;
     PoseWithCovariance pose;
@@ -43,5 +45,10 @@ public class Odometry extends RosMessage{
 
     public void setTwist(TwistWithCovariance twist) {
         this.twist = twist;
+    }
+
+    @Override
+    public RosMessage fromJson(String json) {
+        return new Gson().fromJson(json, Odometry.class);
     }
 }

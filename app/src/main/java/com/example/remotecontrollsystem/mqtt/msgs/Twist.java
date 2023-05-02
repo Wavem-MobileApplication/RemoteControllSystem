@@ -1,6 +1,8 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class Twist extends RosMessage{
+import com.google.gson.Gson;
+
+public class Twist extends RosMessage {
     Vector3 linear;
     Vector3 angular;
 
@@ -23,5 +25,10 @@ public class Twist extends RosMessage{
 
     public void setAngular(Vector3 angular) {
         this.angular = angular;
+    }
+
+    @Override
+    public RosMessage fromJson(String json) {
+        return new Gson().fromJson(json, Twist.class);
     }
 }

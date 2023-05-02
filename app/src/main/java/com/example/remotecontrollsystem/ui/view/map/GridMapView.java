@@ -23,7 +23,7 @@ import java.util.stream.IntStream;
 
 public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
     private static final String TAG = GridMapView.class.getSimpleName();
-    private MessagePublisher responsePublisher;
+    private MessagePublisher<GetMap_Response> mapPublisher;
 
     public GridMapView(@NonNull Context context) {
         super(context);
@@ -36,7 +36,7 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
     }
 
     private void init() {
-        responsePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
+        mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
 
 //        post(() -> setClickable(false));
 
@@ -50,7 +50,7 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        responsePublisher.attach(mapObserver);
+        mapPublisher.attach(mapObserver);
     }
 
     @Override
@@ -108,4 +108,10 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
             }
         }
     };
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mapPublisher.detach(mapObserver);
+    }
 }

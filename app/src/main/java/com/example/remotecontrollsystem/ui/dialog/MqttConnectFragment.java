@@ -36,6 +36,7 @@ public class MqttConnectFragment extends DialogFragment {
     private ConnectionViewModel connectionViewModel;
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,7 +61,8 @@ public class MqttConnectFragment extends DialogFragment {
 
     private void settingClickEvents() {
         binding.btnMqttConnect.setOnClickListener(view -> {
-            Mqtt.getInstance().connectToMqttServer(requireContext(), binding.etMqttAddress.getText().toString());
+//            Mqtt.getInstance().connectToMqttServer(requireContext(), binding.etMqttAddress.getText().toString());
+            connectionViewModel.changeMqttUrl(binding.etMqttAddress.getText().toString());
             saveMqttIpAddressPreference();
         });
 
@@ -159,4 +161,5 @@ public class MqttConnectFragment extends DialogFragment {
         editor.putString(LAST_USED_REAR_URL_TAG, binding.etRtspRearUrl.getText().toString());
         editor.apply();
     }
+
 }

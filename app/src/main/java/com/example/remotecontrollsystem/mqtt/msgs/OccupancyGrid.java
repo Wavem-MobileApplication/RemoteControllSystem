@@ -1,5 +1,7 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
+import com.google.gson.Gson;
+
 import java.util.Map;
 
 public class OccupancyGrid extends RosMessage {
@@ -34,5 +36,10 @@ public class OccupancyGrid extends RosMessage {
 
     public void setData(int[] data) {
         this.data = data;
+    }
+
+    @Override
+    public RosMessage fromJson(String json) {
+        return new Gson().fromJson(json, OccupancyGrid.class);
     }
 }

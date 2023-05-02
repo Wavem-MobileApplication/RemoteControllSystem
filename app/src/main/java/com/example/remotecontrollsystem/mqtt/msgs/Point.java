@@ -4,7 +4,6 @@ public class Point {
     double x;
     double y;
     double z;
-    double w;
 
     public double getX() {
         return Math.round(x * 10000.0) / 10000.0;
@@ -30,11 +29,4 @@ public class Point {
         this.z = Math.round(z * 10000.0) / 10000.0;
     }
 
-    public double getW() {
-        return Math.round(w * 10000.0) / 10000.0;
-    }
-
-    public void setW(double w) {
-        this.w = Math.round(w * 10000.0) / 10000.0;
-    }
 }

@@ -78,6 +78,7 @@ public class Mqtt {
                 client.setCallback(new MqttCallback() {
                     @Override
                     public void connectionLost(Throwable cause) {
+                        ToastMessage.showToast(context, "차량과의 연결이 끊겼습니다.");
                         Log.d("Connection Lost", cause.getMessage());
                         cause.printStackTrace();
                     }
@@ -134,31 +135,31 @@ public class Mqtt {
                     topicFilters.add(topicName);
                     qosFilters.add(qos);
                     listeners.add((topic, message) -> {
-                        RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName);
-                        messagePublishers.get(funcName).postValue(rosMessage);
+  /*                      RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName);
+                        messagePublishers.get(funcName).postValue(rosMessage);*/
                     });
                     break;
                 case TopicType.CALL:
                     topicFilters.add(topicName + RESPONSE);
                     qosFilters.add(qos);
                     listeners.add((topic, message) -> {
-                        RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + RESPONSE);
-                        messagePublishers.get(funcName + RESPONSE).postValue(rosMessage);
+                        /*RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + RESPONSE);
+                        messagePublishers.get(funcName + RESPONSE).postValue(rosMessage);*/
                     });
                     break;
                 case TopicType.GOAL:
                     topicFilters.add(topicName + FEEDBACK);
                     qosFilters.add(qos);
                     listeners.add((topic, message) -> {
-                        RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + FEEDBACK);
-                        messagePublishers.get(funcName + FEEDBACK).postValue(rosMessage);
+                        /*RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + FEEDBACK);
+                        messagePublishers.get(funcName + FEEDBACK).postValue(rosMessage);*/
                     });
 
                     topicFilters.add(topicName + RESPONSE);
                     qosFilters.add(qos);
                     listeners.add((topic, message) -> {
-                        RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + RESPONSE);
-                        messagePublishers.get(funcName + RESPONSE).postValue(rosMessage);
+/*                        RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + RESPONSE);
+                        messagePublishers.get(funcName + RESPONSE).postValue(rosMessage);*/
                     });
                     break;
             }
@@ -216,53 +217,69 @@ public class Mqtt {
     }
 
     public void publishMessage(String funcName, Object data, int qos, boolean retained) {
-        try {
-            String topicName = topicMap.get(funcName).getName();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("mode", "pub");
-            jsonObject.add("data", new Gson().toJsonTree(data));
-            byte[] payload = jsonObject.toString().getBytes();
+        if (client.isConnected()) {
+            try {
+                String topicName = topicMap.get(funcName).getName();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("mode", "pub");
+                jsonObject.add("data", new Gson().toJsonTree(data));
+                byte[] payload = jsonObject.toString().getBytes();
 
-            client.publish(topicName, payload, qos, retained);
-        } catch (Exception e) {
-            e.printStackTrace();
+                client.publish(topicName, payload, qos, retained);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void sendRequestMessageGoal(String funcName, Object data, int qos, boolean retained) {
-        try {
-            String requestName = topicMap.get(funcName).getName() + REQUEST;
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("mode", "goal");
-            jsonObject.add("data", new Gson().toJsonTree(data));
-            byte[] payload = jsonObject.toString().getBytes();
+        if (client.isConnected()) {
+            try {
+                String requestName = topicMap.get(funcName).getName() + REQUEST;
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("mode", "goal");
+                jsonObject.add("data", new Gson().toJsonTree(data));
+                byte[] payload = jsonObject.toString().getBytes();
 
-            Log.d(funcName, requestName);
+                Log.d(funcName, requestName);
 
-            client.publish(requestName, payload, qos, retained);
-        } catch (Exception e) {
-            e.printStackTrace();
+                client.publish(requestName, payload, qos, retained);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void sendRequestMessageCall(String funcName, Object data, int qos, boolean retained) {
-        try {
-            String requestName = topicMap.get(funcName).getName() + REQUEST;
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("mode", "call");
-            jsonObject.add("data", new Gson().toJsonTree(data));
-            byte[] payload = jsonObject.toString().getBytes();
+        if (client.isConnected()) {
+            try {
+                String requestName = topicMap.get(funcName).getName() + REQUEST;
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("mode", "call");
+                jsonObject.add("data", new Gson().toJsonTree(data));
+                byte[] payload = jsonObject.toString().getBytes();
 
-            Log.d(funcName, requestName);
+                Log.d(funcName, requestName);
 
-            client.publish(requestName, payload, qos, retained);
-        } catch (Exception e) {
-            e.printStackTrace();
+                client.publish(requestName, payload, qos, retained);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public MessagePublisher getMessagePublisher(String widgetName) {
         createMessagePublisher(widgetName);
         return messagePublishers.get(widgetName);
+    }
+
+    public void releaseMqtt() {
+        if (client != null && client.isConnected()) {
+            try {
+                client.disconnect();
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

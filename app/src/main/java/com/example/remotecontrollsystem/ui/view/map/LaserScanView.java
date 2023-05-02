@@ -28,6 +28,12 @@ public class LaserScanView extends View {
     private static final String TAG = LaserScanView.class.getSimpleName();
     private static final int STROKE = 3;
 
+    private MessagePublisher<LaserScan> scanPublisher;
+    private MessagePublisher<GetMap_Response> mapPublisher;
+    private MessagePublisher<Pose> robotPosePublisher;
+    private MessagePublisher<TFMessage> tfPublisher;
+
+
     private String frameId = "";
     private float[] scanX;
     private float[] scanY;
@@ -69,10 +75,10 @@ public class LaserScanView extends View {
     }
 
     private void startObserve() {
-        MessagePublisher<LaserScan> scanPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.LASER_SCAN.getType());
-        MessagePublisher<GetMap_Response> mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
-        MessagePublisher<Pose> robotPosePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.ROBOT_POSE.getType());
-        MessagePublisher<TFMessage> tfPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.TF_STATIC.getType());
+        scanPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.LASER_SCAN.getType());
+        mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
+        robotPosePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.ROBOT_POSE.getType());
+        tfPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.TF_STATIC.getType());
 
         scanPublisher.attach(scanObserver);
         mapPublisher.attach(mapObserver);
@@ -153,8 +159,17 @@ public class LaserScanView extends View {
 
         if (scanX != null) {
             for (int i = 0; i < scanX.length; i += STROKE) {
-                canvas.drawPoint(scanX[i] + poseX - tfX, scanY[i] + poseY - tfY, paint);
+                canvas.drawPoint(scanX[i] + poseX + tfX, scanY[i] + poseY + tfY, paint);
             }
         }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        scanPublisher.detach(scanObserver);
+        mapPublisher.detach(mapObserver);
+        robotPosePublisher.detach(robotPoseObserver);
+        tfPublisher.detach(tfObserver);
     }
 }

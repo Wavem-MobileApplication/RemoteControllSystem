@@ -1,7 +1,11 @@
 package com.example.remotecontrollsystem.ui.activity;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,15 +20,26 @@ import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.ActivityMainBinding;
 import com.example.remotecontrollsystem.model.entity.Topic;
 import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
+import com.example.remotecontrollsystem.mqtt.AndroidMqttService;
 import com.example.remotecontrollsystem.mqtt.Mqtt;
+import com.example.remotecontrollsystem.mqtt.MqttService;
 import com.example.remotecontrollsystem.ui.dialog.MqttConnectFragment;
 import com.example.remotecontrollsystem.ui.util.ToastMessage;
+import com.example.remotecontrollsystem.viewmodel.ConnectionViewModel;
+import com.example.remotecontrollsystem.viewmodel.MqttSubViewModel;
+import com.example.remotecontrollsystem.viewmodel.RobotStatusViewModel;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    private AndroidMqttService mqttService;
     private TopicViewModel topicViewModel;
+    private ConnectionViewModel connectionViewModel;
+    private MqttSubViewModel mqttSubViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +47,16 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Initialize default setting
         init();
         settingWindowFullScreen();
         settingClickEvents();
-        settingMqttViewModel();
+        settingViewModel();
+
+        // Service binding
+        Intent intent = new Intent(getApplicationContext(), MqttService.class);
+        startService(intent);
+        bindService(intent, conn, BIND_AUTO_CREATE);
 
         Log.d("경로", BuildConfig.APPLICATION_ID);
     }
@@ -90,15 +111,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void settingMqttViewModel() {
+    private void settingViewModel() {
         topicViewModel = new ViewModelProvider(this).get(TopicViewModel.class);
-        topicViewModel.getAllTopics().observe(MainActivity.this, new Observer<List<Topic>>() {
-            @Override
-            public void onChanged(List<Topic> topics) {
-                Mqtt.getInstance().setTopicList(topics);
-            }
+        mqttSubViewModel = new ViewModelProvider(this).get(MqttSubViewModel.class);
+
+        connectionViewModel = new ViewModelProvider(this).get(ConnectionViewModel.class);
+        connectionViewModel.getMqttUrl().observe(this, url ->  {
+            mqttService.connectToMqttBroker(url, topicViewModel.getAllTopics().getValue(), mqttSubViewModel);
         });
     }
+
+    private ServiceConnection conn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            AndroidMqttService.MqttBinder mb = (AndroidMqttService.MqttBinder) iBinder;
+            mqttService = mb.getService();
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {}
+    };
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {

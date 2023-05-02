@@ -81,6 +81,6 @@ public class DrivingDistanceTextView extends androidx.appcompat.widget.AppCompat
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-//        odomPublisher.detach(odomObserver);
+        odomPublisher.detach(odomObserver);
     }
 }

@@ -28,17 +28,21 @@ public class NavigationView extends androidx.appcompat.widget.AppCompatImageView
 
     public NavigationView(@NonNull Context context) {
         super(context);
-        init();
     }
 
     public NavigationView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+
+        mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
+        robotPosePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.ROBOT_POSE.getType());
+
+        mapPublisher.attach(mapObserver);
+        robotPosePublisher.attach(robotPoseObserver);
 
         setImageResource(R.drawable.icon_navigation);
         getLayoutParams().width = DEFAULT_ICON_SIZE;
@@ -50,14 +54,6 @@ public class NavigationView extends androidx.appcompat.widget.AppCompatImageView
         super.onLayout(changed, left, top, right, bottom);
 
         updateNavigationPosition(-100, -100, 1, 0);
-    }
-
-    private void init() {
-        mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
-        robotPosePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.ROBOT_POSE.getType());
-
-        mapPublisher.attach(mapObserver);
-        robotPosePublisher.attach(robotPoseObserver);
     }
 
     private final Observer<GetMap_Response> mapObserver = new Observer<GetMap_Response>() {
@@ -97,5 +93,21 @@ public class NavigationView extends androidx.appcompat.widget.AppCompatImageView
         setX(navX);
         setY(navY);
         setRotation(degree + originDegree + 90);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        mapPublisher.detach(mapObserver);
+        robotPosePublisher.detach(robotPoseObserver);
+    }
+
+    public void updateMap() {
+        
+    }
+
+    public void updateRobotPose() {
+
     }
 }

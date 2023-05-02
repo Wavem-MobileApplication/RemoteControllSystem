@@ -1,5 +1,7 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
+import com.google.gson.Gson;
+
 public class NavigateToPose_FeedBack extends RosMessage {
     PoseStamped current_pose;
     Duration navigation_time;
@@ -41,5 +43,10 @@ public class NavigateToPose_FeedBack extends RosMessage {
 
     public void setDistance_remaining(float distance_remaining) {
         this.distance_remaining = distance_remaining;
+    }
+
+    @Override
+    public RosMessage fromJson(String json) {
+        return new Gson().fromJson(json, NavigateToPose_FeedBack.class);
     }
 }

@@ -1,6 +1,8 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class Pose extends RosMessage{
+import com.google.gson.Gson;
+
+public class Pose extends RosMessage {
     private Point position;
     private Quaternion orientation;
 
@@ -23,5 +25,10 @@ public class Pose extends RosMessage{
 
     public void setOrientation(Quaternion orientation) {
         this.orientation = orientation;
+    }
+
+    @Override
+    public RosMessage fromJson(String json) {
+        return new Gson().fromJson(json, Pose.class);
     }
 }

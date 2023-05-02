@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.remotecontrollsystem.mqtt.msgs.Pose;
 import com.example.remotecontrollsystem.ui.util.GestureUtil;
 
 
@@ -18,6 +19,11 @@ public class MapFrameLayout extends FrameLayout {
     private ScaleGestureDetector scaleDetector;
 
     private PoseJoystickView poseJoystickView;
+    private GoalFrameView goalFrameView;
+
+    private GridMapView gridMapView;
+    private NavigationView navigationView;
+    private LaserScanView laserScanView;
 
     public MapFrameLayout(@NonNull Context context, AppCompatActivity activity) {
         super(context);
@@ -28,14 +34,18 @@ public class MapFrameLayout extends FrameLayout {
         settingGestures();
         setRotationX(180);
 
-        GridMapView gridMapView = new GridMapView(getContext());
         poseJoystickView = new PoseJoystickView(getContext(), activity);
+        goalFrameView = new GoalFrameView(getContext(), activity);
+
+        gridMapView = new GridMapView(getContext());
+        navigationView = new NavigationView(getContext());
+        laserScanView = new LaserScanView(getContext());
 
         addView(gridMapView);
         addView(poseJoystickView);
-        addView(new NavigationView(getContext()));
-        addView(new GoalFrameView(getContext(), activity));
-        addView(new LaserScanView(getContext()));
+        addView(navigationView);
+        addView(goalFrameView);
+        addView(laserScanView);
 
         gridMapView.addOnLayoutChangeListener((view, i, i1, i2, i3, i4, i5, i6, i7) -> {
             View parent = (View) getParent();
@@ -89,5 +99,9 @@ public class MapFrameLayout extends FrameLayout {
         scaleDetector.onTouchEvent(event);
 
         return true;
+    }
+
+    public void updateRobotPose(Pose pose) {
+
     }
 }
