@@ -26,28 +26,20 @@ import java.util.Map;
 
 public class GoalFrameView extends FrameLayout {
     private static final String TAG = GoalFrameView.class.getSimpleName();
-    private final AppCompatActivity activity;
-    private final RouteViewModel routeViewModel;
-    private final WaypointViewModel waypointViewModel;
-    private final MessagePublisher<GetMap_Response> mapResponse;
+    private AppCompatActivity activity;
+    private RouteViewModel routeViewModel;
+    private WaypointViewModel waypointViewModel;
+    private MessagePublisher<GetMap_Response> mapResponse;
 
     private float resolution = 0.05f;
-    private boolean isLongClicked = false;
 
     private Route curRoute;
     private Waypoint curWaypoint;
-
-    private Map<Waypoint, GoalView> goalViewMap;
-    private Map<Pose, PoseView> poseViewMap;
 
     public GoalFrameView(@NonNull Context context, AppCompatActivity activity) {
         super(context);
 
         this.activity = activity;
-
-        routeViewModel = new ViewModelProvider(activity).get(RouteViewModel.class);
-        waypointViewModel = new ViewModelProvider(activity).get(WaypointViewModel.class);
-        mapResponse = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
 
         curRoute = new Route();
         curWaypoint = new Waypoint();
@@ -57,29 +49,18 @@ public class GoalFrameView extends FrameLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        setClickable(false);
         Log.d(TAG, "onAttachToWindow");
+
+        setClickable(false);
+
+        routeViewModel = new ViewModelProvider(activity).get(RouteViewModel.class);
+        waypointViewModel = new ViewModelProvider(activity).get(WaypointViewModel.class);
+        mapResponse = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
 
         routeViewModel.getCurrentRoute().observe(activity, currentRouteObserver);
         waypointViewModel.getNewWaypoint().observe(activity, newWaypointObserver);
         mapResponse.attach(mapObserver);
     }
-
-    private final Observer<Route> currentRouteObserver = new Observer<Route>() {
-        @Override
-        public void onChanged(Route route) {
-            curRoute = route;
-            updateFlags();
-        }
-    };
-
-    private final Observer<Waypoint> newWaypointObserver = new Observer<Waypoint>() {
-        @Override
-        public void onChanged(Waypoint waypoint) {
-            curWaypoint = waypoint;
-            updateFlags();
-        }
-    };
 
     private void updateFlags() {
         post(this::removeAllViews); // Post
@@ -114,6 +95,22 @@ public class GoalFrameView extends FrameLayout {
         }
     }
 
+    private final Observer<Route> currentRouteObserver = new Observer<Route>() {
+        @Override
+        public void onChanged(Route route) {
+            curRoute = route;
+            updateFlags();
+        }
+    };
+
+    private final Observer<Waypoint> newWaypointObserver = new Observer<Waypoint>() {
+        @Override
+        public void onChanged(Waypoint waypoint) {
+            curWaypoint = waypoint;
+            updateFlags();
+        }
+    };
+
     private final com.example.remotecontrollsystem.mqtt.data.Observer<GetMap_Response> mapObserver = message -> {
         if (message != null) {
             resolution = message.getMap().getInfo().getResolution();
@@ -124,8 +121,15 @@ public class GoalFrameView extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+
         Log.d(TAG, "onDetachedFromWindow");
+
         routeViewModel.getCurrentRoute().removeObserver(currentRouteObserver);
+        waypointViewModel.getNewWaypoint().removeObserver(newWaypointObserver);
         mapResponse.detach(mapObserver);
+
+        routeViewModel = null;
+        waypointViewModel = null;
+        mapResponse = null;
     }
 }

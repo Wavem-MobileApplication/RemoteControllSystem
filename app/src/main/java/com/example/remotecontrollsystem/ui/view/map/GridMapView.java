@@ -38,8 +38,6 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
     private void init() {
         responsePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
 
-//        post(() -> setClickable(false));
-
         setOnClickListener(view -> {
             Log.d(TAG,  "onClick");
             updateMap();
