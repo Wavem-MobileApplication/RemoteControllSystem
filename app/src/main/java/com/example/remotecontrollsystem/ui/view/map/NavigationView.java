@@ -1,6 +1,8 @@
 package com.example.remotecontrollsystem.ui.view.map;
 
 
+import static com.example.remotecontrollsystem.mqtt.utils.MessageType.RESPONSE;
+
 import android.content.Context;
 import android.util.AttributeSet;
 
@@ -38,7 +40,7 @@ public class NavigationView extends androidx.appcompat.widget.AppCompatImageView
 
 
     private void init() {
-        mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
+        mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + RESPONSE.getType());
         robotPosePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.ROBOT_POSE.getType());
     }
 

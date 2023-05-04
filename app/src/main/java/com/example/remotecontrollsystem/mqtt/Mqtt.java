@@ -1,5 +1,9 @@
 package com.example.remotecontrollsystem.mqtt;
 
+import static com.example.remotecontrollsystem.mqtt.utils.MessageType.FEEDBACK;
+import static com.example.remotecontrollsystem.mqtt.utils.MessageType.REQUEST;
+import static com.example.remotecontrollsystem.mqtt.utils.MessageType.RESPONSE;
+
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
@@ -36,9 +40,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 public class Mqtt {
     private static final String TAG = Mqtt.class.getSimpleName();
     private static final String CLIENT_NAME = "rcs_mqtt_client";
-    public static final String REQUEST = "/request";
-    public static final String FEEDBACK = "/feedback";
-    public static final String RESPONSE = "/response";
     private static Mqtt instance;
     private MqttAndroidClient client;
 
@@ -147,22 +148,22 @@ public class Mqtt {
                     });
                     break;
                 case TopicType.CALL:
-                    topicFilters.add(topicName + RESPONSE);
+                    topicFilters.add(topicName + RESPONSE.getType());
                     qosFilters.add(qos);
                     listeners.add((topic, message) -> {
                         RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + RESPONSE);
-                        messagePublishers.get(funcName + RESPONSE).postValue(rosMessage);
+                        messagePublishers.get(funcName + RESPONSE.getType()).postValue(rosMessage);
                     });
                     break;
                 case TopicType.GOAL:
-                    topicFilters.add(topicName + FEEDBACK);
+                    topicFilters.add(topicName + FEEDBACK.getType());
                     qosFilters.add(qos);
                     listeners.add((topic, message) -> {
                         long currentTime = System.currentTimeMillis();
 
                         if (currentTime - preTime[0] > interval) {
-                            RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + FEEDBACK);
-                            messagePublishers.get(funcName + FEEDBACK).postValue(rosMessage);
+                            RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + FEEDBACK.getType());
+                            messagePublishers.get(funcName + FEEDBACK.getType()).postValue(rosMessage);
                             preTime[0] = currentTime;
                         }
                     });
@@ -170,8 +171,8 @@ public class Mqtt {
                     topicFilters.add(topicName + RESPONSE);
                     qosFilters.add(qos);
                     listeners.add((topic, message) -> {
-                        RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + RESPONSE);
-                        messagePublishers.get(funcName + RESPONSE).postValue(rosMessage);
+                        RosMessage rosMessage = new RosMessage().fromJson(message.toString(), funcName + RESPONSE.getType());
+                        messagePublishers.get(funcName + RESPONSE.getType()).postValue(rosMessage);
                     });
                     break;
             }
@@ -207,16 +208,16 @@ public class Mqtt {
                     Log.d(TAG, "Add Publisher -> " + funcName);
                     break;
                 case TopicType.CALL:
-                    createMessagePublisher(funcName + RESPONSE);
+                    createMessagePublisher(funcName + RESPONSE.getType());
 
-                    Log.d(TAG, "Add Publisher -> " + funcName + RESPONSE);
+                    Log.d(TAG, "Add Publisher -> " + funcName + RESPONSE.getType());
                     break;
                 case TopicType.GOAL:
-                    createMessagePublisher(funcName + FEEDBACK);
-                    createMessagePublisher(funcName + RESPONSE);
+                    createMessagePublisher(funcName + FEEDBACK.getType());
+                    createMessagePublisher(funcName + RESPONSE.getType());
 
-                    Log.d(TAG, "Add Publisher -> " + funcName + FEEDBACK);
-                    Log.d(TAG, "Add Publisher -> " + funcName + RESPONSE);
+                    Log.d(TAG, "Add Publisher -> " + funcName + FEEDBACK.getType());
+                    Log.d(TAG, "Add Publisher -> " + funcName + RESPONSE.getType());
                     break;
             }
         }
@@ -244,7 +245,7 @@ public class Mqtt {
 
     public void sendRequestMessageGoal(String funcName, Object data, int qos, boolean retained) {
         try {
-            String requestName = topicMap.get(funcName).getName() + REQUEST;
+            String requestName = topicMap.get(funcName).getName() + REQUEST.getType();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("mode", "goal");
             jsonObject.add("data", new Gson().toJsonTree(data));
@@ -260,7 +261,7 @@ public class Mqtt {
 
     public void sendRequestMessageCall(String funcName, Object data, int qos, boolean retained) {
         try {
-            String requestName = topicMap.get(funcName).getName() + REQUEST;
+            String requestName = topicMap.get(funcName).getName() + REQUEST.getType();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("mode", "call");
             jsonObject.add("data", new Gson().toJsonTree(data));

@@ -1,5 +1,7 @@
 package com.example.remotecontrollsystem.ui.view.map;
 
+import static com.example.remotecontrollsystem.mqtt.utils.MessageType.RESPONSE;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -70,7 +72,7 @@ public class LaserScanView extends View {
 
     private void startObserve() {
         MessagePublisher<LaserScan> scanPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.LASER_SCAN.getType());
-        MessagePublisher<GetMap_Response> mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
+        MessagePublisher<GetMap_Response> mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + RESPONSE.getType());
         MessagePublisher<Pose> robotPosePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.ROBOT_POSE.getType());
         MessagePublisher<TFMessage> tfPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.TF_STATIC.getType());
 

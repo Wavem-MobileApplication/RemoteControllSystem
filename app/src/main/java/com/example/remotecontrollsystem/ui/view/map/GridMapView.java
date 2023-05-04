@@ -1,5 +1,7 @@
 package com.example.remotecontrollsystem.ui.view.map;
 
+import static com.example.remotecontrollsystem.mqtt.utils.MessageType.RESPONSE;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -36,7 +38,7 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
     }
 
     private void init() {
-        responsePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
+        responsePublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + RESPONSE.getType());
 
         setOnClickListener(view -> {
             Log.d(TAG,  "onClick");

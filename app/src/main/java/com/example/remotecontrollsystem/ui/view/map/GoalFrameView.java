@@ -1,5 +1,7 @@
 package com.example.remotecontrollsystem.ui.view.map;
 
+import static com.example.remotecontrollsystem.mqtt.utils.MessageType.RESPONSE;
+
 import android.content.Context;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -55,7 +57,7 @@ public class GoalFrameView extends FrameLayout {
 
         routeViewModel = new ViewModelProvider(activity).get(RouteViewModel.class);
         waypointViewModel = new ViewModelProvider(activity).get(WaypointViewModel.class);
-        mapResponse = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
+        mapResponse = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + RESPONSE.getType());
 
         routeViewModel.getCurrentRoute().observe(activity, currentRouteObserver);
         waypointViewModel.getNewWaypoint().observe(activity, newWaypointObserver);

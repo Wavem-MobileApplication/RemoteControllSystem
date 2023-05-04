@@ -9,6 +9,7 @@ import com.example.remotecontrollsystem.mqtt.msgs.NavigateToPose_FeedBack;
 import com.example.remotecontrollsystem.mqtt.msgs.NavigateToPose_Request;
 import com.example.remotecontrollsystem.mqtt.msgs.NavigateToPose_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessageDefinition;
+import com.example.remotecontrollsystem.mqtt.utils.MessageType;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 
 public class GoalManager {
@@ -33,11 +34,11 @@ public class GoalManager {
 
     public GoalManager() {
         feedbackPublisher = Mqtt.getInstance().getMessagePublisher(
-                WidgetType.NAVIGATE_TO_POSE.getType() + Mqtt.FEEDBACK);
+                WidgetType.NAVIGATE_TO_POSE.getType() + MessageType.FEEDBACK.getType());
         feedbackPublisher.attach(feedbackObserver);
 
         responsePublisher = Mqtt.getInstance().getMessagePublisher(
-                WidgetType.NAVIGATE_TO_POSE.getType() + Mqtt.RESPONSE);
+                WidgetType.NAVIGATE_TO_POSE.getType() + MessageType.RESPONSE.getType());
         responsePublisher.attach(responseObserver);
     }
 

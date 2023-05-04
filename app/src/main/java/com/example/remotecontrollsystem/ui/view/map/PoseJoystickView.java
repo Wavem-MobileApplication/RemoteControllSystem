@@ -1,5 +1,7 @@
 package com.example.remotecontrollsystem.ui.view.map;
 
+import static com.example.remotecontrollsystem.mqtt.utils.MessageType.RESPONSE;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -40,7 +42,7 @@ public class PoseJoystickView extends View {
         super(context);
 
         waypointViewModel = new ViewModelProvider(activity).get(WaypointViewModel.class);
-        mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE);
+        mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + RESPONSE.getType());
 
         circlePaint = new Paint();
         circlePaint.setColor(Color.RED);

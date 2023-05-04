@@ -1,31 +1,17 @@
 package com.example.remotecontrollsystem.ui.activity;
 
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remotecontrollsystem.BuildConfig;
 import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.ActivityMainBinding;
-import com.example.remotecontrollsystem.model.entity.Topic;
-import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
-import com.example.remotecontrollsystem.mqtt.Mqtt;
 import com.example.remotecontrollsystem.ui.dialog.MqttConnectFragment;
-import com.example.remotecontrollsystem.ui.viewmodel.ConnectionViewModel;
 
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MqttActivity {
     private ActivityMainBinding binding;
-    private TopicViewModel topicViewModel;
-    private ConnectionViewModel connectionViewModel;
+/*    private TopicViewModel topicViewModel;
+    private ConnectionViewModel connectionViewModel;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +20,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         init();
-        settingWindowFullScreen();
         settingClickEvents();
-        settingMqttViewModel();
+//        settingMqttViewModel();
 
         Log.d("경로", BuildConfig.APPLICATION_ID);
     }
@@ -66,19 +51,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void settingWindowFullScreen() {
-        View decorView = getWindow().getDecorView();
-        int uiOption = decorView.getSystemUiVisibility();
-
-        uiOption |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        uiOption |= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        uiOption |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        uiOption |= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        uiOption |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-
-        decorView.setSystemUiVisibility(uiOption);
-    }
-
     private void settingClickEvents() {
         binding.btnMenuMain.setOnClickListener(view -> binding.navigationDrawer.open());
 
@@ -89,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void settingMqttViewModel() {
-        topicViewModel = new ViewModelProvider(this).get(TopicViewModel.class);
+/*        topicViewModel = new ViewModelProvider(this).get(TopicViewModel.class);
         topicViewModel.getAllTopics().observe(MainActivity.this, new Observer<List<Topic>>() {
             @Override
             public void onChanged(List<Topic> topics) {
@@ -103,24 +75,7 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(String url) {
                 Mqtt.getInstance().connectToMqttServer(getApplicationContext(), url);
             }
-        });
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        View focusView = getCurrentFocus();
-        if (focusView != null) {
-            Rect rect = new Rect();
-            focusView.getGlobalVisibleRect(rect);
-            int x = (int) ev.getX(), y = (int) ev.getY();
-            if (!rect.contains(x, y)) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                if (imm != null)
-                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
-                focusView.clearFocus();
-            }
-        }
-        return super.dispatchTouchEvent(ev);
+        });*/
     }
 
     @Override

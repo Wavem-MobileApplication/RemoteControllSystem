@@ -13,6 +13,7 @@ import com.example.remotecontrollsystem.mqtt.msgs.Pose;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessage;
 import com.example.remotecontrollsystem.mqtt.msgs.TFMessage;
 import com.example.remotecontrollsystem.mqtt.msgs.Twist;
+import com.example.remotecontrollsystem.mqtt.utils.MessageType;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 
 import java.util.HashMap;
@@ -35,11 +36,21 @@ public class MessageManager {
 //        classMap.put(WidgetType.GLOBAL_PLAN.getType(), Path.class);
 //        classMap.put(WidgetType.LOCAL_PLAN.getType(), Path.class);
 //        classMap.put(WidgetType.INITIAL_POSE.getType(), PoseWithCovarianceStamped.class);
-        classMap.put(WidgetType.NAVIGATE_TO_POSE.getType() + Mqtt.REQUEST, NavigateToPose_Request.class);
-        classMap.put(WidgetType.NAVIGATE_TO_POSE.getType() + Mqtt.FEEDBACK, NavigateToPose_FeedBack.class);
-        classMap.put(WidgetType.NAVIGATE_TO_POSE.getType() + Mqtt.RESPONSE, NavigateToPose_Response.class);
-        classMap.put(WidgetType.GET_MAP.getType() + Mqtt.REQUEST,  GetMap_Request.class);
-        classMap.put(WidgetType.GET_MAP.getType() + Mqtt.RESPONSE, GetMap_Response.class);
+        classMap.put(
+                WidgetType.NAVIGATE_TO_POSE.getType() + MessageType.REQUEST.getType(),
+                NavigateToPose_Request.class);
+        classMap.put(
+                WidgetType.NAVIGATE_TO_POSE.getType() + MessageType.FEEDBACK.getType(),
+                NavigateToPose_FeedBack.class);
+        classMap.put(
+                WidgetType.NAVIGATE_TO_POSE.getType() + MessageType.RESPONSE.getType(),
+                NavigateToPose_Response.class);
+        classMap.put(
+                WidgetType.GET_MAP.getType() + MessageType.REQUEST.getType(),
+                GetMap_Request.class);
+        classMap.put(
+                WidgetType.GET_MAP.getType() + MessageType.RESPONSE.getType(),
+                GetMap_Response.class);
     }
 
     public static Class<? extends RosMessage> getMessageClassFromWidgetType(String widgetType) {
