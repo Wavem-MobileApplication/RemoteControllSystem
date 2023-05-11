@@ -52,7 +52,7 @@ public class WaypointListAdapter extends RecyclerView.Adapter<WaypointListAdapte
             }
         });
 
-        holder.binding.btnDeleteRoute.setOnClickListener(view -> {
+        holder.binding.btnDeleteWaypoint.setOnClickListener(view -> {
             if (deleteClickListener != null) {
                 deleteClickListener.onClick(holder.getAdapterPosition(), waypoint);
             }

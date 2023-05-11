@@ -10,8 +10,6 @@ import com.example.remotecontrollsystem.ui.dialog.MqttConnectFragment;
 
 public class MainActivity extends MqttActivity {
     private ActivityMainBinding binding;
-/*    private TopicViewModel topicViewModel;
-    private ConnectionViewModel connectionViewModel;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +19,6 @@ public class MainActivity extends MqttActivity {
 
         init();
         settingClickEvents();
-//        settingMqttViewModel();
 
         Log.d("경로", BuildConfig.APPLICATION_ID);
     }
@@ -58,24 +55,6 @@ public class MainActivity extends MqttActivity {
             MqttConnectFragment dialog = new MqttConnectFragment();
             dialog.show(getSupportFragmentManager(), "MqttConnectFragment");
         });
-    }
-
-    private void settingMqttViewModel() {
-/*        topicViewModel = new ViewModelProvider(this).get(TopicViewModel.class);
-        topicViewModel.getAllTopics().observe(MainActivity.this, new Observer<List<Topic>>() {
-            @Override
-            public void onChanged(List<Topic> topics) {
-                Mqtt.getInstance().setTopicList(topics);
-            }
-        });
-
-        connectionViewModel = new ViewModelProvider(this).get(ConnectionViewModel.class);
-        connectionViewModel.getMqttUrl().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String url) {
-                Mqtt.getInstance().connectToMqttServer(getApplicationContext(), url);
-            }
-        });*/
     }
 
     @Override

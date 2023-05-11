@@ -1,4 +1,4 @@
-package com.example.remotecontrollsystem.ui.viewmodel;
+package com.example.remotecontrollsystem.viewmodel;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

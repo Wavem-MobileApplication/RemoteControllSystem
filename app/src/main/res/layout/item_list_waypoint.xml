@@ -56,12 +56,12 @@
         android:scaleType="fitCenter"
         android:background="@drawable/ripple_click_button_white_no_padding"
         app:layout_constraintBottom_toBottomOf="@+id/btn_sign_up_waypoint"
-        app:layout_constraintEnd_toStartOf="@+id/btn_delete_route"
+        app:layout_constraintEnd_toStartOf="@+id/btn_delete_waypoint"
         app:layout_constraintTop_toTopOf="@+id/btn_sign_up_waypoint"
         tools:ignore="ContentDescription" />
 
     <ImageButton
-        android:id="@+id/btn_delete_route"
+        android:id="@+id/btn_delete_waypoint"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginEnd="8dp"

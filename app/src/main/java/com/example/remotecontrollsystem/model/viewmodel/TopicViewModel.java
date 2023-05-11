@@ -22,12 +22,7 @@ public class TopicViewModel extends AndroidViewModel {
         dataStorage = DataStorage.getInstance(application);
 
         allTopics = new MediatorLiveData<>();
-        allTopics.addSource(dataStorage.getAllTopics(), new Observer<List<Topic>>() {
-            @Override
-            public void onChanged(List<Topic> topics) {
-                allTopics.postValue(topics);
-            }
-        });
+        allTopics.addSource(dataStorage.getAllTopics(), topics -> allTopics.postValue(topics));
     }
 
     public void updateTopic(Topic topic) {

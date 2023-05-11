@@ -17,19 +17,32 @@ import com.example.remotecontrollsystem.model.entity.Route;
 import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.model.viewmodel.RouteViewModel;
 import com.example.remotecontrollsystem.model.viewmodel.WaypointViewModel;
+import com.example.remotecontrollsystem.mqtt.data.RosObserver;
+import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Request;
+import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.example.remotecontrollsystem.ui.fragment.route.adapter.WaypointListAdapter;
 import com.example.remotecontrollsystem.ui.util.GoalManager;
+import com.example.remotecontrollsystem.ui.util.MapFrameLayoutManager;
 import com.example.remotecontrollsystem.ui.util.ToastMessage;
 import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
+import com.example.remotecontrollsystem.viewmodel.MqttPubViewModel;
+import com.example.remotecontrollsystem.viewmodel.MqttSubViewModel;
 
 import java.util.List;
 
 
 public class RouteFragment extends Fragment {
     private FragmentRouteBinding binding;
+
+
     private WaypointViewModel waypointViewModel;
     private RouteViewModel routeViewModel;
+    private MqttSubViewModel mqttSubViewModel;
+    private MqttPubViewModel mqttPubViewModel;
     private WaypointListAdapter rvAdapter;
+
+    private MapFrameLayout mapFrameLayout;
+    private MapFrameLayoutManager manager;
 
 
     public static RouteFragment newInstance(int num) {
@@ -63,6 +76,15 @@ public class RouteFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        mqttSubViewModel.getResponseLiveData(WidgetType.GET_MAP).observe(requireActivity(), manager.mapObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.ROBOT_POSE).observe(requireActivity(), manager.robotPoseObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.LASER_SCAN).observe(requireActivity(), manager.scanObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.TF).observe(requireActivity(), manager.tfObserver);
+
+        routeViewModel.getCurrentRoute().observe(requireActivity(), manager.currentRouteObserver);
+
+        waypointViewModel.getNewWaypoint().observe(requireActivity(), manager.newWaypointObserver);
         waypointViewModel.getAllWaypoint().observe(requireActivity(), waypointListObserver);
     }
 
@@ -78,9 +100,13 @@ public class RouteFragment extends Fragment {
         // Initialize ViewModel
         waypointViewModel = new ViewModelProvider(requireActivity()).get(WaypointViewModel.class);
         routeViewModel = new ViewModelProvider(requireActivity()).get(RouteViewModel.class);
+        mqttSubViewModel = new ViewModelProvider(requireActivity()).get(MqttSubViewModel.class);
+        mqttPubViewModel = new ViewModelProvider(requireActivity()).get(MqttPubViewModel.class);
 
         // Add Views
-        binding.frameMapRoute.addView(new MapFrameLayout(requireContext(), (AppCompatActivity) requireActivity()));
+        mapFrameLayout = new MapFrameLayout(requireContext());
+        manager = new MapFrameLayoutManager(mapFrameLayout);
+        binding.frameMapRoute.addView(mapFrameLayout);
     }
 
     private void settingRecyclerItemClickEvents() {
@@ -130,7 +156,7 @@ public class RouteFragment extends Fragment {
         });
     }
 
-    private Observer<List<Waypoint>> waypointListObserver = new Observer<List<Waypoint>>() {
+    private final Observer<List<Waypoint>> waypointListObserver = new Observer<List<Waypoint>>() {
         @Override
         public void onChanged(List<Waypoint> waypoints) {
             rvAdapter.setWaypointList(waypoints);
@@ -140,6 +166,14 @@ public class RouteFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        mqttSubViewModel.getResponseLiveData(WidgetType.GET_MAP).removeObserver(manager.mapObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.ROBOT_POSE).removeObserver(manager.robotPoseObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.LASER_SCAN).removeObserver(manager.scanObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.TF).removeObserver(manager.tfObserver);
+
+        routeViewModel.getCurrentRoute().removeObserver(manager.currentRouteObserver);
+
+        waypointViewModel.getNewWaypoint().removeObserver(manager.newWaypointObserver);
         waypointViewModel.getAllWaypoint().removeObserver(waypointListObserver);
     }
 }

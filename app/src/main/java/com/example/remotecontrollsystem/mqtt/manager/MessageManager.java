@@ -1,6 +1,5 @@
 package com.example.remotecontrollsystem.mqtt.manager;
 
-import com.example.remotecontrollsystem.mqtt.Mqtt;
 import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Request;
 import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.LaserScan;

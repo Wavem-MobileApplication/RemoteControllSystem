@@ -98,19 +98,17 @@ public class ClockView extends View {
         }
 
         int angleSec = sec * 6 - 90;
-        float length = radius * 0.1f;
-        float xSeconds = (float) (centerX + radius * Math.cos(Math.toRadians(angleSec)));
-        float ySeconds = (float) (centerY + radius * Math.sin(Math.toRadians(angleSec)));
+        float length = radius * 0.2f;
+        float xSeconds = (float) (centerX + (radius * 0.9f) * Math.cos(Math.toRadians(angleSec)));
+        float ySeconds = (float) (centerY + (radius * 0.9f) * Math.sin(Math.toRadians(angleSec)));
 
-        float x1 = (float) (xSeconds - length * Math.cos(Math.toRadians(angleSec)));
-        float y1 = (float) (ySeconds - length * Math.sin(Math.toRadians(angleSec)));
-        float x2 = (float) (xSeconds - length * Math.cos(Math.toRadians(angleSec - 120)) / 2);
-        float y2 = (float) (ySeconds - length * Math.sin(Math.toRadians(angleSec - 120)) / 2);
-        float x3 = (float) (xSeconds - length * Math.cos(Math.toRadians(angleSec + 120)) / 2);
-        float y3 = (float) (ySeconds - length * Math.sin(Math.toRadians(angleSec + 120)) / 2);
+        float x2 = (float) (xSeconds - length * Math.cos(Math.toRadians(angleSec + 20)) / 2);
+        float y2 = (float) (ySeconds - length * Math.sin(Math.toRadians(angleSec + 20)) / 2);
+        float x3 = (float) (xSeconds - length * Math.cos(Math.toRadians(angleSec - 20)) / 2);
+        float y3 = (float) (ySeconds - length * Math.sin(Math.toRadians(angleSec - 20)) / 2);
 
         Path path = new Path();
-        path.moveTo(x1, y1);
+        path.moveTo(xSeconds, ySeconds);
         path.lineTo(x2, y2);
         path.lineTo(x3, y3);
         path.close();

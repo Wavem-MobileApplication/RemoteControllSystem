@@ -46,8 +46,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/front_camera_main_view" />
 
-    <fragment
-        android:id="@+id/frame_robot_status"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/frag_driving_status"
         android:name="com.example.remotecontrollsystem.ui.fragment.dashboard.DrivingStatusFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -61,20 +61,20 @@
         app:layout_constraintWidth_percent="0.45"
         tools:layout="@layout/fragment_driving_status" />
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/frag_robot_status"
+        android:name="com.example.remotecontrollsystem.ui.fragment.dashboard.RobotStatusFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:id="@+id/frag_robot_status"
-        android:name="com.example.remotecontrollsystem.ui.fragment.dashboard.RobotStatusFragment"
-        tools:layout="@layout/fragment_robot_status"
         android:layout_marginBottom="8dp"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/frame_robot_status"
+        app:layout_constraintStart_toEndOf="@+id/frag_driving_status"
         app:layout_constraintTop_toBottomOf="@+id/frame_map_main"
-        app:layout_constraintWidth_percent="0.4" />
+        app:layout_constraintWidth_percent="0.4"
+        tools:layout="@layout/fragment_robot_status" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
@@ -87,7 +87,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/frag_robot_status"
-        app:layout_constraintTop_toBottomOf="@+id/frame_map_main" >
+        app:layout_constraintTop_toBottomOf="@+id/frame_map_main">
 
         <com.example.remotecontrollsystem.ui.view.move.EStopButton
             android:id="@+id/EStopButton"

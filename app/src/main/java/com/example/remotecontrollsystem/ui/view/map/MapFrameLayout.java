@@ -8,8 +8,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.remotecontrollsystem.model.entity.Route;
+import com.example.remotecontrollsystem.model.entity.Waypoint;
+import com.example.remotecontrollsystem.mqtt.msgs.LaserScan;
+import com.example.remotecontrollsystem.mqtt.msgs.OccupancyGrid;
+import com.example.remotecontrollsystem.mqtt.msgs.Pose;
+import com.example.remotecontrollsystem.mqtt.msgs.TFMessage;
 import com.example.remotecontrollsystem.ui.util.GestureUtil;
 
 
@@ -17,25 +22,32 @@ public class MapFrameLayout extends FrameLayout {
     private GestureDetector gestureDetector;
     private ScaleGestureDetector scaleDetector;
 
+    private GridMapView gridMapView;
+    private NavigationView navigationView;
+    private LaserScanView laserScanView;
+    private GoalFrameView goalFrameView;
     private PoseJoystickView poseJoystickView;
 
-    public MapFrameLayout(@NonNull Context context, AppCompatActivity activity) {
+    public MapFrameLayout(@NonNull Context context) {
         super(context);
-        init(activity);
+        init();
     }
 
-    private void init(AppCompatActivity activity) {
+    private void init() {
         settingGestures();
         setRotationX(180);
 
-        GridMapView gridMapView = new GridMapView(getContext());
-        poseJoystickView = new PoseJoystickView(getContext(), activity);
+        gridMapView = new GridMapView(getContext());
+        navigationView = new NavigationView(getContext());
+        laserScanView = new LaserScanView(getContext());
+        goalFrameView = new GoalFrameView(getContext());
+        poseJoystickView = new PoseJoystickView(getContext());
 
         addView(gridMapView);
+        addView(navigationView);
+        addView(laserScanView);
+        addView(goalFrameView);
         addView(poseJoystickView);
-        addView(new NavigationView(getContext()));
-        addView(new GoalFrameView(getContext(), activity));
-        addView(new LaserScanView(getContext()));
 
         gridMapView.addOnLayoutChangeListener((view, i, i1, i2, i3, i4, i5, i6, i7) -> {
             View parent = (View) getParent();
@@ -78,6 +90,39 @@ public class MapFrameLayout extends FrameLayout {
         poseJoystickView.setX(e.getX());
         poseJoystickView.setY(e.getY());
         poseJoystickView.setVisibility(VISIBLE);
+    }
+
+    public void updateMap(OccupancyGrid occupancyGrid) {
+        gridMapView.updateMap(occupancyGrid);
+        navigationView.updateMapMetaData(occupancyGrid.getInfo());
+        laserScanView.updateMapMetaData(occupancyGrid.getInfo());
+        goalFrameView.updateMapMetaData(occupancyGrid.getInfo());
+        poseJoystickView.updateMapMetaData(occupancyGrid.getInfo());
+    }
+
+    public void updateRobotPose(Pose pose) {
+        navigationView.updateRobotPose(pose);
+        laserScanView.updateRobotPose(pose);
+    }
+
+    public void updateLaserScan(LaserScan laserScan) {
+        laserScanView.updateLaserScan(laserScan);
+    }
+
+    public void updateTF(TFMessage tfMessage) {
+        laserScanView.updateTF(tfMessage);
+    }
+
+    public void updateCurrentRoute(Route route) {
+        goalFrameView.updateCurrentRoute(route);
+    }
+
+    public void updateNewWaypoint(Waypoint waypoint) {
+        goalFrameView.updateNewWaypoint(waypoint);
+    }
+
+    public void setPoseViewClickListener(GoalFrameView.OnPoseViewClickListener listener) {
+        goalFrameView.setPoseViewClickListener(listener);
     }
 
     @Override

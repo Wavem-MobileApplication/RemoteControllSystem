@@ -18,6 +18,7 @@ import com.example.remotecontrollsystem.mqtt.Mqtt;
 import com.example.remotecontrollsystem.mqtt.data.MessagePublisher;
 import com.example.remotecontrollsystem.mqtt.data.Observer;
 import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
+import com.example.remotecontrollsystem.mqtt.msgs.MapMetaData;
 import com.example.remotecontrollsystem.mqtt.msgs.Pose;
 import com.example.remotecontrollsystem.mqtt.utils.RosMath;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
@@ -28,9 +29,6 @@ public class PoseJoystickView extends View {
     private static final int STROKE = 3;
     private static final float RADIUS = (SIZE - STROKE) / 2f;
 
-    private WaypointViewModel waypointViewModel;
-    private MessagePublisher mapPublisher;
-
     private Paint circlePaint;
     private Paint linePaint;
 
@@ -38,11 +36,8 @@ public class PoseJoystickView extends View {
     private float centerX, centerY;
     private float resolution = 0.05f;
 
-    public PoseJoystickView(Context context, AppCompatActivity activity) {
+    public PoseJoystickView(Context context) {
         super(context);
-
-        waypointViewModel = new ViewModelProvider(activity).get(WaypointViewModel.class);
-        mapPublisher = Mqtt.getInstance().getMessagePublisher(WidgetType.GET_MAP.getType() + RESPONSE.getType());
 
         circlePaint = new Paint();
         circlePaint.setColor(Color.RED);
@@ -55,13 +50,6 @@ public class PoseJoystickView extends View {
         linePaint.setStyle(Paint.Style.STROKE);
 
         setVisibility(INVISIBLE);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-
-        mapPublisher.attach(mapObserver);
     }
 
     @Override
@@ -145,23 +133,9 @@ public class PoseJoystickView extends View {
 
         Log.d("Quaternion_Z", String.valueOf(quaternion[0]));
         Log.d("Quaternion_W", String.valueOf(quaternion[1]));
-
-        waypointViewModel.addPoseToNewWaypoint(pose);
     }
 
-    private final Observer<GetMap_Response> mapObserver = new Observer<GetMap_Response>() {
-        @Override
-        public void update(GetMap_Response response) {
-            if (response != null) {
-                resolution = response.getMap().getInfo().getResolution();
-            }
-        }
-    };
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-
-        mapPublisher.detach(mapObserver);
+    public void updateMapMetaData(MapMetaData mapMetaData) {
+        resolution = mapMetaData.getResolution();
     }
 }

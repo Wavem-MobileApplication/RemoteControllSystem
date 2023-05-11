@@ -5,7 +5,6 @@ import static com.example.remotecontrollsystem.mqtt.utils.MessageType.REQUEST;
 import static com.example.remotecontrollsystem.mqtt.utils.MessageType.RESPONSE;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 
 import com.example.remotecontrollsystem.model.entity.Topic;
@@ -32,10 +31,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public class Mqtt {
     private static final String TAG = Mqtt.class.getSimpleName();

@@ -71,6 +71,7 @@ public class RouteListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        binding = null;
         routeViewModel.getAllRoute().removeObserver(allRoutesObserver);
     }
 }

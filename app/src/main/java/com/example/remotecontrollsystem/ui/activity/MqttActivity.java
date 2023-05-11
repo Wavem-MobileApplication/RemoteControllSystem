@@ -3,6 +3,7 @@ package com.example.remotecontrollsystem.ui.activity;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -14,15 +15,18 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remotecontrollsystem.model.entity.Topic;
 import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
+import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Request;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessage;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessageDefinition;
 import com.example.remotecontrollsystem.mqtt.utils.MessageType;
 import com.example.remotecontrollsystem.mqtt.utils.TopicType;
+import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.example.remotecontrollsystem.ui.util.ToastMessage;
-import com.example.remotecontrollsystem.ui.viewmodel.ConnectionViewModel;
-import com.example.remotecontrollsystem.ui.viewmodel.MqttSubViewModel;
+import com.example.remotecontrollsystem.viewmodel.ConnectionViewModel;
+import com.example.remotecontrollsystem.viewmodel.MqttPubViewModel;
+import com.example.remotecontrollsystem.viewmodel.MqttSubViewModel;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonObject;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -33,8 +37,8 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,26 +47,49 @@ public abstract class MqttActivity extends AppCompatActivity {
     private static final String TAG = MqttActivity.class.getSimpleName();
     private static final String CLIENT_NAME = "rcs_mqtt_client";
     private MqttAndroidClient client;
+    private Gson gson;
 
     TopicViewModel topicViewModel;
     MqttSubViewModel mqttSubViewModel;
+    MqttPubViewModel mqttPubViewModel;
     ConnectionViewModel connectionViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        gson = new Gson();
+
         topicViewModel = new ViewModelProvider(this).get(TopicViewModel.class);
         mqttSubViewModel = new ViewModelProvider(this).get(MqttSubViewModel.class);
+        mqttPubViewModel = new ViewModelProvider(this).get(MqttPubViewModel.class);
         connectionViewModel = new ViewModelProvider(this).get(ConnectionViewModel.class);
 
         connectionViewModel.getMqttUrl().observe(this, this::connectToMqttServer);
-
-        topicViewModel.getAllTopics().observe(this, new Observer<List<Topic>>() {
+        topicViewModel.getAllTopics().observe(this, new Observer<List<Topic>>() { // Observer를 생성해야 getValue시 업데이트 된 데이터를 반환
             @Override
             public void onChanged(List<Topic> topics) {
-//                Type type = new TypeToken<List<Topic>>() {}.getType();
-                Log.d("Topics", new Gson().toJson(topics));
+                Log.d("AllTopics", gson.toJson(topics));
+            }
+        });
+
+        mqttPubViewModel.getPublisher().observe(this, pair -> {
+            String topicName = pair.first;
+            String type = pair.second.first;
+            RosMessage data = pair.second.second;
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("mode", type);
+            jsonObject.add("data", gson.toJsonTree(data));
+
+            Log.d("KSDJ", jsonObject.toString());
+
+            try {
+                if (client != null) {
+                    client.publish(topicName, jsonObject.toString().getBytes(), 0, false);
+                }
+            } catch (MqttException e) {
+                e.printStackTrace();
             }
         });
 
@@ -115,6 +142,7 @@ public abstract class MqttActivity extends AppCompatActivity {
                     try {
                         sendRosMessageInit();
                         startToSubscribe();
+                        mqttPubViewModel.publishCall(WidgetType.GET_MAP.getType(), new GetMap_Request());
                     } catch (MqttException e) {
                         e.printStackTrace();
                     }
@@ -140,6 +168,8 @@ public abstract class MqttActivity extends AppCompatActivity {
 
             byte[] payload = new Gson().toJson(data).getBytes();
             client.publish("ros_message_init", payload, 0, false);
+
+            Log.d("Ros Message Init", new Gson().toJson(data));
         } else {
             Log.d("GetAllTopics", "NULL");
             ToastMessage.showToast(getApplicationContext(), "차량 연결을 다시 시도해주세요.");
@@ -169,13 +199,13 @@ public abstract class MqttActivity extends AppCompatActivity {
                         listeners.add(createIMqttMessageListener(funcName, interval));
                         break;
                     case TopicType.CALL:
-                        topicFilters.add(topicName + MessageType.RESPONSE);
+                        topicFilters.add(topicName + MessageType.RESPONSE.getType());
                         qosFilter.add(qos);
                         listeners.add(createIMqttMessageListener(
                                 funcName + MessageType.RESPONSE.getType(), interval));
                         break;
                     case TopicType.GOAL:
-                        topicFilters.add(topicName + MessageType.FEEDBACK);
+                        topicFilters.add(topicName + MessageType.FEEDBACK.getType());
                         qosFilter.add(qos);
                         listeners.add(createIMqttMessageListener(
                                 funcName + MessageType.FEEDBACK.getType(), interval));
@@ -194,7 +224,7 @@ public abstract class MqttActivity extends AppCompatActivity {
         IMqttMessageListener[] listenerArray = listeners.toArray(new IMqttMessageListener[listeners.size()]);
 
         try {
-            Log.d("Subscribe", "[" + Arrays.toString(topicFilterArray) + "]");
+            Log.d("Subscribe", Arrays.toString(topicFilterArray));
             client.subscribe(topicFilterArray, qosFilterArray, listenerArray);
         } catch (MqttException e) {
             e.printStackTrace();

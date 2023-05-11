@@ -1,18 +1,21 @@
 package com.example.remotecontrollsystem.ui.fragment.dashboard;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.remotecontrollsystem.R;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.remotecontrollsystem.databinding.FragmentRobotStatusBinding;
+import com.example.remotecontrollsystem.viewmodel.StatusViewModel;
 
 public class RobotStatusFragment extends Fragment {
     private FragmentRobotStatusBinding binding;
+
+    private StatusViewModel statusViewModel;
 
     public static RobotStatusFragment newInstance(int num) {
         RobotStatusFragment fragment = new RobotStatusFragment();
@@ -35,9 +38,28 @@ public class RobotStatusFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentRobotStatusBinding.inflate(inflater, container, false);
 
-
+        statusViewModel = new ViewModelProvider(requireActivity()).get(StatusViewModel.class);
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        statusViewModel.getDrivingDistance().observe(requireActivity(), drivingDistanceObserver);
+    }
+
+    private final Observer<Double> drivingDistanceObserver = new Observer<Double>() {
+        @Override
+        public void onChanged(Double mileage) {
+            binding.tvDrivingDistance.updateDrivingDistance(mileage);
+        }
+    };
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        statusViewModel.getDrivingDistance().removeObserver(drivingDistanceObserver);
     }
 
     @Override

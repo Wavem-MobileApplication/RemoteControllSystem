@@ -4,21 +4,24 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.annotation.Nullable;
 
-import com.example.remotecontrollsystem.R;
-import com.example.remotecontrollsystem.ui.util.JoystickUtil;
-
 public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImageView {
     private static final String TAG = AngularJoystickView.class.getSimpleName();
+
+    private Paint outerPaint;
     private Paint joystickPaint;
     private float joystickRadius;
     private float posX;
     private float maxVel = 0.45f;
+
+    private RectF arcRect;
+
+    private OnAngularJoystickMoveListener angularJoystickMoveListener;
 
 
     public AngularJoystickView(Context context) {
@@ -34,7 +37,12 @@ public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImag
     private void init() {
         joystickPaint = new Paint();
         joystickPaint.setColor(Color.parseColor("#ed1c24"));
-        setBackgroundResource(R.drawable.icon_joystick_angular);
+
+        outerPaint = new Paint();
+        outerPaint.setColor(Color.parseColor("#9BA4B5"));
+        outerPaint.setStyle(Paint.Style.STROKE);
+
+        arcRect = new RectF();
     }
 
     @Override
@@ -42,6 +50,13 @@ public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImag
         super.onLayout(changed, left, top, right, bottom);
         joystickRadius = (float) (getWidth() * 0.25 / 2);
         moveTo(getWidth() / 2f);
+
+        int width = getWidth();
+        int height = getHeight();
+        float stroke = Math.min(width / 4f, height / 4f);
+
+        outerPaint.setStrokeWidth(stroke);
+        arcRect.set(stroke / 2f, stroke / 2f, width - stroke / 2f, height - stroke / 2f);
     }
 
     @Override
@@ -56,11 +71,15 @@ public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImag
                 break;
             case MotionEvent.ACTION_MOVE:
                 moveTo(posX);
-                JoystickUtil.getInstance().publishAngularVel(polarX * maxVel);
+                if (angularJoystickMoveListener != null) {
+                    angularJoystickMoveListener.onMove(polarX * maxVel);
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 moveTo(getWidth() / 2f);
-                JoystickUtil.getInstance().publishAngularVel(0);
+                if (angularJoystickMoveListener != null) {
+                    angularJoystickMoveListener.onMove(0);
+                }
                 break;
         }
         return true;
@@ -99,6 +118,17 @@ public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImag
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        canvas.drawArc(arcRect, -45, 90, false, outerPaint);
+        canvas.drawArc(arcRect, 135, 90, false, outerPaint);
+
         canvas.drawCircle(posX, getHeight() / 2f, joystickRadius, joystickPaint);
+    }
+
+    public void setAngularJoystickMoveListener(OnAngularJoystickMoveListener angularJoystickMoveListener) {
+        this.angularJoystickMoveListener = angularJoystickMoveListener;
+    }
+
+    public interface OnAngularJoystickMoveListener {
+        void onMove(float angular);
     }
 }
