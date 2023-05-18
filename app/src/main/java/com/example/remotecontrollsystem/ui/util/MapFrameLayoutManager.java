@@ -1,7 +1,5 @@
 package com.example.remotecontrollsystem.ui.util;
 
-import android.util.Log;
-
 import androidx.lifecycle.Observer;
 
 import com.example.remotecontrollsystem.model.entity.Route;
@@ -9,10 +7,10 @@ import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.mqtt.data.RosObserver;
 import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.LaserScan;
+import com.example.remotecontrollsystem.mqtt.msgs.Path;
 import com.example.remotecontrollsystem.mqtt.msgs.Pose;
 import com.example.remotecontrollsystem.mqtt.msgs.TFMessage;
 import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
-import com.google.gson.Gson;
 
 public class MapFrameLayoutManager {
     private final MapFrameLayout mapFrameLayout;
@@ -47,6 +45,20 @@ public class MapFrameLayoutManager {
         @Override
         public void onChange(TFMessage tfMessage) {
             mapFrameLayout.updateTF(tfMessage);
+        }
+    };
+
+    public final RosObserver<Path> globalPlanObserver = new RosObserver<Path>(Path.class) {
+        @Override
+        public void onChange(Path path) {
+            mapFrameLayout.updateGlobalPath(path);
+        }
+    };
+
+    public final RosObserver<Path> localPlanObserver = new RosObserver<Path>(Path.class) {
+        @Override
+        public void onChange(Path path) {
+            mapFrameLayout.updateLocalPath(path);
         }
     };
 

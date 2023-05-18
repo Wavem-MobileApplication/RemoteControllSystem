@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -17,11 +16,8 @@ import com.example.remotecontrollsystem.model.entity.Route;
 import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.model.viewmodel.RouteViewModel;
 import com.example.remotecontrollsystem.model.viewmodel.WaypointViewModel;
-import com.example.remotecontrollsystem.mqtt.data.RosObserver;
-import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Request;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.example.remotecontrollsystem.ui.fragment.route.adapter.WaypointListAdapter;
-import com.example.remotecontrollsystem.ui.util.GoalManager;
 import com.example.remotecontrollsystem.ui.util.MapFrameLayoutManager;
 import com.example.remotecontrollsystem.ui.util.ToastMessage;
 import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
@@ -150,13 +146,12 @@ public class RouteFragment extends Fragment {
             dialog.show(getParentFragmentManager(), "waypoint_add_dialog");
         });
 
-        binding.btnStartDrive.setOnClickListener(view -> {
-            Route route = routeViewModel.getCurrentRoute().getValue();
-            GoalManager.getInstance().startRouteDriving(route);
-        });
+        binding.btnStartDrive.setOnClickListener(view -> mqttPubViewModel.startAutoDriving());
+
+        binding.btnStopDrive.setOnClickListener(view -> mqttPubViewModel.stopAutoDriving());
     }
 
-    private final Observer<List<Waypoint>> waypointListObserver = new Observer<List<Waypoint>>() {
+    private final Observer<List<Waypoint>> waypointListObserver = new Observer<>() {
         @Override
         public void onChanged(List<Waypoint> waypoints) {
             rvAdapter.setWaypointList(waypoints);

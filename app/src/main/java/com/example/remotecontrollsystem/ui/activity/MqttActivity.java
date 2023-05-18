@@ -3,7 +3,6 @@ package com.example.remotecontrollsystem.ui.activity;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.remotecontrollsystem.model.entity.Route;
 import com.example.remotecontrollsystem.model.entity.Topic;
+import com.example.remotecontrollsystem.model.viewmodel.RouteViewModel;
 import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
 import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Request;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessage;
@@ -25,6 +26,8 @@ import com.example.remotecontrollsystem.ui.util.ToastMessage;
 import com.example.remotecontrollsystem.viewmodel.ConnectionViewModel;
 import com.example.remotecontrollsystem.viewmodel.MqttPubViewModel;
 import com.example.remotecontrollsystem.viewmodel.MqttSubViewModel;
+import com.example.remotecontrollsystem.viewmodel.StatusViewModel;
+import com.example.remotecontrollsystem.viewmodel.manager.AutoDrivingManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -37,7 +40,6 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +55,9 @@ public abstract class MqttActivity extends AppCompatActivity {
     MqttSubViewModel mqttSubViewModel;
     MqttPubViewModel mqttPubViewModel;
     ConnectionViewModel connectionViewModel;
+    RouteViewModel routeViewModel;
+    StatusViewModel statusViewModel;
+    AutoDrivingManager autoDrivingManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +69,9 @@ public abstract class MqttActivity extends AppCompatActivity {
         mqttSubViewModel = new ViewModelProvider(this).get(MqttSubViewModel.class);
         mqttPubViewModel = new ViewModelProvider(this).get(MqttPubViewModel.class);
         connectionViewModel = new ViewModelProvider(this).get(ConnectionViewModel.class);
+        routeViewModel = new ViewModelProvider(this).get(RouteViewModel.class);
+        statusViewModel = new ViewModelProvider(this).get(StatusViewModel.class);
+        autoDrivingManager = new AutoDrivingManager(mqttSubViewModel, mqttPubViewModel, statusViewModel);
 
         connectionViewModel.getMqttUrl().observe(this, this::connectToMqttServer);
         topicViewModel.getAllTopics().observe(this, new Observer<List<Topic>>() { // Observer를 생성해야 getValue시 업데이트 된 데이터를 반환
@@ -94,6 +102,20 @@ public abstract class MqttActivity extends AppCompatActivity {
         });
 
         settingWindowFullScreen();
+        settingAutoDrivingManager();
+    }
+
+    private void settingAutoDrivingManager() {
+        routeViewModel.getCurrentRoute().observe(this, route -> autoDrivingManager.setRoute(route));
+        mqttSubViewModel.getFeedbackLiveData(WidgetType.NAVIGATE_TO_POSE).observe(this, autoDrivingManager.feedbackObserver);
+        mqttSubViewModel.getResponseLiveData(WidgetType.NAVIGATE_TO_POSE).observe(this, autoDrivingManager.responseObserver);
+        mqttPubViewModel.getAutoDrivingController().observe(this, startDriving -> {
+            if (startDriving) {
+                autoDrivingManager.startAutoDriving();
+            } else {
+                autoDrivingManager.stopAutoDriving();
+            }
+        });
     }
 
     private void settingWindowFullScreen() {

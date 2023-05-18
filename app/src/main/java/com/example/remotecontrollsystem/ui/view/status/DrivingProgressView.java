@@ -9,18 +9,25 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.remotecontrollsystem.R;
+import com.example.remotecontrollsystem.model.entity.Route;
+import com.example.remotecontrollsystem.model.entity.Waypoint;
+import com.example.remotecontrollsystem.mqtt.msgs.Odometry;
 import com.example.remotecontrollsystem.mqtt.msgs.Pose;
+import com.example.remotecontrollsystem.viewmodel.manager.AutoDrivingProgression;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DrivingProgressView extends androidx.appcompat.widget.AppCompatImageView {
+    private static final String TAG = DrivingProgressView.class.getSimpleName();
     private static final int WIDTH_STRIDE = 200;
     private static final int DEFAULT_HEIGHT = 20;
     private static final int ROUND = 10;
@@ -31,7 +38,7 @@ public class DrivingProgressView extends androidx.appcompat.widget.AppCompatImag
     private static final float CAR_SIZE = 100;
     private static final float HEIGHT = DEFAULT_HEIGHT + BOTTOM_TEXT_SIZE + TOP_TEXT_SIZE + TOP_TEXT_MARGIN;
 
-    private List<Pose> destinationList;
+    private Route route;
     private Paint progressBarPaint;
     private Paint destinationPointPaint;
     private Paint bottomTextPaint;
@@ -39,24 +46,27 @@ public class DrivingProgressView extends androidx.appcompat.widget.AppCompatImag
 
     private Bitmap carBitmap;
 
+    private AutoDrivingProgression progression;
+    private Odometry odometry;
+    private DecimalFormat decimalFormat;
+
     public DrivingProgressView(@NonNull Context context) {
         super(context);
+        init();
         settingCarBitmap();
     }
 
     public DrivingProgressView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init();
         settingCarBitmap();
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        init();
-    }
-
     private void init() {
-        destinationList = new ArrayList<>();
+        route = new Route();
+        progression = new AutoDrivingProgression();
+        odometry = new Odometry();
+        decimalFormat = new DecimalFormat("#.#");
 
         progressBarPaint = new Paint();
         progressBarPaint.setColor(Color.parseColor("#D3D3D3"));
@@ -73,9 +83,6 @@ public class DrivingProgressView extends androidx.appcompat.widget.AppCompatImag
         topTextPaint.setColor(Color.YELLOW);
         topTextPaint.setTextSize(TOP_TEXT_SIZE);
         topTextPaint.setTextAlign(Paint.Align.CENTER);
-
-        List<Pose> dummyList = dummyDestinationListData();
-        updateDestinationList(dummyList);
     }
 
     private void settingCarBitmap() {
@@ -90,59 +97,59 @@ public class DrivingProgressView extends androidx.appcompat.widget.AppCompatImag
                 carBitmap.getWidth(), carBitmap.getHeight(), matrix, true);
     }
 
-    private List<Pose> dummyDestinationListData() {
-        List<Pose> dummyDestinationList = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            Pose dummy = new Pose();
-            dummy.getPosition().setX(i);
-            dummy.getPosition().setY(i);
-            dummy.getOrientation().setZ(0.43);
-            dummy.getOrientation().setW(0.52);
-
-            dummyDestinationList.add(dummy);
-        }
-
-        return dummyDestinationList;
-    }
-
-    private void updateDestinationList(List<Pose> destinations) {
-        this.destinationList.clear();
-        this.destinationList.addAll(destinations);
-
+    public void updateRoute(Route route) {
+        this.route = route;
+        Log.d(TAG, "updateRoute");
+        Log.d(TAG, "updateRoute -> size : " + route.getWaypointList().size());
         updateUI();
     }
 
-    private void updateUI() {
-        getLayoutParams().width = WIDTH_STRIDE * destinationList.size() + POINT_RADIUS * 4;
-        getLayoutParams().height = (int) HEIGHT + carBitmap.getHeight();
-
+    public void updateAutoDrivingProgression(AutoDrivingProgression autoDrivingProgression) {
+        this.progression = autoDrivingProgression;
         invalidate();
+    }
+
+    public void updateOdometry(Odometry odometry) {
+        this.odometry = odometry;
+    }
+
+    private void updateUI() {
+        getLayoutParams().width = WIDTH_STRIDE * route.getWaypointList().size() + POINT_RADIUS * 4;
+        getLayoutParams().height = (int) HEIGHT + carBitmap.getHeight();
+        Log.d(TAG, "updateUI");
+        if (route != null) {
+            invalidate();
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        int barRight = destinationList.size() * WIDTH_STRIDE;
+        Log.d(TAG, "onDraw");
+        int barRight = route.getWaypointList().size() * WIDTH_STRIDE;
         int barBottom = getBottom() - BOTTOM_TEXT_SIZE;
         int barTop = barBottom - DEFAULT_HEIGHT;
 
         canvas.drawRoundRect(0, barTop, barRight, barBottom, ROUND, ROUND, progressBarPaint);
-
-        for (int i = 0; i < destinationList.size(); i++) {
+        Log.d(TAG, "onDraw -> size : " + route.getWaypointList().size());
+        Log.d(TAG, "onDraw -> width : " + barRight);
+        for (int i = 0; i < route.getWaypointList().size(); i++) {
             int x = WIDTH_STRIDE * (i + 1) - POINT_RADIUS;
             int y = getBottom();
             int circleY = y - BOTTOM_TEXT_SIZE - POINT_RADIUS;
-            canvas.drawText("목적지" + i, x, y, bottomTextPaint);
+            canvas.drawText(route.getWaypointList().get(i).getName(), x, y, bottomTextPaint);
             canvas.drawCircle(x, circleY, POINT_RADIUS, destinationPointPaint);
+            Log.d(TAG, route.getWaypointList().get(i).getName());
         }
 
-        int carLeft = 100 - carBitmap.getWidth() / 2;
-        int carTop = getBottom() - BOTTOM_TEXT_SIZE - DEFAULT_HEIGHT - carBitmap.getHeight();
+        float carLeft = (float) ((progression.getClearedNum() + progression.getPercent()) * WIDTH_STRIDE - carBitmap.getWidth() / 2);
+        float carTop = getBottom() - BOTTOM_TEXT_SIZE - DEFAULT_HEIGHT - carBitmap.getHeight();
         canvas.drawBitmap(carBitmap, carLeft, carTop, new Paint());
 
-        int speedX = carLeft + carBitmap.getWidth() / 2;
-        int speedY = carTop - TOP_TEXT_MARGIN;
-        canvas.drawText("3.2 m/s", speedX, speedY, topTextPaint);
+        float speedX = carLeft + carBitmap.getWidth() / 2f;
+        float speedY = carTop - TOP_TEXT_MARGIN;
+        String speed = decimalFormat.format(odometry.getTwist().getTwist().getLinear().getX());
+        Log.d("스피드", speed);
+        canvas.drawText(speed + " m/s", speedX, speedY, topTextPaint);
     }
 }

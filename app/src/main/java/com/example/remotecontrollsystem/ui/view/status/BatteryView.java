@@ -123,8 +123,5 @@ public class BatteryView extends View {
             canvas.drawText(hour, centerX, centerY + getFontMetrics() - textSize / 2, textPaint);
             canvas.drawText(min, centerX, centerY + getFontMetrics() + textSize / 2, textPaint);
         }
-
-        Log.d("뷰 크기", String.valueOf(getWidth()));
-        Log.d("텍스트 사이즈", String.valueOf(textPaint.getTextSize()));
     }
 }

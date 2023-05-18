@@ -107,6 +107,9 @@ public class DashboardFragment extends Fragment {
         mqttSubViewModel.getTopicLiveData(WidgetType.ROBOT_POSE).observe(requireActivity(), manager.robotPoseObserver);
         mqttSubViewModel.getTopicLiveData(WidgetType.LASER_SCAN).observe(requireActivity(), manager.scanObserver);
         mqttSubViewModel.getTopicLiveData(WidgetType.TF).observe(requireActivity(), manager.tfObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.GLOBAL_PLAN).observe(requireActivity(), manager.globalPlanObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.LOCAL_PLAN).observe(requireActivity(), manager.localPlanObserver);
+
         routeViewModel.getCurrentRoute().observe(requireActivity(), manager.currentRouteObserver);
         waypointViewModel.getNewWaypoint().observe(requireActivity(), manager.newWaypointObserver);
     }
@@ -148,6 +151,9 @@ public class DashboardFragment extends Fragment {
         mqttSubViewModel.getTopicLiveData(WidgetType.MAP).removeObserver(manager.mapObserver);
         mqttSubViewModel.getTopicLiveData(WidgetType.LASER_SCAN).removeObserver(manager.scanObserver);
         mqttSubViewModel.getTopicLiveData(WidgetType.TF).removeObserver(manager.scanObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.GLOBAL_PLAN).removeObserver(manager.globalPlanObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.LOCAL_PLAN).removeObserver(manager.localPlanObserver);
+
         routeViewModel.getCurrentRoute().removeObserver(manager.currentRouteObserver);
         waypointViewModel.getNewWaypoint().removeObserver(manager.newWaypointObserver);
     }
@@ -160,5 +166,6 @@ public class DashboardFragment extends Fragment {
         mqttSubViewModel = null;
         routeViewModel = null;
         waypointViewModel = null;
+        manager = null;
     }
 }

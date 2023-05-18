@@ -1,9 +1,9 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
 public class Vector3 {
-    double x = 0;
-    double y = 0;
-    double z = 0;
+    double x = 0.0;
+    double y = 0.0;
+    double z = 0.0;
 
     public double getX() {
         return x;

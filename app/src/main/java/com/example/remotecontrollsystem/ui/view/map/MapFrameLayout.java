@@ -13,6 +13,7 @@ import com.example.remotecontrollsystem.model.entity.Route;
 import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.mqtt.msgs.LaserScan;
 import com.example.remotecontrollsystem.mqtt.msgs.OccupancyGrid;
+import com.example.remotecontrollsystem.mqtt.msgs.Path;
 import com.example.remotecontrollsystem.mqtt.msgs.Pose;
 import com.example.remotecontrollsystem.mqtt.msgs.TFMessage;
 import com.example.remotecontrollsystem.ui.util.GestureUtil;
@@ -27,6 +28,8 @@ public class MapFrameLayout extends FrameLayout {
     private LaserScanView laserScanView;
     private GoalFrameView goalFrameView;
     private PoseJoystickView poseJoystickView;
+    private GlobalPlanView globalPlanView;
+    private LocalPlanView localPlanView;
 
     public MapFrameLayout(@NonNull Context context) {
         super(context);
@@ -42,12 +45,16 @@ public class MapFrameLayout extends FrameLayout {
         laserScanView = new LaserScanView(getContext());
         goalFrameView = new GoalFrameView(getContext());
         poseJoystickView = new PoseJoystickView(getContext());
+        globalPlanView = new GlobalPlanView(getContext());
+        localPlanView = new LocalPlanView(getContext());
 
         addView(gridMapView);
         addView(navigationView);
         addView(laserScanView);
         addView(goalFrameView);
         addView(poseJoystickView);
+        addView(globalPlanView);
+        addView(localPlanView);
 
         gridMapView.addOnLayoutChangeListener((view, i, i1, i2, i3, i4, i5, i6, i7) -> {
             View parent = (View) getParent();
@@ -98,6 +105,8 @@ public class MapFrameLayout extends FrameLayout {
         laserScanView.updateMapMetaData(occupancyGrid.getInfo());
         goalFrameView.updateMapMetaData(occupancyGrid.getInfo());
         poseJoystickView.updateMapMetaData(occupancyGrid.getInfo());
+        globalPlanView.updateMapMetaData(occupancyGrid.getInfo());
+        localPlanView.updateMapMetaData(occupancyGrid.getInfo());
     }
 
     public void updateRobotPose(Pose pose) {
@@ -119,6 +128,14 @@ public class MapFrameLayout extends FrameLayout {
 
     public void updateNewWaypoint(Waypoint waypoint) {
         goalFrameView.updateNewWaypoint(waypoint);
+    }
+
+    public void updateGlobalPath(Path path) {
+        globalPlanView.updateGlobalPath(path);
+    }
+
+    public void updateLocalPath(Path path) {
+        localPlanView.updateLocalPath(path);
     }
 
     public void setPoseViewClickListener(GoalFrameView.OnPoseViewClickListener listener) {

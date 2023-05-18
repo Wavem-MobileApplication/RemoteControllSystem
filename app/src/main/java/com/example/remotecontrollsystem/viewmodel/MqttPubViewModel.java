@@ -25,6 +25,7 @@ import java.util.List;
 public class MqttPubViewModel extends AndroidViewModel {
     private TopicViewModel topicViewModel;
     private MutableLiveData<Pair<String, Pair<String, RosMessage>>> publisher;
+    private MutableLiveData<Boolean> controlAutoDriving;
 
     private HashMap<String, String> pubTopicNameMap;
 
@@ -32,6 +33,7 @@ public class MqttPubViewModel extends AndroidViewModel {
         super(application);
         topicViewModel = new ViewModelProvider.AndroidViewModelFactory(application).create(TopicViewModel.class);
         publisher = new MutableLiveData<>();
+        controlAutoDriving = new MutableLiveData<>();
         pubTopicNameMap = new HashMap<>();
 
         topicViewModel.getAllTopics().observeForever(topics -> {
@@ -62,5 +64,17 @@ public class MqttPubViewModel extends AndroidViewModel {
 
     public LiveData<Pair<String, Pair<String, RosMessage>>> getPublisher() {
         return publisher;
+    }
+
+    public void startAutoDriving() {
+        controlAutoDriving.postValue(true);
+    }
+
+    public void stopAutoDriving() {
+        controlAutoDriving.postValue(false);
+    }
+
+    public LiveData<Boolean> getAutoDrivingController() {
+        return controlAutoDriving;
     }
 }

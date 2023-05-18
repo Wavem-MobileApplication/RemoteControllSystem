@@ -46,5 +46,4 @@ public class DrivingDistanceTextView extends androidx.appcompat.widget.AppCompat
             post(() -> setText(formattedNum));
         }
     }
-
 }
