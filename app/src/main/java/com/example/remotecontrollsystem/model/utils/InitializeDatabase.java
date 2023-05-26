@@ -29,6 +29,7 @@ public class InitializeDatabase {
 
                     topicDao.insert(getDefaultCmdVelPub());
                     topicDao.insert(getDefaultInitialPose());
+                    topicDao.insert(getDefaultControlHardWare());
 
                     topicDao.insert(getDefaultNavigateToPose());
 
@@ -136,6 +137,15 @@ public class InitializeDatabase {
         Topic topic = new Topic(WidgetType.INITIAL_POSE.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.PUB("/initialpose", "geometry_msgs/msg/PoseWithCovarianceStamped");
+        topic.setMessage(msg);
+
+        return topic;
+    }
+
+    private Topic getDefaultControlHardWare() {
+        Topic topic = new Topic(WidgetType.CONTROL_HARD_WARE.getType());
+        RosMessageDefinition msg =
+                RosMessageDefinition.PUB("/can/control_hardware", "can_msgs/msg/ControlHardware");
         topic.setMessage(msg);
 
         return topic;

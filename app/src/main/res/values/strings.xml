@@ -33,4 +33,5 @@
     <string name="rtsp_front_connect">전방 카메라 연결</string>
     <string name="rtsp_url_ex">rtsp://192.168.30.5:8554/rcs</string>
     <string name="rtsp_rear_connect">후방 카메라 연결</string>
+    <string name="control_car">차량제어</string>
 </resources>

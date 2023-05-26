@@ -25,8 +25,8 @@ public class LinearJoystickView extends androidx.appcompat.widget.AppCompatImage
     private float maxVel = 0.45f;
 
     private RectF arcRect;
-    private Path topArrow;
-    private Path bottomArrow;
+/*    private Path topArrow;
+    private Path bottomArrow;*/
 
     private OnLinearJoystickMoveListener linearJoystickMoveListener;
 
@@ -54,8 +54,8 @@ public class LinearJoystickView extends androidx.appcompat.widget.AppCompatImage
         arrowPaint.setStyle(Paint.Style.FILL);
 
         arcRect = new RectF();
-        topArrow = new Path();
-        bottomArrow = new Path();
+/*        topArrow = new Path();
+        bottomArrow = new Path();*/
     }
 
     @Override
@@ -72,11 +72,11 @@ public class LinearJoystickView extends androidx.appcompat.widget.AppCompatImage
         arcRect.set(stroke / 2f, stroke / 2f, width - stroke / 2f, height - stroke / 2f);
 
         float padding = stroke * 0.1f;
-        topArrow = new ArrowPath.ArrowPathBuilder()
+/*        topArrow = new ArrowPath.ArrowPathBuilder()
                 .startPoint(width / 2f, height - padding)
                 .length(stroke - padding * 2f)
                 .centerPoint(width / 2f, height / 2f)
-                .build();
+                .build();*/
 
         Log.d("padding", String.valueOf(padding));
     }
@@ -146,7 +146,7 @@ public class LinearJoystickView extends androidx.appcompat.widget.AppCompatImage
         canvas.drawArc(arcRect, -135, 90, false, outerPaint);
         canvas.drawArc(arcRect, 45, 90, false, outerPaint);
 
-        canvas.drawPath(topArrow, arrowPaint);
+//        canvas.drawPath(topArrow, arrowPaint);
 
         canvas.drawCircle(getWidth() / 2f, posY, joystickRadius, joystickPaint);
     }

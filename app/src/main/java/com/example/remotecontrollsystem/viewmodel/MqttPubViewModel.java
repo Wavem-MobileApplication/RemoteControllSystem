@@ -26,6 +26,7 @@ public class MqttPubViewModel extends AndroidViewModel {
     private TopicViewModel topicViewModel;
     private MutableLiveData<Pair<String, Pair<String, RosMessage>>> publisher;
     private MutableLiveData<Boolean> controlAutoDriving;
+    private MutableLiveData<Pair<String, String>> mqttPublisher;
 
     private HashMap<String, String> pubTopicNameMap;
 
@@ -46,6 +47,7 @@ public class MqttPubViewModel extends AndroidViewModel {
             }
         });
 
+        mqttPublisher = new MutableLiveData<>();
     }
 
     public void publishTopic(String widgetName, RosMessage rosMessage) {
@@ -62,8 +64,16 @@ public class MqttPubViewModel extends AndroidViewModel {
                 new Pair<>(TopicType.GOAL, rosMessage)));
     }
 
+    public void publishDefaultMqttTopic(String topicName, String data) {
+        mqttPublisher.postValue(new Pair<>(topicName, data));
+    }
+
     public LiveData<Pair<String, Pair<String, RosMessage>>> getPublisher() {
         return publisher;
+    }
+
+    public MutableLiveData<Pair<String, String>> getMqttPublisher() {
+        return mqttPublisher;
     }
 
     public void startAutoDriving() {

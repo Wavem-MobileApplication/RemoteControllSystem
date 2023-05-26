@@ -1,7 +1,5 @@
 package com.example.remotecontrollsystem.ui.view.map;
 
-import static com.example.remotecontrollsystem.mqtt.utils.MessageType.RESPONSE;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,18 +8,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
-import com.example.remotecontrollsystem.model.viewmodel.WaypointViewModel;
-import com.example.remotecontrollsystem.mqtt.Mqtt;
-import com.example.remotecontrollsystem.mqtt.data.MessagePublisher;
-import com.example.remotecontrollsystem.mqtt.data.Observer;
-import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.MapMetaData;
 import com.example.remotecontrollsystem.mqtt.msgs.Pose;
 import com.example.remotecontrollsystem.mqtt.utils.RosMath;
-import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 
 public class PoseJoystickView extends View {
     private static final String TAG = PoseJoystickView.class.getSimpleName();

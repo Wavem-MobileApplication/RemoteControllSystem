@@ -142,5 +142,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:menu="@menu/main_menu_drawer"
+        app:itemTextColor="@color/white"
         android:background="@color/color_contents_background" />
 </androidx.drawerlayout.widget.DrawerLayout>

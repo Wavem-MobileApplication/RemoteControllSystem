@@ -3,6 +3,7 @@ package com.example.remotecontrollsystem.ui.fragment.setting;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,5 +49,19 @@ public class SettingFragment extends Fragment {
         SettingViewPagerAdapter viewPagerAdapter = new SettingViewPagerAdapter(this);
         binding.viewPagerSetting.setAdapter(viewPagerAdapter);
         binding.viewPagerSetting.setUserInputEnabled(false);
+
+        binding.btnSettingTopic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.viewPagerSetting.setCurrentItem(0, false);
+            }
+        });
+
+        binding.btnControlCar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.viewPagerSetting.setCurrentItem(1, false);
+            }
+        });
     }
 }

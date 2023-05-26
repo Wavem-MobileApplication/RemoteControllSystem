@@ -13,7 +13,8 @@ public enum WidgetType {
     LOCAL_PLAN("목표 주행 경로"),
     INITIAL_POSE("차량 위치 갱신"),
     NAVIGATE_TO_POSE("자율주행"),
-    GET_MAP("지도 불러오기");
+    GET_MAP("지도 불러오기"),
+    CONTROL_HARD_WARE("장치 제어");
 
     private final String type;
 

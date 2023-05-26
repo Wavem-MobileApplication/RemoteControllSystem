@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.remotecontrollsystem.ui.fragment.setting.frag.ControlFragment;
 import com.example.remotecontrollsystem.ui.fragment.setting.frag.TopicEditFragment;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class SettingViewPagerAdapter extends FragmentStateAdapter {
         super(fragment);
         fragmentList = new ArrayList<>();
         fragmentList.add(TopicEditFragment.newInstance(0));
+        fragmentList.add(ControlFragment.newInstance(1));
     }
 
     @NonNull

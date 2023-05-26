@@ -72,7 +72,7 @@ public class CameraView extends VLCVideoLayout {
         Log.d(TAG, "Setting RTSP Camera Connection");
         Media media = new Media(libVlc, Uri.parse(url));
         media.setHWDecoderEnabled(true, false);
-        media.addOption(":network-caching=600");
+        media.addOption(":network-caching=300");
 
         addView(progressBar);
 

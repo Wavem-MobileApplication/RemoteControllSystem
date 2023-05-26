@@ -19,6 +19,7 @@ import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.model.viewmodel.RouteViewModel;
 import com.example.remotecontrollsystem.model.viewmodel.WaypointViewModel;
 import com.example.remotecontrollsystem.mqtt.data.RosObserver;
+import com.example.remotecontrollsystem.mqtt.msgs.ControlHardware;
 import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.LaserScan;
 import com.example.remotecontrollsystem.mqtt.msgs.Odometry;
@@ -53,7 +54,7 @@ public class ManualControlFragment extends Fragment {
     private MapFrameLayout mapFrameLayout;
 
     private Twist twist;
-
+    private ControlHardware controlHardware;
 
     public static ManualControlFragment newInstance(int num) {
         ManualControlFragment fragment = new ManualControlFragment();
@@ -84,7 +85,10 @@ public class ManualControlFragment extends Fragment {
 
         linearMaxVel = new MutableLiveData<>();
         angularMaxVel = new MutableLiveData<>();
+
+        // Initialize Messages
         twist = new Twist();
+        controlHardware = new ControlHardware();
 
         mapFrameLayout = new MapFrameLayout(requireContext());
         binding.frameMapManual.addView(mapFrameLayout);
@@ -118,9 +122,31 @@ public class ManualControlFragment extends Fragment {
             twist.getLinear().setX(linear);
             mqttPubViewModel.publishTopic(WidgetType.CMD_VEL_PUB.getType(), twist);
         });
+
         binding.angularJoystickView.setAngularJoystickMoveListener(angular -> {
             twist.getAngular().setZ(-angular);
             mqttPubViewModel.publishTopic(WidgetType.CMD_VEL_PUB.getType(), twist);
+        });
+
+        // Initialize ControlHardWare Buttons
+        binding.btnClarkson.setOnClickListener(v -> {
+            controlHardware.setHorn(!controlHardware.isHorn());
+            mqttPubViewModel.publishTopic(WidgetType.CONTROL_HARD_WARE.getType(), controlHardware);
+        });
+
+        binding.btnHeadRight.setOnClickListener(v -> {
+            controlHardware.setHead_light(!controlHardware.isHead_light());
+            mqttPubViewModel.publishTopic(WidgetType.CONTROL_HARD_WARE.getType(), controlHardware);
+        });
+
+        binding.btnLeftLight.setOnClickListener(v -> {
+            controlHardware.setLeft_light(!controlHardware.isLeft_light());
+            mqttPubViewModel.publishTopic(WidgetType.CONTROL_HARD_WARE.getType(), controlHardware);
+        });
+
+        binding.btnRightLight.setOnClickListener(v -> {
+            controlHardware.setRight_light(!controlHardware.isRight_light());
+            mqttPubViewModel.publishTopic(WidgetType.CONTROL_HARD_WARE.getType(), controlHardware);
         });
 
         return binding.getRoot();
@@ -136,7 +162,7 @@ public class ManualControlFragment extends Fragment {
         mqttSubViewModel.getResponseLiveData(WidgetType.GET_MAP).observe(requireActivity(), mapObserver);
         mqttSubViewModel.getTopicLiveData(WidgetType.ROBOT_POSE).observe(requireActivity(), robotPoseObserver);
         mqttSubViewModel.getTopicLiveData(WidgetType.LASER_SCAN).observe(requireActivity(), scanObserver);
-        mqttSubViewModel.getTopicLiveData(WidgetType.TF).observe(requireActivity(), scanObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.TF).observe(requireActivity(), tfObserver);
         mqttSubViewModel.getTopicLiveData(WidgetType.ODOM).observe(requireActivity(), odomObserver);
 
         routeViewModel.getCurrentRoute().observe(requireActivity(), currentRouteObserver);

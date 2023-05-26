@@ -3,6 +3,7 @@ package com.example.remotecontrollsystem.ui.activity;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -40,6 +41,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,11 +92,21 @@ public abstract class MqttActivity extends AppCompatActivity {
             jsonObject.addProperty("mode", type);
             jsonObject.add("data", gson.toJsonTree(data));
 
-            Log.d("KSDJ", jsonObject.toString());
-
             try {
                 if (client != null) {
                     client.publish(topicName, jsonObject.toString().getBytes(), 0, false);
+                    Log.d("KSDJ", jsonObject.toString());
+                }
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+        });
+
+        mqttPubViewModel.getMqttPublisher().observe(this, pair -> {
+            try {
+                if (client != null) {
+                    client.publish(pair.first, pair.second.getBytes(), 0, false);
+                    Log.d("MqttPublish", pair.first + " -> " + pair.second);
                 }
             } catch (MqttException e) {
                 e.printStackTrace();
