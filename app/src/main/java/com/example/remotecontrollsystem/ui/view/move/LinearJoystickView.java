@@ -25,8 +25,8 @@ public class LinearJoystickView extends androidx.appcompat.widget.AppCompatImage
     private float maxVel = 0.45f;
 
     private RectF arcRect;
-/*    private Path topArrow;
-    private Path bottomArrow;*/
+    private Path topArrow;
+    private Path bottomArrow;
 
     private OnLinearJoystickMoveListener linearJoystickMoveListener;
 
@@ -48,6 +48,7 @@ public class LinearJoystickView extends androidx.appcompat.widget.AppCompatImage
         outerPaint = new Paint();
         outerPaint.setColor(Color.parseColor("#9BA4B5"));
         outerPaint.setStyle(Paint.Style.STROKE);
+        outerPaint.setStrokeCap(Paint.Cap.ROUND);
 
         arrowPaint = new Paint();
         arrowPaint.setColor(Color.RED);
@@ -72,13 +73,29 @@ public class LinearJoystickView extends androidx.appcompat.widget.AppCompatImage
         arcRect.set(stroke / 2f, stroke / 2f, width - stroke / 2f, height - stroke / 2f);
 
         float padding = stroke * 0.1f;
-/*        topArrow = new ArrowPath.ArrowPathBuilder()
-                .startPoint(width / 2f, height - padding)
-                .length(stroke - padding * 2f)
-                .centerPoint(width / 2f, height / 2f)
-                .build();*/
-
         Log.d("padding", String.valueOf(padding));
+
+        // Draw top arrow
+        float arrowPadding = joystickRadius * 0.5f; // 화살표의 여백
+        float arrowLength = joystickRadius * 2.5f; // 화살표의 길이
+
+        topArrow = new Path();
+        topArrow.moveTo(getWidth() / 2f, joystickRadius + arrowPadding); // 시작 지점
+
+        // 화살표의 끝 지점 (위쪽으로 화살표가 향하도록 설정)
+        topArrow.lineTo(getWidth() / 2f - arrowLength / 2f, joystickRadius + arrowPadding + arrowLength);
+        topArrow.lineTo(getWidth() / 2f + arrowLength / 2f, joystickRadius + arrowPadding + arrowLength);
+        topArrow.close();
+
+        // Draw bottom arrow
+        bottomArrow = new Path();
+        bottomArrow.moveTo(getWidth() / 2f, getHeight() - joystickRadius - arrowPadding); // 시작 지점
+
+        // 화살표의 끝 지점 (아래쪽으로 화살표가 향하도록 설정)
+        bottomArrow.lineTo(getWidth() / 2f - arrowLength / 2f, getHeight() - joystickRadius - arrowPadding - arrowLength);
+        bottomArrow.lineTo(getWidth() / 2f + arrowLength / 2f, getHeight() - joystickRadius - arrowPadding - arrowLength);
+        bottomArrow.close();
+
     }
 
     @Override
@@ -145,6 +162,9 @@ public class LinearJoystickView extends androidx.appcompat.widget.AppCompatImage
 
         canvas.drawArc(arcRect, -135, 90, false, outerPaint);
         canvas.drawArc(arcRect, 45, 90, false, outerPaint);
+
+/*        canvas.drawPath(topArrow, arrowPaint);
+        canvas.drawPath(bottomArrow, arrowPaint);*/
 
 //        canvas.drawPath(topArrow, arrowPaint);
 

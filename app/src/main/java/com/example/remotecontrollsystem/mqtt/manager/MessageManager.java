@@ -1,5 +1,7 @@
 package com.example.remotecontrollsystem.mqtt.manager;
 
+import com.example.remotecontrollsystem.mqtt.msgs.BatteryState;
+import com.example.remotecontrollsystem.mqtt.msgs.ControlHardware;
 import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Request;
 import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.LaserScan;
@@ -35,6 +37,8 @@ public class MessageManager {
 //        classMap.put(WidgetType.GLOBAL_PLAN.getType(), Path.class);
 //        classMap.put(WidgetType.LOCAL_PLAN.getType(), Path.class);
 //        classMap.put(WidgetType.INITIAL_POSE.getType(), PoseWithCovarianceStamped.class);
+        classMap.put(WidgetType.CONTROL_HARD_WARE.getType(), ControlHardware.class);
+        classMap.put(WidgetType.BATTERY_STATE.getType(), BatteryState.class);
         classMap.put(
                 WidgetType.NAVIGATE_TO_POSE.getType() + MessageType.REQUEST.getType(),
                 NavigateToPose_Request.class);

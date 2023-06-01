@@ -11,6 +11,7 @@ public enum WidgetType {
     ODOM("위치/이동 정보"),
     GLOBAL_PLAN("예상 주행 경로"),
     LOCAL_PLAN("목표 주행 경로"),
+    BATTERY_STATE("배터리 정보"),
     INITIAL_POSE("차량 위치 갱신"),
     NAVIGATE_TO_POSE("자율주행"),
     GET_MAP("지도 불러오기"),

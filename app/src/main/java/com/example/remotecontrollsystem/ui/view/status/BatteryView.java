@@ -19,7 +19,7 @@ public class BatteryView extends View {
     private Paint circlePaint;
     private Paint textPaint;
     private float battery = 0f;
-    private int maxOperationTime = 60 * 4;
+    private int maxOperationTime = 60 * 2;
     private boolean isPercentMode = true;
 
     public BatteryView(Context context) {
@@ -58,7 +58,7 @@ public class BatteryView extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        updateUI(88.4f);
+        updateBatteryState(0f);
     }
 
     @Override
@@ -67,8 +67,8 @@ public class BatteryView extends View {
         textPaint.setTextSize(getWidth() / 2 / 3);
     }
 
-    private void updateUI(float battery) {
-        this.battery = battery;
+    public void updateBatteryState(float percent) {
+        this.battery = percent;
 
         // Set arch color of remaining battery capacity.
         if (battery >= 80) {

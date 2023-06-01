@@ -111,7 +111,7 @@ public class MqttConnectFragment extends DialogFragment {
         SharedPreferences pref = requireActivity().getSharedPreferences(IP_ARRAY_TAG, Context.MODE_PRIVATE);
 
         Set<String> savedIpAddresses = pref.getStringSet(IP_TAG, new LinkedHashSet<>());
-        String lastUsedIp = pref.getString(LAST_USED_IP_TAG, "tcp://10.223.188.12:1883");
+        String lastUsedIp = pref.getString(LAST_USED_IP_TAG, "tcp://10.223.188.11:1883");
         String[] savedIpArr = savedIpAddresses.toArray(new String[savedIpAddresses.size()]);
 
         ArrayAdapter<String> ipAdapter = new ArrayAdapter<>(requireContext(),

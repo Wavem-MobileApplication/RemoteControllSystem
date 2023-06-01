@@ -3,7 +3,6 @@ package com.example.remotecontrollsystem.ui.activity;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.remotecontrollsystem.model.entity.Route;
 import com.example.remotecontrollsystem.model.entity.Topic;
 import com.example.remotecontrollsystem.model.viewmodel.RouteViewModel;
 import com.example.remotecontrollsystem.model.viewmodel.TopicViewModel;
@@ -41,7 +39,6 @@ import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -153,8 +150,7 @@ public abstract class MqttActivity extends AppCompatActivity {
         client = new MqttAndroidClient(getApplicationContext(), address, CLIENT_NAME);
         client.setCallback(new MqttCallbackExtended() {
             @Override
-            public void connectComplete(boolean b, String s) {
-            }
+            public void connectComplete(boolean b, String s) {}
             @Override
             public void connectionLost(Throwable throwable) {
                 ToastMessage.showToast(getApplicationContext(), "차량과 연결이 끊겼습니다.");

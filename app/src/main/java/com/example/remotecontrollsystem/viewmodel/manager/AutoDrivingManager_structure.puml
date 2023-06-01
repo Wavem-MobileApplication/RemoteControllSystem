@@ -1,0 +1,983 @@
+@startuml
+
+/' diagram meta data start
+config=StructureConfiguration;
+{
+  "projectClassification": {
+    "searchMode": "OpenProject", // OpenProject, AllProjects
+    "includedProjects": "",
+    "pathEndKeywords": "*.impl",
+    "isClientPath": "",
+    "isClientName": "",
+    "isTestPath": "",
+    "isTestName": "",
+    "isMappingPath": "",
+    "isMappingName": "",
+    "isDataAccessPath": "",
+    "isDataAccessName": "",
+    "isDataStructurePath": "",
+    "isDataStructureName": "",
+    "isInterfaceStructuresPath": "",
+    "isInterfaceStructuresName": "",
+    "isEntryPointPath": "",
+    "isEntryPointName": "",
+    "treatFinalFieldsAsMandatory": false
+  },
+  "graphRestriction": {
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "removeByInheritance": "", // inheritance/annotation based filtering is done in a second step
+    "removeByAnnotation": "",
+    "removeByClassPackage": "", // cleanup the graph after inheritance/annotation based filtering is done
+    "removeByClassName": "",
+    "cutMappings": false,
+    "cutEnum": true,
+    "cutTests": true,
+    "cutClient": true,
+    "cutDataAccess": false,
+    "cutInterfaceStructures": false,
+    "cutDataStructures": false,
+    "cutGetterAndSetter": true,
+    "cutConstructors": true
+  },
+  "graphTraversal": {
+    "forwardDepth": 6,
+    "backwardDepth": 6,
+    "classPackageExcludeFilter": "",
+    "classPackageIncludeFilter": "",
+    "classNameExcludeFilter": "",
+    "classNameIncludeFilter": "",
+    "methodNameExcludeFilter": "",
+    "methodNameIncludeFilter": "",
+    "hideMappings": false,
+    "hideDataStructures": false,
+    "hidePrivateMethods": true,
+    "hideInterfaceCalls": true, // indirection: implementation -> interface (is hidden) -> implementation
+    "onlyShowApplicationEntryPoints": false, // root node is included
+    "useMethodCallsForStructureDiagram": "ForwardOnly" // ForwardOnly, BothDirections, No
+  },
+  "details": {
+    "aggregation": "GroupByClass", // ByClass, GroupByClass, None
+    "showClassGenericTypes": true,
+    "showMethods": true,
+    "showMethodParameterNames": true,
+    "showMethodParameterTypes": true,
+    "showMethodReturnType": true,
+    "showPackageLevels": 2,
+    "showDetailedClassStructure": true
+  },
+  "rootClass": "com.example.remotecontrollsystem.viewmodel.manager.AutoDrivingManager",
+  "extensionCallbackMethod": "" // qualified.class.name#methodName - signature: public static String method(String)
+}
+diagram meta data end '/
+
+
+
+digraph g {
+    rankdir="TB"
+    splines=polyline
+    
+
+'nodes 
+subgraph cluster_1322970774 { 
+   	label=example
+	labeljust=l
+	fillcolor="#ececec"
+	style=filled
+   
+   subgraph cluster_350572184 { 
+   	label=remotecontrollsystem
+	labeljust=l
+	fillcolor="#d8d8d8"
+	style=filled
+   
+   AutoDrivingManager1171950486[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)AutoDrivingManager</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   autoDrivingProgression: AutoDrivingProgression [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   curWaypointSize: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   feedbackObserver: RosObserver&lt;NavigateToPose_FeedBack&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   mqttPubViewModel: MqttPubViewModel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   mqttSubViewModel: MqttSubViewModel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   poseCount: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   poseProgression: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >+   responseObserver: RosObserver&lt;NavigateToPose_Response&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   route: Route [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   startX: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   startY: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   statusViewModel: StatusViewModel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   totalDistance: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   waypointCount: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   waypointProgression: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- clearData()</TD></TR>
+<TR><TD ALIGN="LEFT" >- sendGoal(goal: NavigateToPose_Request)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ startAutoDriving()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ stopAutoDriving()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+AutoDrivingProgression1171950486[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)AutoDrivingProgression</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   clearedNum: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   percent: double [1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+BatteryState1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)BatteryState</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   capacity: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   cell_temperature: HashMap&lt;String, Float&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   cell_voltage: HashMap&lt;String, Float&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   charge: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   current: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   design_capacity: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   header: Header [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   location: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   percentage: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   power_supply_health: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   power_supply_status: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   power_supply_technology: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   present: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   serial_number: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   temperature: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   voltage: float [1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+ControlHardware1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)ControlHardware</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   head_light: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   horn: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   left_light: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   right_light: boolean [1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+DataStorage748575056[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)DataStorage</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ addRoute(route: Route)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ addTopic(topic: Topic)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ addWaypoint(waypoint: Waypoint)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getInstance(context: Context): DataStorage</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getRoute(id: int): LiveData&lt;Route&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getTopic(funcName: String): LiveData&lt;Topic&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getWaypoint(id: int): LiveData&lt;Waypoint&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ removeRoute(route: Route)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ removeTopic(topic: Topic)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ removeWaypoint(waypoint: Waypoint)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ routeDao(): RouteDao</TD></TR>
+<TR><TD ALIGN="LEFT" >+ topicDao(): TopicDao</TD></TR>
+<TR><TD ALIGN="LEFT" >+ updateRoute(route: Route)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ updateTopic(topic: Topic)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ updateWaypoint(waypoint: Waypoint)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ waypointDao(): WaypointDao</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+DataStorage_Impl748575056[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)DataStorage_Impl</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   _routeDao: RouteDao [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   _topicDao: TopicDao [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   _waypointDao: WaypointDao [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ clearAllTables()</TD></TR>
+<TR><TD ALIGN="LEFT" ># createInvalidationTracker(): InvalidationTracker</TD></TR>
+<TR><TD ALIGN="LEFT" ># createOpenHelper(configuration: DatabaseConfiguration): SupportSQLiteOpenHelper</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getAutoMigrations(autoMigrationSpecsMap: Map&lt;Class&lt;? extends AutoMigrationSpec&gt;, AutoMigrationSpec&gt;): List&lt;Migration&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ routeDao(): RouteDao</TD></TR>
+<TR><TD ALIGN="LEFT" >+ topicDao(): TopicDao</TD></TR>
+<TR><TD ALIGN="LEFT" >+ waypointDao(): WaypointDao</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Duration1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Duration</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   nanosec: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   sec: int [1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+GetMap_Request1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)GetMap_Request</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+GetMap_Response1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)GetMap_Response</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   map: OccupancyGrid [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Header1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Header</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   frame_id: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   stamp: Time [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+LambdaTask75227123[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)LambdaTask</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   taskRunnable: TaskRunnable [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ dispose()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+LaserScan1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)LaserScan</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   angle_increment: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   angle_max: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   angle_min: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   header: Header [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   intensities: Map&lt;String, Float&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   range_max: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   range_min: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   ranges: Map&lt;String, Float&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   scan_time: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   time_increment: float [1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+MainActivity1498962064[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)MainActivity</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   binding: ActivityMainBinding [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >- init()</TD></TR>
+<TR><TD ALIGN="LEFT" ># onCreate(savedInstanceState: Bundle)</TD></TR>
+<TR><TD ALIGN="LEFT" ># onDestroy()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+MapMetaData1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)MapMetaData</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   height: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   map_load_time: Time [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   origin: Pose [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   resolution: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   width: int [1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+MessageManager1661574524[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)MessageManager</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ getMessageClassFromWidgetType(widgetType: String): Class&lt;? extends RosMessage&gt;</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+MqttActivity1498962064[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)MqttActivity</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   autoDrivingManager: AutoDrivingManager [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   client: MqttAndroidClient [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   connectionViewModel: ConnectionViewModel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   gson: Gson [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   mqttPubViewModel: MqttPubViewModel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   mqttSubViewModel: MqttSubViewModel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   routeViewModel: RouteViewModel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   statusViewModel: StatusViewModel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   topicViewModel: TopicViewModel [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ connectToMqttServer(address: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >- createIMqttMessageListener(funcName: String, interval: int): IMqttMessageListener</TD></TR>
+<TR><TD ALIGN="LEFT" >+ dispatchTouchEvent(ev: MotionEvent): boolean</TD></TR>
+<TR><TD ALIGN="LEFT" ># onCreate(savedInstanceState: Bundle)</TD></TR>
+<TR><TD ALIGN="LEFT" ># onDestroy()</TD></TR>
+<TR><TD ALIGN="LEFT" >- sendRosMessageInit()</TD></TR>
+<TR><TD ALIGN="LEFT" >- startToSubscribe()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+MqttPubViewModel2100351061[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)MqttPubViewModel</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   controlAutoDriving: MutableLiveData&lt;Boolean&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   mqttPublisher: MutableLiveData&lt;Pair&lt;String, String&gt;&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   pubTopicNameMap: HashMap&lt;String, String&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   publisher: MutableLiveData&lt;Pair&lt;String, Pair&lt;String, RosMessage&gt;&gt;&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   topicViewModel: TopicViewModel [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ publishCall(widgetName: String, rosMessage: RosMessage)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ publishDefaultMqttTopic(topicName: String, data: String)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ publishGoal(widgetName: String, rosMessage: RosMessage)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ publishTopic(widgetName: String, rosMessage: RosMessage)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ startAutoDriving()</TD></TR>
+<TR><TD ALIGN="LEFT" >+ stopAutoDriving()</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+MqttSubViewModel2100351061[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)MqttSubViewModel</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   rosMessagesMap: HashMap&lt;String, MutableLiveData&lt;RosMessage&gt;&gt; [0..*]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ getFeedbackLiveData(widgetType: WidgetType): LiveData&lt;RosMessage&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getResponseLiveData(widgetType: WidgetType): LiveData&lt;RosMessage&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getTopicLiveData(widgetType: WidgetType): LiveData&lt;RosMessage&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ updateMqttData(funcName: String, rosMessage: RosMessage)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+NavigateToPose_FeedBack1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)NavigateToPose_FeedBack</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   current_pose: PoseStamped [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   distance_remaining: float [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   navigation_time: Duration [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   number_of_recoveries: int [1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+NavigateToPose_Request1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)NavigateToPose_Request</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   behavior_tree: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   pose: PoseStamped [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+NavigateToPose_Response1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)NavigateToPose_Response</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   code: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   result: String [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+OccupancyGrid1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)OccupancyGrid</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   data: int[] [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   header: Header [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   info: MapMetaData [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Odometry1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Odometry</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   child_frame_id: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   header: Header [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   pose: PoseWithCovariance [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   twist: TwistWithCovariance [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Path1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Path</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   header: Header [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   poses: PoseStamped[] [0..*]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Pose1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Pose</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   orientation: Quaternion [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   position: Point [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+PoseStamped1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)PoseStamped</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   header: Header [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   pose: Pose [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+PoseWithCovariance1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)PoseWithCovariance</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   covariance: Map&lt;String, Double&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   pose: Pose [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+RoomConverter75227123[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)RoomConverter</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ fromJsonToPose(json: String): List&lt;Pose&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ fromJsonToRosMessageDefinition(json: String): RosMessageDefinition</TD></TR>
+<TR><TD ALIGN="LEFT" >+ fromJsonToWaypointList(json: String): List&lt;Waypoint&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ fromPoseToJson(poseList: List&lt;Pose&gt;): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ fromRosMessageDefinitionToJson(rosMessageDefinition: RosMessageDefinition): String</TD></TR>
+<TR><TD ALIGN="LEFT" >+ fromWaypointListToJson(waypointList: List&lt;Waypoint&gt;): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+RosMessage1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)RosMessage</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ fromJson(json: String, widgetType: String): RosMessage</TD></TR>
+<TR><TD ALIGN="LEFT" >+ toJson(message: Object): String</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+RosMessageDefinition1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)RosMessageDefinition</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   feedback_type: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   message_type: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   name: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   qos: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   request_type: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   response_type: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   retained: boolean [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   type: String [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ CALL(name: String, message_type: String, request_type: String, response_type: String, qos: int, retained: boolean): RosMessageDefinition</TD></TR>
+<TR><TD ALIGN="LEFT" >+ GOAL(name: String, message_type: String, request_type: String, response_type: String, feedback_type: String, qos: int, retained: boolean): RosMessageDefinition</TD></TR>
+<TR><TD ALIGN="LEFT" >+ PUB(name: String, message_type: String): RosMessageDefinition</TD></TR>
+<TR><TD ALIGN="LEFT" >+ PUB(name: String, message_type: String, qos: int): RosMessageDefinition</TD></TR>
+<TR><TD ALIGN="LEFT" >+ PUB(name: String, message_type: String, retained: boolean): RosMessageDefinition</TD></TR>
+<TR><TD ALIGN="LEFT" >+ PUB(name: String, message_type: String, qos: int, retained: boolean): RosMessageDefinition</TD></TR>
+<TR><TD ALIGN="LEFT" >+ SUB(name: String, message_type: String): RosMessageDefinition</TD></TR>
+<TR><TD ALIGN="LEFT" >+ SUB(name: String, message_type: String, qos: int): RosMessageDefinition</TD></TR>
+<TR><TD ALIGN="LEFT" >+ SUB(name: String, message_type: String, retained: boolean): RosMessageDefinition</TD></TR>
+<TR><TD ALIGN="LEFT" >+ SUB(name: String, message_type: String, qos: int, retained: boolean): RosMessageDefinition</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+RosObserver1672295365[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)RosObserver&lt;T extends RosMessage&gt;</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   messageType: Class&lt;T&gt; [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ onChange(message: T)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ onChanged(rosMessage: RosMessage)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Route1868758241[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Route</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   id: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   name: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   waypointList: List&lt;Waypoint&gt; [0..*]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+RouteDao_Impl1743076180[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)RouteDao_Impl</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   __db: RoomDatabase [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __deletionAdapterOfRoute: EntityDeletionOrUpdateAdapter&lt;Route&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __insertionAdapterOfRoute: EntityInsertionAdapter&lt;Route&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __updateAdapterOfRoute: EntityDeletionOrUpdateAdapter&lt;Route&gt; [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ delete(route: Route)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getRoute(id: int): LiveData&lt;Route&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ insert(route: Route)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update(route: Route)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+StatusViewModel2100351061[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)StatusViewModel</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   autoDrivingProgression: MutableLiveData&lt;AutoDrivingProgression&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   drivingDistance: MediatorLiveData&lt;Double&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   mileage: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   mqttSubViewModel: MqttSubViewModel [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   preX: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   preY: double [1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ updateAutoDrivingProgression(autoDrivingProgression: AutoDrivingProgression)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TFMessage1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TFMessage</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   transforms: TransformStamped[] [0..*]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Time1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Time</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   nanosec: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   sec: int [1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Topic1868758241[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Topic</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   funcName: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   message: RosMessageDefinition [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TopicDao_Impl1743076180[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TopicDao_Impl</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   __db: RoomDatabase [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __deletionAdapterOfTopic: EntityDeletionOrUpdateAdapter&lt;Topic&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __insertionAdapterOfTopic: EntityInsertionAdapter&lt;Topic&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __updateAdapterOfTopic: EntityDeletionOrUpdateAdapter&lt;Topic&gt; [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ delete(topic: Topic)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getTopic(funcName: String): LiveData&lt;Topic&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ insert(topic: Topic)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update(topic: Topic)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TopicViewModel8913434[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TopicViewModel</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   allTopics: MediatorLiveData&lt;List&lt;Topic&gt;&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   dataStorage: DataStorage [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ updateTopic(topic: Topic)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Transform1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Transform</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   rotation: Quaternion [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   translation: Vector3 [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TransformStamped1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TransformStamped</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   child_frame_id: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   header: Header [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   transform: Transform [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Twist1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Twist</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   angular: Vector3 [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   linear: Vector3 [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+TwistWithCovariance1672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)TwistWithCovariance</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   covariance: Map&lt;String, Double&gt; [0..*]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   twist: Twist [0..1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Vector31672010333[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Vector3</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >#   x: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   y: double [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >#   z: double [1]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+Waypoint1868758241[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)Waypoint</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   id: int [1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   name: String [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   poseList: List&lt;Pose&gt; [0..*]</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+
+WaypointDao_Impl1743076180[
+	label=<<TABLE BORDER="1" CELLBORDER="0" CELLPADDING="4" CELLSPACING="0">
+<TR><TD ALIGN="LEFT" >(C)WaypointDao_Impl</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >-   __db: RoomDatabase [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __deletionAdapterOfWaypoint: EntityDeletionOrUpdateAdapter&lt;Waypoint&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __insertionAdapterOfWaypoint: EntityInsertionAdapter&lt;Waypoint&gt; [0..1]</TD></TR>
+<TR><TD ALIGN="LEFT" >-   __updateAdapterOfWaypoint: EntityDeletionOrUpdateAdapter&lt;Waypoint&gt; [0..1]</TD></TR>
+<HR/>
+<TR><TD ALIGN="LEFT" >+ delete(waypoint: Waypoint)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ getWaypoint(id: int): LiveData&lt;Waypoint&gt;</TD></TR>
+<TR><TD ALIGN="LEFT" >+ insert(waypoint: Waypoint)</TD></TR>
+<TR><TD ALIGN="LEFT" >+ update(waypoint: Waypoint)</TD></TR>
+</TABLE>>
+	style=filled
+	margin=0
+	shape=plaintext
+	fillcolor="#FFFFFF"
+];
+} 
+} 
+
+'edges    
+AutoDrivingManager1171950486 -> AutoDrivingProgression1171950486[label="autoDrivingProgression
+[0..1]"];
+AutoDrivingManager1171950486 -> MqttPubViewModel2100351061[label="mqttPubViewModel
+[0..1]"];
+AutoDrivingManager1171950486 -> MqttSubViewModel2100351061[label="mqttSubViewModel
+[0..1]"];
+AutoDrivingManager1171950486 -> NavigateToPose_FeedBack1672010333[label="feedbackObserver
+[0..1]"];
+AutoDrivingManager1171950486 -> NavigateToPose_Response1672010333[label="responseObserver
+[0..1]"];
+AutoDrivingManager1171950486 -> RosObserver1672295365[label="feedbackObserver
+[0..1]"];
+AutoDrivingManager1171950486 -> RosObserver1672295365[label="responseObserver
+[0..1]"];
+AutoDrivingManager1171950486 -> Route1868758241[label="route
+[0..1]"];
+AutoDrivingManager1171950486 -> StatusViewModel2100351061[label="statusViewModel
+[0..1]"];
+BatteryState1672010333 -> Header1672010333[label="header
+[0..1]"];
+DataStorage748575056 -> DataStorage_Impl748575056[arrowhead=none, arrowtail=empty, dir=both];
+DataStorage748575056 -> RouteDao_Impl1743076180[arrowhead=none];
+DataStorage748575056 -> TopicDao_Impl1743076180[arrowhead=none];
+DataStorage748575056 -> WaypointDao_Impl1743076180[arrowhead=none];
+GetMap_Response1672010333 -> OccupancyGrid1672010333[label="map
+[0..1]"];
+LaserScan1672010333 -> Header1672010333[label="header
+[0..1]"];
+MapMetaData1672010333 -> Pose1672010333[label="origin
+[0..1]"];
+MapMetaData1672010333 -> Time1672010333[label="map_load_time
+[0..1]"];
+MqttActivity1498962064 -> AutoDrivingManager1171950486[label="autoDrivingManager
+[0..1]"];
+MqttActivity1498962064 -> MainActivity1498962064[arrowhead=none, arrowtail=empty, dir=both];
+MqttPubViewModel2100351061 -> RosMessage1672010333[label="publisher
+[0..1]"];
+MqttPubViewModel2100351061 -> TopicViewModel8913434[label="topicViewModel
+[0..1]"];
+MqttSubViewModel2100351061 -> RosMessage1672010333[label="rosMessagesMap
+[0..*]"];
+NavigateToPose_FeedBack1672010333 -> Duration1672010333[label="navigation_time
+[0..1]"];
+NavigateToPose_FeedBack1672010333 -> PoseStamped1672010333[label="current_pose
+[0..1]"];
+NavigateToPose_Request1672010333 -> PoseStamped1672010333[label="pose
+[0..1]"];
+OccupancyGrid1672010333 -> Header1672010333[label="header
+[0..1]"];
+OccupancyGrid1672010333 -> MapMetaData1672010333[label="info
+[0..1]"];
+Odometry1672010333 -> Header1672010333[label="header
+[0..1]"];
+Odometry1672010333 -> PoseWithCovariance1672010333[label="pose
+[0..1]"];
+Odometry1672010333 -> TwistWithCovariance1672010333[label="twist
+[0..1]"];
+Path1672010333 -> Header1672010333[label="header
+[0..1]"];
+Path1672010333 -> PoseStamped1672010333[label="poses
+[0..*]"];
+PoseStamped1672010333 -> Header1672010333[label="header
+[0..1]"];
+PoseStamped1672010333 -> Pose1672010333[label="pose
+[0..1]"];
+PoseWithCovariance1672010333 -> Pose1672010333[label="pose
+[0..1]"];
+RosMessage1672010333 -> BatteryState1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> ControlHardware1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> GetMap_Request1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> GetMap_Response1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> LaserScan1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> MessageManager1661574524[label="fromJson() -> getMessageClassFromWidgetType()"];
+RosMessage1672010333 -> NavigateToPose_FeedBack1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> NavigateToPose_Request1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> NavigateToPose_Response1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> OccupancyGrid1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> Odometry1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> Path1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> Pose1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> TFMessage1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosMessage1672010333 -> Twist1672010333[arrowhead=none, arrowtail=empty, dir=both];
+RosObserver1672295365 -> RosMessage1672010333[label="onChanged() -> toJson()"];
+RouteDao_Impl1743076180 -> RoomConverter75227123[label="getRoute() -> fromJsonToWaypointList()"];
+RouteDao_Impl1743076180 -> Route1868758241[label="__deletionAdapterOfRoute
+[0..1]"];
+RouteDao_Impl1743076180 -> Route1868758241[label="__insertionAdapterOfRoute
+[0..1]"];
+RouteDao_Impl1743076180 -> Route1868758241[label="__updateAdapterOfRoute
+[0..1]"];
+StatusViewModel2100351061 -> AutoDrivingProgression1171950486[label="autoDrivingProgression
+[0..1]"];
+StatusViewModel2100351061 -> MqttSubViewModel2100351061[label="mqttSubViewModel
+[0..1]"];
+TFMessage1672010333 -> TransformStamped1672010333[label="transforms
+[0..*]"];
+Topic1868758241 -> RosMessageDefinition1672010333[label="message
+[0..1]"];
+TopicDao_Impl1743076180 -> RoomConverter75227123[label="getTopic() -> fromJsonToRosMessageDefinition()"];
+TopicDao_Impl1743076180 -> Topic1868758241[label="__deletionAdapterOfTopic
+[0..1]"];
+TopicDao_Impl1743076180 -> Topic1868758241[label="__insertionAdapterOfTopic
+[0..1]"];
+TopicDao_Impl1743076180 -> Topic1868758241[label="__updateAdapterOfTopic
+[0..1]"];
+TopicViewModel8913434 -> DataStorage748575056[label="dataStorage
+[0..1]"];
+TopicViewModel8913434 -> Topic1868758241[label="allTopics
+[0..1]"];
+TransformStamped1672010333 -> Header1672010333[label="header
+[0..1]"];
+TransformStamped1672010333 -> Transform1672010333[label="transform
+[0..1]"];
+Twist1672010333 -> Vector31672010333[label="angular
+[0..1]"];
+Twist1672010333 -> Vector31672010333[label="linear
+[0..1]"];
+TwistWithCovariance1672010333 -> Twist1672010333[label="twist
+[0..1]"];
+WaypointDao_Impl1743076180 -> RoomConverter75227123[label="getWaypoint() -> fromJsonToPose()"];
+WaypointDao_Impl1743076180 -> Waypoint1868758241[label="__deletionAdapterOfWaypoint
+[0..1]"];
+WaypointDao_Impl1743076180 -> Waypoint1868758241[label="__insertionAdapterOfWaypoint
+[0..1]"];
+WaypointDao_Impl1743076180 -> Waypoint1868758241[label="__updateAdapterOfWaypoint
+[0..1]"];
+    
+}
+@enduml

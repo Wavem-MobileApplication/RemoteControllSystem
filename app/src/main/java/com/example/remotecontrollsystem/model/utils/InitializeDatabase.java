@@ -25,7 +25,7 @@ public class InitializeDatabase {
                     topicDao.insert(getDefaultOdom());
                     topicDao.insert(getDefaultGlobalPlan());
                     topicDao.insert(getDefaultLocalPlan());
-
+                    topicDao.insert(getDefaultBatteryState());
 
                     topicDao.insert(getDefaultCmdVelPub());
                     topicDao.insert(getDefaultInitialPose());
@@ -128,6 +128,14 @@ public class InitializeDatabase {
         Topic topic = new Topic(WidgetType.LOCAL_PLAN.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.SUB("/local_plan", "nav_msgs/msg/Path");
+        topic.setMessage(msg);
+
+        return topic;
+    }
+
+    private Topic getDefaultBatteryState() {
+        Topic topic = new Topic(WidgetType.BATTERY_STATE.getType());
+        RosMessageDefinition msg = RosMessageDefinition.SUB("/battery/state", "sensor_msgs/msg/BatteryState");
         topic.setMessage(msg);
 
         return topic;

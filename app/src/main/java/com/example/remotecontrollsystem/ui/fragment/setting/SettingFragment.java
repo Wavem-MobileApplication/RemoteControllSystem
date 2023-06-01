@@ -50,18 +50,10 @@ public class SettingFragment extends Fragment {
         binding.viewPagerSetting.setAdapter(viewPagerAdapter);
         binding.viewPagerSetting.setUserInputEnabled(false);
 
-        binding.btnSettingTopic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.viewPagerSetting.setCurrentItem(0, false);
-            }
-        });
+        binding.btnSettingTopic.setOnClickListener(v ->
+                binding.viewPagerSetting.setCurrentItem(0, false));
 
-        binding.btnControlCar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.viewPagerSetting.setCurrentItem(1, false);
-            }
-        });
+        binding.btnControlCar.setOnClickListener(v ->
+                binding.viewPagerSetting.setCurrentItem(1, false));
     }
 }

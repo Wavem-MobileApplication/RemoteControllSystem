@@ -22,6 +22,7 @@ public class ViewModelManager {
         rosMessageMap.put(WidgetType.ODOM.getType(), new MutableLiveData<>());
         rosMessageMap.put(WidgetType.GLOBAL_PLAN.getType(), new MutableLiveData<>());
         rosMessageMap.put(WidgetType.LOCAL_PLAN.getType(), new MutableLiveData<>());
+        rosMessageMap.put(WidgetType.BATTERY_STATE.getType(), new MutableLiveData<>());
         rosMessageMap.put(WidgetType.NAVIGATE_TO_POSE.getType() + MessageType.FEEDBACK.getType(), new MutableLiveData<>());
         rosMessageMap.put(WidgetType.NAVIGATE_TO_POSE.getType() + MessageType.RESPONSE.getType(), new MutableLiveData<>());
         rosMessageMap.put(WidgetType.GET_MAP.getType() + MessageType.RESPONSE.getType(), new MutableLiveData<>());

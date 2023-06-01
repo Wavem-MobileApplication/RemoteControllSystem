@@ -10,11 +10,16 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remotecontrollsystem.databinding.FragmentRobotStatusBinding;
+import com.example.remotecontrollsystem.mqtt.data.RosObserver;
+import com.example.remotecontrollsystem.mqtt.msgs.BatteryState;
+import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
+import com.example.remotecontrollsystem.viewmodel.MqttSubViewModel;
 import com.example.remotecontrollsystem.viewmodel.StatusViewModel;
 
 public class RobotStatusFragment extends Fragment {
     private FragmentRobotStatusBinding binding;
 
+    private MqttSubViewModel mqttSubViewModel;
     private StatusViewModel statusViewModel;
 
     public static RobotStatusFragment newInstance(int num) {
@@ -38,6 +43,7 @@ public class RobotStatusFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentRobotStatusBinding.inflate(inflater, container, false);
 
+        mqttSubViewModel = new ViewModelProvider(requireActivity()).get(MqttSubViewModel.class);
         statusViewModel = new ViewModelProvider(requireActivity()).get(StatusViewModel.class);
 
         return binding.getRoot();
@@ -46,8 +52,16 @@ public class RobotStatusFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mqttSubViewModel.getTopicLiveData(WidgetType.BATTERY_STATE).observe(requireActivity(), batteryStateObserver);
         statusViewModel.getDrivingDistance().observe(requireActivity(), drivingDistanceObserver);
     }
+
+    private final RosObserver<BatteryState> batteryStateObserver = new RosObserver<>(BatteryState.class) {
+        @Override
+        public void onChange(BatteryState batteryState) {
+            binding.batteryView.updateBatteryState(batteryState.getPercentage());
+        }
+    };
 
     private final Observer<Double> drivingDistanceObserver = new Observer<Double>() {
         @Override
@@ -57,8 +71,9 @@ public class RobotStatusFragment extends Fragment {
     };
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
+        mqttSubViewModel.getTopicLiveData(WidgetType.BATTERY_STATE).removeObserver(batteryStateObserver);
         statusViewModel.getDrivingDistance().removeObserver(drivingDistanceObserver);
     }
 
