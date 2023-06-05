@@ -47,6 +47,9 @@ dependencies {
 
     implementation files('libs/libvlc.aar')
 
+    // Apache commons
+    implementation 'commons-io:commons-io:2.12.0'
+
     // RxJava
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.7'
@@ -71,4 +74,14 @@ dependencies {
 
     // Bubble Tab Bar
     implementation  'io.ak1:bubbletabbar:1.0.8'
+
+    // Mapsforge VTM
+    implementation 'org.mapsforge:vtm:0.19.0'
+    implementation 'org.mapsforge:vtm-themes:0.19.0'
+    runtimeOnly 'org.mapsforge:vtm-android:0.19.0:natives-armeabi-v7a'
+    runtimeOnly 'org.mapsforge:vtm-android:0.19.0:natives-arm64-v8a'
+    runtimeOnly 'org.mapsforge:vtm-android:0.19.0:natives-x86'
+    runtimeOnly 'org.mapsforge:vtm-android:0.19.0:natives-x86_64'
+    implementation 'org.mapsforge:vtm-android:0.19.0'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
 }

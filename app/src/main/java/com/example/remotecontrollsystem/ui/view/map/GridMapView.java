@@ -34,8 +34,12 @@ public class GridMapView extends androidx.appcompat.widget.AppCompatImageView {
     }
 
     public void updateMap(OccupancyGrid occupancyGrid) {
-        Bitmap bitmap = convertOccupancyGridToBitmap(occupancyGrid);
-        setImageBitmap(bitmap);
+        try {
+            Bitmap bitmap = convertOccupancyGridToBitmap(occupancyGrid);
+            setImageBitmap(bitmap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Bitmap convertOccupancyGridToBitmap(OccupancyGrid occupancyGrid) {

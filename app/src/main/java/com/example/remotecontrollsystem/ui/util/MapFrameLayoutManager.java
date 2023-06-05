@@ -5,8 +5,8 @@ import androidx.lifecycle.Observer;
 import com.example.remotecontrollsystem.model.entity.Route;
 import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.mqtt.data.RosObserver;
-import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.LaserScan;
+import com.example.remotecontrollsystem.mqtt.msgs.OccupancyGrid;
 import com.example.remotecontrollsystem.mqtt.msgs.Path;
 import com.example.remotecontrollsystem.mqtt.msgs.Pose;
 import com.example.remotecontrollsystem.mqtt.msgs.TFMessage;
@@ -20,10 +20,10 @@ public class MapFrameLayoutManager {
     }
 
     // ROS-Mqtt Observers
-    public final RosObserver<GetMap_Response> mapObserver = new RosObserver<GetMap_Response>(GetMap_Response.class) {
+    public final RosObserver<OccupancyGrid> mapObserver = new RosObserver<>(OccupancyGrid.class) {
         @Override
-        public void onChange(GetMap_Response getMap_response) {
-            mapFrameLayout.updateMap(getMap_response.getMap());
+        public void onChange(OccupancyGrid occupancyGrid) {
+            mapFrameLayout.updateMap(occupancyGrid);
         }
     };
 

@@ -15,7 +15,6 @@ public class RosMessage {
 /*        if (widgetType.equals(WidgetType.LASER_SCAN.getType())) {
             Log.d("LaserScan", json);
         }*/
-        Log.d(widgetType, json);
         return new Gson().fromJson(json, MessageManager.getMessageClassFromWidgetType(widgetType));
     }
 }

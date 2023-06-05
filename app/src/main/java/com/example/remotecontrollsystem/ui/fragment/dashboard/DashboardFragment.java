@@ -11,16 +11,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remotecontrollsystem.databinding.FragmentDashboardBinding;
-import com.example.remotecontrollsystem.model.entity.Route;
-import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.model.viewmodel.RouteViewModel;
 import com.example.remotecontrollsystem.model.viewmodel.WaypointViewModel;
-import com.example.remotecontrollsystem.mqtt.data.RosObserver;
 import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Request;
-import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
-import com.example.remotecontrollsystem.mqtt.msgs.LaserScan;
-import com.example.remotecontrollsystem.mqtt.msgs.Pose;
-import com.example.remotecontrollsystem.mqtt.msgs.TFMessage;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
 import com.example.remotecontrollsystem.ui.util.MapFrameLayoutManager;
 import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
@@ -103,7 +96,7 @@ public class DashboardFragment extends Fragment {
         connectionViewModel.getRtspFrontUrl().observe(requireActivity(), frontUrlObserver);
         connectionViewModel.getRtspRearUrl().observe(requireActivity(), rearUrlObserver);
 
-        mqttSubViewModel.getResponseLiveData(WidgetType.GET_MAP).observe(requireActivity(), manager.mapObserver);
+        mqttSubViewModel.getTopicLiveData(WidgetType.MAP).observe(requireActivity(), manager.mapObserver);
         mqttSubViewModel.getTopicLiveData(WidgetType.ROBOT_POSE).observe(requireActivity(), manager.robotPoseObserver);
         mqttSubViewModel.getTopicLiveData(WidgetType.LASER_SCAN).observe(requireActivity(), manager.scanObserver);
         mqttSubViewModel.getTopicLiveData(WidgetType.TF).observe(requireActivity(), manager.tfObserver);

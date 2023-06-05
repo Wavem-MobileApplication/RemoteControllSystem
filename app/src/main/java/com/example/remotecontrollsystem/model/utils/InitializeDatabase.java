@@ -16,7 +16,7 @@ public class InitializeDatabase {
 
     public void settingDefaultTopics(TopicDao topicDao) {
         Disposable backgroundTask = Observable.fromCallable(() -> {
-//        topicDao.insert(getDefaultMap());
+                    topicDao.insert(getDefaultMap());
                     topicDao.insert(getDefaultRobotPose());
                     topicDao.insert(getDefaultScan());
                     topicDao.insert(getDefaultTF());
@@ -159,7 +159,7 @@ public class InitializeDatabase {
         return topic;
     }
 
-    private Topic  getDefaultNavigateToPose() {
+    private Topic getDefaultNavigateToPose() {
         Topic topic = new Topic(WidgetType.NAVIGATE_TO_POSE.getType());
         RosMessageDefinition msg = RosMessageDefinition.GOAL(
                 "/navigate_to_pose", "nav2_msgs/action/NavigateToPose",
