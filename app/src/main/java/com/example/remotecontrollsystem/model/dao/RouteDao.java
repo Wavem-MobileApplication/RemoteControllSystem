@@ -20,8 +20,8 @@ public interface RouteDao {
     @Update
     void update(Route route);
 
-    @Delete
-    void delete(Route route);
+    @Query("DELETE FROM route_table WHERE id = :id")
+    void delete(int id);
 
     @Query("SELECT * FROM route_table WHERE id = :id")
     LiveData<Route> getRoute(int id);

@@ -43,6 +43,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class MqttActivity extends AppCompatActivity {
     private static final String TAG = MqttActivity.class.getSimpleName();
@@ -92,7 +93,7 @@ public abstract class MqttActivity extends AppCompatActivity {
             try {
                 if (client != null) {
                     client.publish(topicName, jsonObject.toString().getBytes(), 0, false);
-                    Log.d("KSDJ", jsonObject.toString());
+                    Log.d("publish", jsonObject.toString());
                 }
             } catch (MqttException e) {
                 e.printStackTrace();
@@ -147,7 +148,10 @@ public abstract class MqttActivity extends AppCompatActivity {
         connOpts.setCleanSession(true);
         connOpts.setConnectionTimeout(5000);
 
-        client = new MqttAndroidClient(getApplicationContext(), address, CLIENT_NAME);
+        client = new MqttAndroidClient(
+                getApplicationContext(),
+                address,
+                UUID.randomUUID().toString() + CLIENT_NAME);
         client.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean b, String s) {}

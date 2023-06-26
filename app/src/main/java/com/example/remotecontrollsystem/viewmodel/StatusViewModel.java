@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.remotecontrollsystem.model.utils.InitializeDatabase;
 import com.example.remotecontrollsystem.mqtt.data.RosObserver;
 import com.example.remotecontrollsystem.mqtt.msgs.NavigateToPose_FeedBack;
 import com.example.remotecontrollsystem.mqtt.msgs.NavigateToPose_Response;
@@ -24,7 +25,7 @@ public class StatusViewModel extends AndroidViewModel {
     private MqttSubViewModel mqttSubViewModel;
 
     private MediatorLiveData<Double> drivingDistance;
-    private MutableLiveData<AutoDrivingProgression> autoDrivingProgression;
+    private MutableLiveData<Integer> manualMoveProgress;
 
     private double preX = 0f, preY = 0f, mileage = 0f; // About driving distance mileage
 
@@ -55,18 +56,17 @@ public class StatusViewModel extends AndroidViewModel {
             }
         });
 
-        autoDrivingProgression = new MutableLiveData<>();
+        manualMoveProgress = new MutableLiveData<>();
     }
 
     public LiveData<Double> getDrivingDistance() {
         return drivingDistance;
     }
 
-    public void updateAutoDrivingProgression(AutoDrivingProgression autoDrivingProgression) {
-        this.autoDrivingProgression.postValue(autoDrivingProgression);
+    public void updateManualMoveProgress(int progress) {
+        manualMoveProgress.postValue(progress);
     }
-
-    public LiveData<AutoDrivingProgression> getAutoDrivingProgression() {
-        return autoDrivingProgression;
+    public LiveData<Integer> getManualMoveProgress() {
+        return manualMoveProgress;
     }
 }

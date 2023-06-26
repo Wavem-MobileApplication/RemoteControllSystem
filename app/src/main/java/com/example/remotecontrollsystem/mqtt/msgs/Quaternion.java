@@ -7,6 +7,39 @@ public class Quaternion {
     double w;
 
     public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
+    public void setZ(double z) {
+        this.z = z;
+    }
+
+    public double getW() {
+        return w;
+    }
+
+    public void setW(double w) {
+        this.w = w;
+    }
+
+    /*
+    public double getX() {
         return Math.round(x * 10000.0) / 10000.0;
     }
 
@@ -36,5 +69,5 @@ public class Quaternion {
 
     public void setW(double w) {
         this.w = Math.round(w * 10000.0) / 10000.0;
-    }
+    }*/
 }

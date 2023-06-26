@@ -6,9 +6,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import androidx.annotation.Nullable;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImageView {
     private static final String TAG = AngularJoystickView.class.getSimpleName();
@@ -18,11 +22,13 @@ public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImag
     private float joystickRadius;
     private float posX;
     private float maxVel = 0.45f;
+    float polarX;
 
     private RectF arcRect;
 
     private OnAngularJoystickMoveListener angularJoystickMoveListener;
-
+    private Timer timer;
+    private TimerTask timerTask;
 
     public AngularJoystickView(Context context) {
         super(context);
@@ -62,20 +68,18 @@ public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImag
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float eventX = event.getX();
-        float polarX = convertPxToPolar(eventX);
+        polarX = convertPxToPolar(eventX);
         posX = convertPolarToPx(polarX);
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                moveTo(posX);
+                startTimerTask();
                 break;
             case MotionEvent.ACTION_MOVE:
                 moveTo(posX);
-                if (angularJoystickMoveListener != null) {
-                    angularJoystickMoveListener.onMove(polarX * maxVel);
-                }
                 break;
             case MotionEvent.ACTION_UP:
+                stopTimerTask();
                 moveTo(getWidth() / 2f);
                 if (angularJoystickMoveListener != null) {
                     angularJoystickMoveListener.onMove(0);
@@ -83,6 +87,32 @@ public class AngularJoystickView extends androidx.appcompat.widget.AppCompatImag
                 break;
         }
         return true;
+    }
+
+
+    private void initializeTimerTask() {
+        timer = new Timer();
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                if (angularJoystickMoveListener != null) {
+                    angularJoystickMoveListener.onMove(-polarX * maxVel);
+                    Log.d(TAG, String.valueOf(-polarX * maxVel));
+                }
+            }
+        };
+    }
+
+    private void startTimerTask() {
+        initializeTimerTask();
+        timer.schedule(timerTask, 0, 100);
+    }
+
+    private void stopTimerTask() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
     }
 
     private float convertPxToPolar(float x) {

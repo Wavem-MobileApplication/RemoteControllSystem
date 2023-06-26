@@ -1,6 +1,6 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
-public class PoseStamped {
+public class PoseStamped extends RosMessage {
     private Header header;
     private Pose pose;
 

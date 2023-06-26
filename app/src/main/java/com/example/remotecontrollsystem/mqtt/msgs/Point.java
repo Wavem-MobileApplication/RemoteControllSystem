@@ -6,26 +6,26 @@ public class Point {
     double z;
 
     public double getX() {
-        return Math.round(x * 10000.0) / 10000.0;
+        return x;
     }
 
     public void setX(double x) {
-        this.x = Math.round(x * 10000.0) / 10000.0;
+        this.x = x;
     }
 
     public double getY() {
-        return Math.round(y * 10000.0) / 10000.0;
+        return y;
     }
 
     public void setY(double y) {
-        this.y = Math.round(y * 10000.0) / 10000.0;
+        this.y = y;
     }
 
     public double getZ() {
-        return Math.round(z * 10000.0) / 10000.0;
+        return z;
     }
 
     public void setZ(double z) {
-        this.z = Math.round(z * 10000.0) / 10000.0;
+        this.z = z;
     }
 }

@@ -14,21 +14,17 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.remotecontrollsystem.databinding.FragmentManualControlBinding;
-import com.example.remotecontrollsystem.model.entity.Route;
-import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.model.viewmodel.RouteViewModel;
 import com.example.remotecontrollsystem.model.viewmodel.WaypointViewModel;
-import com.example.remotecontrollsystem.mqtt.data.RosObserver;
 import com.example.remotecontrollsystem.mqtt.msgs.ControlHardware;
-import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
-import com.example.remotecontrollsystem.mqtt.msgs.LaserScan;
-import com.example.remotecontrollsystem.mqtt.msgs.Odometry;
+import com.example.remotecontrollsystem.mqtt.msgs.NavSatFix;
 import com.example.remotecontrollsystem.mqtt.msgs.Pose;
-import com.example.remotecontrollsystem.mqtt.msgs.TFMessage;
 import com.example.remotecontrollsystem.mqtt.msgs.Twist;
 import com.example.remotecontrollsystem.mqtt.utils.WidgetType;
-import com.example.remotecontrollsystem.ui.view.map.MapFrameLayout;
+import com.example.remotecontrollsystem.ui.view.mapsforge.GpsMapView;
 import com.example.remotecontrollsystem.ui.view.status.CameraView;
+import com.example.remotecontrollsystem.ui.view.utils.CameraViewLifecycleManager;
+import com.example.remotecontrollsystem.ui.view.utils.GpsMapViewLifecycleManager;
 import com.example.remotecontrollsystem.viewmodel.ConnectionViewModel;
 import com.example.remotecontrollsystem.viewmodel.MqttPubViewModel;
 import com.example.remotecontrollsystem.viewmodel.MqttSubViewModel;
@@ -37,22 +33,22 @@ import java.util.Locale;
 
 
 public class ManualControlFragment extends Fragment {
+    private static final String TAG = ManualControlFragment.class.getSimpleName();
     private static final String LINEAR_MAX_VEL_TAG = "linearMaxVel";
     private static final String ANGULAR_MAX_VEL_TAG = "angularMaxVel";
     private FragmentManualControlBinding binding;
 
     // ViewModels
-    private ConnectionViewModel connectionViewModel;
     private MqttSubViewModel mqttSubViewModel;
     private MqttPubViewModel mqttPubViewModel;
     private RouteViewModel routeViewModel;
     private WaypointViewModel waypointViewModel;
 
+    // Data of max velocity
     private MutableLiveData<Float> linearMaxVel;
     private MutableLiveData<Float> angularMaxVel;
 
-    private MapFrameLayout mapFrameLayout;
-
+    // Publish messages
     private Twist twist;
     private ControlHardware controlHardware;
 
@@ -77,11 +73,21 @@ public class ManualControlFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentManualControlBinding.inflate(inflater, container, false);
 
-        connectionViewModel = new ViewModelProvider(requireActivity()).get(ConnectionViewModel.class);
         mqttSubViewModel = new ViewModelProvider(requireActivity()).get(MqttSubViewModel.class);
         mqttPubViewModel = new ViewModelProvider(requireActivity()).get(MqttPubViewModel.class);
         routeViewModel = new ViewModelProvider(requireActivity()).get(RouteViewModel.class);
         waypointViewModel = new ViewModelProvider(requireActivity()).get(WaypointViewModel.class);
+
+        // Attach Lifecycle Managers
+        GpsMapViewLifecycleManager gpsMapViewLifecycleManager = new GpsMapViewLifecycleManager(
+                this,
+                binding.frameMapManual
+        );
+        CameraViewLifecycleManager cameraViewLifecycleManager = new CameraViewLifecycleManager(
+                this,
+                binding.frameFrontCameraManual,
+                binding.frameRearCameraManual
+        );
 
         linearMaxVel = new MutableLiveData<>();
         angularMaxVel = new MutableLiveData<>();
@@ -89,9 +95,6 @@ public class ManualControlFragment extends Fragment {
         // Initialize Messages
         twist = new Twist();
         controlHardware = new ControlHardware();
-
-        mapFrameLayout = new MapFrameLayout(requireContext());
-        binding.frameMapManual.addView(mapFrameLayout);
 
         // Initialize max velocity EditTexts
         binding.etLinearMaxVel.setOnFocusChangeListener((view, isFocused) -> {
@@ -119,12 +122,13 @@ public class ManualControlFragment extends Fragment {
 
         // Initialize joystickViews
         binding.linearJoystickView.setLinearJoystickMoveListener(linear -> {
+            Log.d("Linear", String.valueOf(linear));
             twist.getLinear().setX(linear);
             mqttPubViewModel.publishTopic(WidgetType.CMD_VEL_PUB.getType(), twist);
         });
 
         binding.angularJoystickView.setAngularJoystickMoveListener(angular -> {
-            twist.getAngular().setZ(-angular);
+            twist.getAngular().setZ(angular);
             mqttPubViewModel.publishTopic(WidgetType.CMD_VEL_PUB.getType(), twist);
         });
 
@@ -149,6 +153,16 @@ public class ManualControlFragment extends Fragment {
             mqttPubViewModel.publishTopic(WidgetType.CONTROL_HARD_WARE.getType(), controlHardware);
         });
 
+        binding.button.setOnClickListener(v -> {
+            NavSatFix fix = (NavSatFix) mqttSubViewModel.getTopicLiveData(WidgetType.NAV_SAT_FIX).getValue();
+            if (fix != null) {
+                Pose pose = new Pose();
+                pose.getPosition().setX(fix.getLatitude());
+                pose.getPosition().setY(fix.getLongitude());
+                waypointViewModel.addPoseToNewWaypoint(pose);
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -156,17 +170,6 @@ public class ManualControlFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d("수동조작", "Resume");
-        connectionViewModel.getRtspFrontUrl().observe(requireActivity(), frontUrlObserver);
-        connectionViewModel.getRtspRearUrl().observe(requireActivity(), rearUrlObserver);
-
-        mqttSubViewModel.getResponseLiveData(WidgetType.GET_MAP).observe(requireActivity(), mapObserver);
-        mqttSubViewModel.getTopicLiveData(WidgetType.ROBOT_POSE).observe(requireActivity(), robotPoseObserver);
-        mqttSubViewModel.getTopicLiveData(WidgetType.LASER_SCAN).observe(requireActivity(), scanObserver);
-        mqttSubViewModel.getTopicLiveData(WidgetType.TF).observe(requireActivity(), tfObserver);
-        mqttSubViewModel.getTopicLiveData(WidgetType.ODOM).observe(requireActivity(), odomObserver);
-
-        routeViewModel.getCurrentRoute().observe(requireActivity(), currentRouteObserver);
-        waypointViewModel.getNewWaypoint().observe(requireActivity(), newWaypointObserver);
 
         linearMaxVel.observe(getViewLifecycleOwner(), velocity -> {
             String text = String.format(Locale.KOREA, "%.2fm/s", velocity);
@@ -182,83 +185,6 @@ public class ManualControlFragment extends Fragment {
 
         restorePreference();
     }
-
-    // RTSP Camera Observers
-    private final Observer<String> frontUrlObserver = url -> {
-        binding.frameFrontCameraManual.removeAllViews();
-
-        CameraView cameraView = new CameraView(requireContext());
-        binding.frameFrontCameraManual.addView(cameraView);
-
-        cameraView.post(() -> cameraView.settingRtspConnection(url));
-    };
-
-    private final Observer<String> rearUrlObserver = url -> {
-        binding.frameRearCameraManual.removeAllViews();
-
-        CameraView cameraView = new CameraView(requireContext());
-        binding.frameRearCameraManual.addView(cameraView);
-
-        cameraView.post(() -> cameraView.settingRtspConnection(url));
-    };
-
-    // ROS-MQTT Observers
-    private final RosObserver<Odometry> odomObserver = new RosObserver<Odometry>(Odometry.class) {
-        @Override
-        public void onChange(Odometry odometry) {
-            double linearVel = odometry.getTwist().getTwist().getLinear().getX();
-            double angularVel = odometry.getTwist().getTwist().getAngular().getZ();
-
-            String linear = String.format(Locale.KOREA, "%.2f m/s", linearVel);
-            String angular = String.format(Locale.KOREA, "%.2f m/s", angularVel);
-
-            binding.tvCurrentLinearVel.post(() -> binding.tvCurrentLinearVel.setText(linear));
-            binding.tvCurrentAngularVel.post(() -> binding.tvCurrentAngularVel.setText(angular));
-        }
-    };
-
-    private final RosObserver<GetMap_Response> mapObserver = new RosObserver<GetMap_Response>(GetMap_Response.class) {
-        @Override
-        public void onChange(GetMap_Response getMap_response) {
-            mapFrameLayout.updateMap(getMap_response.getMap());
-        }
-    };
-
-    private final RosObserver<Pose> robotPoseObserver = new RosObserver<Pose>(Pose.class) {
-        @Override
-        public void onChange(Pose pose) {
-            mapFrameLayout.updateRobotPose(pose);
-        }
-    };
-
-    private final RosObserver<LaserScan> scanObserver = new RosObserver<LaserScan>(LaserScan.class) {
-        @Override
-        public void onChange(LaserScan laserScan) {
-            mapFrameLayout.updateLaserScan(laserScan);
-        }
-    };
-
-    private final RosObserver<TFMessage> tfObserver = new RosObserver<TFMessage>(TFMessage.class) {
-        @Override
-        public void onChange(TFMessage tfMessage) {
-            mapFrameLayout.updateTF(tfMessage);
-        }
-    };
-
-    // Route Observers
-    private final Observer<Route> currentRouteObserver = new Observer<Route>() {
-        @Override
-        public void onChanged(Route route) {
-            mapFrameLayout.updateCurrentRoute(route);
-        }
-    };
-
-    private final Observer<Waypoint> newWaypointObserver = new Observer<Waypoint>() {
-        @Override
-        public void onChanged(Waypoint waypoint) {
-            mapFrameLayout.updateNewWaypoint(waypoint);
-        }
-    };
 
     // SharedPreferences
     private void saveMaxVelPreference(String tag, float maxVel) {
@@ -284,16 +210,6 @@ public class ManualControlFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        connectionViewModel.getRtspFrontUrl().removeObserver(frontUrlObserver);
-        connectionViewModel.getRtspRearUrl().removeObserver(rearUrlObserver);
-        mqttSubViewModel.getResponseLiveData(WidgetType.GET_MAP).removeObserver(mapObserver);
-        mqttSubViewModel.getTopicLiveData(WidgetType.ROBOT_POSE).removeObserver(robotPoseObserver);
-        mqttSubViewModel.getTopicLiveData(WidgetType.LASER_SCAN).removeObserver(scanObserver);
-        mqttSubViewModel.getTopicLiveData(WidgetType.TF).removeObserver(tfObserver);
-        mqttSubViewModel.getTopicLiveData(WidgetType.ODOM).removeObserver(odomObserver);
-        routeViewModel.getCurrentRoute().removeObserver(currentRouteObserver);
-        waypointViewModel.getNewWaypoint().removeObserver(newWaypointObserver);
-
         try {
             float linear = linearMaxVel.getValue();
             float angular = angularMaxVel.getValue();
@@ -312,10 +228,7 @@ public class ManualControlFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        connectionViewModel = null;
         mqttSubViewModel = null;
         mqttPubViewModel = null;
-        routeViewModel = null;
-        waypointViewModel = null;
     }
 }

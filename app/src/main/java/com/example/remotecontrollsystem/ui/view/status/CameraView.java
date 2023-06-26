@@ -3,6 +3,7 @@ package com.example.remotecontrollsystem.ui.view.status;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -13,10 +14,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.remotecontrollsystem.ui.dialog.LoadingDialog;
+
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.util.VLCVideoLayout;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 public class CameraView extends VLCVideoLayout {
@@ -27,6 +35,7 @@ public class CameraView extends VLCVideoLayout {
     private LibVLC libVlc;
     private TextView textView;
     private ProgressBar progressBar;
+
 
     public CameraView(@NonNull Context context) {
         super(context);
@@ -70,6 +79,7 @@ public class CameraView extends VLCVideoLayout {
 
     public void settingRtspConnection(String url) {
         Log.d(TAG, "Setting RTSP Camera Connection");
+
         Media media = new Media(libVlc, Uri.parse(url));
         media.setHWDecoderEnabled(true, false);
         media.addOption(":network-caching=300");
@@ -108,16 +118,37 @@ public class CameraView extends VLCVideoLayout {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
+        LoadingDialog dialog = new LoadingDialog(getContext());
+        dialog.setText("리소스 정리중...");
 
+        Disposable backgroundTask = Observable.fromCallable(() -> {
+                    try {
+                        if (mediaPlayer != null && !mediaPlayer.isReleased()) {
+                            mediaPlayer.stop();
+                            mediaPlayer.detachViews();
+                            mediaPlayer.release();
+                        }
 
-        if (mediaPlayer != null && !mediaPlayer.isReleased()) {
-            mediaPlayer.stop();
-            mediaPlayer.detachViews();
-            mediaPlayer.release();
-        }
+                        Log.d(TAG, "Finish to release media player");
+                        if (libVlc != null && !libVlc.isReleased()) {
+                            libVlc.release();
+                        }
 
-        if (libVlc != null && !libVlc.isReleased()) {
-            libVlc.release();
-        }
+                        Log.d(TAG, "Finish to release libVlc");
+
+                        return true;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+
+                        Log.e(TAG, "Failed to release resources");
+
+                        return false;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((result) -> {
+                    dialog.dismiss();
+                });
     }
 }

@@ -13,11 +13,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.remotecontrollsystem.model.dao.RouteDao;
 import com.example.remotecontrollsystem.model.dao.TopicDao;
+import com.example.remotecontrollsystem.model.dao.UgvAttributeDao;
 import com.example.remotecontrollsystem.model.dao.WaypointDao;
 import com.example.remotecontrollsystem.model.entity.Route;
 import com.example.remotecontrollsystem.model.entity.Topic;
+import com.example.remotecontrollsystem.model.entity.UgvAttribute;
 import com.example.remotecontrollsystem.model.entity.Waypoint;
 import com.example.remotecontrollsystem.model.utils.InitializeDatabase;
+import com.example.remotecontrollsystem.model.utils.InitializerUgvDatabase;
 import com.example.remotecontrollsystem.model.utils.LambdaTask;
 import com.example.remotecontrollsystem.model.utils.RoomConverter;
 
@@ -28,7 +31,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-@Database(entities = {Topic.class, Waypoint.class, Route.class}, version = 1, exportSchema = false)
+@Database(entities = {Topic.class, Waypoint.class, Route.class, UgvAttribute.class}, version = 1, exportSchema = false)
 @TypeConverters(RoomConverter.class)
 public abstract class DataStorage extends RoomDatabase {
     private static final String TAG = DataStorage.class.getSimpleName();
@@ -52,7 +55,10 @@ public abstract class DataStorage extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
+
+            new InitializerUgvDatabase(instance.ugvDao()).initializeDatabase();
             new InitializeDatabase().settingDefaultTopics(instance.topicDao());
+
         }
     };
 
@@ -60,6 +66,7 @@ public abstract class DataStorage extends RoomDatabase {
     public abstract TopicDao topicDao();
     public abstract WaypointDao waypointDao();
     public abstract RouteDao routeDao();
+    public abstract UgvAttributeDao ugvDao();
 
     // Topic Methods
     public void addTopic(Topic topic) {
@@ -109,11 +116,11 @@ public abstract class DataStorage extends RoomDatabase {
     }
 
     public void removeRoute(Route route) {
-        new LambdaTask(() -> routeDao().delete(route));
+        new LambdaTask(() -> routeDao().delete(route.getId())).dispose();
     }
 
     public void updateRoute(Route route) {
-        new LambdaTask(() -> routeDao().update(route));
+        new LambdaTask(() -> routeDao().update(route)).dispose();
     }
 
     public LiveData<Route> getRoute(int id) {
@@ -122,5 +129,26 @@ public abstract class DataStorage extends RoomDatabase {
 
     public LiveData<List<Route>> getAllRoutes() {
         return routeDao().getAllRoutes();
+    }
+
+    // Ugv Methods
+    public void addUgvAttr(UgvAttribute attr) {
+        new LambdaTask(() -> ugvDao().insert(attr)).dispose();
+    }
+
+    public void removeUgvAttr(UgvAttribute attr) {
+        new LambdaTask(() -> ugvDao().delete(attr)).dispose();
+    }
+
+    public void updateUgvAttr(UgvAttribute attr) {
+        new LambdaTask(() -> ugvDao().update(attr)).dispose();
+    }
+
+    public LiveData<UgvAttribute> getUgvAttr(int id) {
+        return ugvDao().getUgvAttribute(id);
+    }
+
+    public LiveData<List<UgvAttribute>> getAllUgvAttr() {
+        return ugvDao().getAllUgvAttribute();
     }
 }

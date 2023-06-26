@@ -43,14 +43,14 @@ public class AutoDrivingManager {
     }
 
     public void startAutoDriving() {
-        PoseStamped poseStamped = new PoseStamped();
+/*        PoseStamped poseStamped = new PoseStamped();
         poseStamped.getHeader().setFrame_id("map");
         poseStamped.setPose(route.getWaypointList().get(waypointCount).getPoseList().get(poseCount));
 
         NavigateToPose_Request goal = new NavigateToPose_Request();
         goal.setPose(poseStamped);
 
-        sendGoal(goal);
+        sendGoal(goal);*/
     }
 
     public void stopAutoDriving() {
@@ -77,7 +77,6 @@ public class AutoDrivingManager {
             waypointProgression = (poseCount + poseProgression) / curWaypointSize;
 
             autoDrivingProgression.setPercent(waypointProgression);
-            statusViewModel.updateAutoDrivingProgression(autoDrivingProgression);
         }
     };
 
@@ -105,8 +104,6 @@ public class AutoDrivingManager {
 
                 sendGoal(goal);
             }
-
-            statusViewModel.updateAutoDrivingProgression(autoDrivingProgression);
         }
     };
 

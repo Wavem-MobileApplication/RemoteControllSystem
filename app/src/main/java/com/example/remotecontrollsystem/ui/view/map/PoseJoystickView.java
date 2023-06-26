@@ -55,8 +55,6 @@ public class PoseJoystickView extends View {
         x = centerX;
         y = centerY;
         invalidate();
-
-        Log.d("Width", String.valueOf(getWidth()));
     }
 
     @Override

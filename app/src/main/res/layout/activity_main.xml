@@ -30,14 +30,12 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/ripple_click_button_white"
-                android:scaleType="fitCenter"
+                style="@style/IconButtonLv2"
                 android:src="@drawable/icon_menu_button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/btn_logo"
@@ -46,14 +44,11 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/ripple_click_button_white"
-                android:scaleType="fitCenter"
-                android:src="@drawable/logo_agency_for_defense_development"
+                style="@style/IconButtonLv2"
+                android:src="@drawable/icon_add_logo"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btn_menu_main"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_notification_msg"
@@ -83,14 +78,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/ripple_click_button_white"
-                android:scaleType="fitCenter"
+                style="@style/IconButtonLv2"
                 android:src="@drawable/icon_notification"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toStartOf="@+id/btn_connection"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageButton
                 android:id="@+id/btn_connection"
@@ -99,14 +93,12 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/ripple_click_button_white"
-                android:scaleType="fitCenter"
+                style="@style/IconButtonLv2"
                 android:src="@drawable/icon_car_no_connection"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toStartOf="@+id/btn_network"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/btn_network"
@@ -115,8 +107,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/ripple_click_button_white"
-                android:scaleType="fitCenter"
+                style="@style/IconButtonLv2"
                 android:src="@drawable/icon_network_signal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"

@@ -16,24 +16,29 @@ public class InitializeDatabase {
 
     public void settingDefaultTopics(TopicDao topicDao) {
         Disposable backgroundTask = Observable.fromCallable(() -> {
-                    topicDao.insert(getDefaultMap());
-                    topicDao.insert(getDefaultRobotPose());
-                    topicDao.insert(getDefaultScan());
+//                    topicDao.insert(getDefaultMap());
+//                    topicDao.insert(getDefaultRobotPose());
+//                    topicDao.insert(getDefaultScan());
                     topicDao.insert(getDefaultTF());
                     topicDao.insert(getDefaultTFStatic());
                     topicDao.insert(getDefaultCmdVelSub());
                     topicDao.insert(getDefaultOdom());
-                    topicDao.insert(getDefaultGlobalPlan());
-                    topicDao.insert(getDefaultLocalPlan());
+//                    topicDao.insert(getDefaultGlobalPlan());
+//                    topicDao.insert(getDefaultLocalPlan());
                     topicDao.insert(getDefaultBatteryState());
+                    topicDao.insert(getDefaultNavSatFix());
+                    topicDao.insert(getDefaultRttOdom());
 
                     topicDao.insert(getDefaultCmdVelPub());
                     topicDao.insert(getDefaultInitialPose());
                     topicDao.insert(getDefaultControlHardWare());
 
-                    topicDao.insert(getDefaultNavigateToPose());
+                    topicDao.insert(getDefaultGpsMoveRequest());
+                    topicDao.insert(getDefaultGpsMoveFeedBack());
+                    topicDao.insert(getDefaultGpsMoveResponse());
+//                    topicDao.insert(getDefaultNavigateToPose());
 
-                    topicDao.insert(getDefaultGetMap());
+//                    topicDao.insert(getDefaultGetMap());
                     return true;
                 })
                 .subscribeOn(Schedulers.io())
@@ -141,6 +146,22 @@ public class InitializeDatabase {
         return topic;
     }
 
+    private Topic getDefaultNavSatFix() {
+        Topic topic = new Topic(WidgetType.NAV_SAT_FIX.getType());
+        RosMessageDefinition msg = RosMessageDefinition.SUB("/ublox/fix", "sensor_msgs/msg/NavSatFix");
+        topic.setMessage(msg);
+
+        return topic;
+    }
+
+    private Topic getDefaultRttOdom() {
+        Topic topic = new Topic(WidgetType.RTT_ODOM.getType());
+        RosMessageDefinition msg = RosMessageDefinition.SUB("/rtt_odom", "geometry_msgs/msg/PoseStamped");
+        topic.setMessage(msg);
+
+        return topic;
+    }
+
     private Topic getDefaultInitialPose() {
         Topic topic = new Topic(WidgetType.INITIAL_POSE.getType());
         RosMessageDefinition msg =
@@ -154,6 +175,33 @@ public class InitializeDatabase {
         Topic topic = new Topic(WidgetType.CONTROL_HARD_WARE.getType());
         RosMessageDefinition msg =
                 RosMessageDefinition.PUB("/can/control_hardware", "can_msgs/msg/ControlHardware");
+        topic.setMessage(msg);
+
+        return topic;
+    }
+
+    private Topic getDefaultGpsMoveRequest() {
+        Topic topic = new Topic(WidgetType.GPS_MOVE_REQUEST.getType());
+        RosMessageDefinition msg = RosMessageDefinition.PUB(
+                "/gps_manual_move/request", "manual_move_msgs/msg/GpsMoveRequest");
+        topic.setMessage(msg);
+
+        return topic;
+    }
+
+    private Topic getDefaultGpsMoveFeedBack() {
+        Topic topic = new Topic(WidgetType.GPS_MOVE_FEEDBACK.getType());
+        RosMessageDefinition msg = RosMessageDefinition.SUB(
+                "/gps_manual_move/feedback", "manual_move_msgs/msg/GpsMoveFeedBack");
+        topic.setMessage(msg);
+
+        return topic;
+    }
+
+    private Topic getDefaultGpsMoveResponse() {
+        Topic topic = new Topic(WidgetType.GPS_MOVE_RESPONSE.getType());
+        RosMessageDefinition msg = RosMessageDefinition.SUB(
+                "/gps_manual_move/response", "manual_move_msgs/msg/GpsMoveResponse");
         topic.setMessage(msg);
 
         return topic;

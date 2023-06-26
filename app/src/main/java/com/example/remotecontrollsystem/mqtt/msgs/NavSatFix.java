@@ -1,18 +1,21 @@
 package com.example.remotecontrollsystem.mqtt.msgs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class NavSatFix extends RosMessage {
     private Header header;
     private NavSatStatus status;
     private double latitude;
     private double longitude;
     private double altitude;
-    private double[] position_covariance;
+    private Map<String, Double> position_covariance;
     private int position_covariance_type;
 
     public NavSatFix() {
         header = new Header();
         status = new NavSatStatus();
-        position_covariance = new double[9];
+        position_covariance = new HashMap<>();
     }
 
     public Header getHeader() {
@@ -55,11 +58,11 @@ public class NavSatFix extends RosMessage {
         this.altitude = altitude;
     }
 
-    public double[] getPosition_covariance() {
+    public Map<String, Double> getPosition_covariance() {
         return position_covariance;
     }
 
-    public void setPosition_covariance(double[] position_covariance) {
+    public void setPosition_covariance(Map<String, Double> position_covariance) {
         this.position_covariance = position_covariance;
     }
 

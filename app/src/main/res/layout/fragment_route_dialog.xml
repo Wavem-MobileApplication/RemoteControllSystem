@@ -14,9 +14,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/route"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
+        style="@style/TextTitleStyle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,8 +25,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:src="@drawable/icon_exit"
-        android:scaleType="fitCenter"
-        android:background="@drawable/ripple_click_button_white_no_padding"
+        style="@style/IconButtonLv1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="@null"/>

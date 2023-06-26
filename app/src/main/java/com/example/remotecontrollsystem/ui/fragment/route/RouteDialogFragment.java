@@ -20,9 +20,11 @@ import android.view.WindowManager;
 import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.FragmentRouteDialogBinding;
 import com.example.remotecontrollsystem.databinding.FragmentRouteListBinding;
+import com.example.remotecontrollsystem.ui.dialog.CustomDialogFragment;
+import com.example.remotecontrollsystem.ui.util.DialogUtil;
 
 
-public class RouteDialogFragment extends DialogFragment {
+public class RouteDialogFragment extends CustomDialogFragment {
     private FragmentRouteDialogBinding binding;
     private NavController navController;
 
@@ -31,7 +33,10 @@ public class RouteDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         binding = FragmentRouteDialogBinding.inflate(inflater, container, false);
 
+        DialogUtil.settingNoNavigationBarScreen(requireDialog());
 
+        setCancelable(false);
+        binding.btnExitRouteDialog.setOnClickListener(v -> dismiss());
 
         return binding.getRoot();
     }
@@ -49,15 +54,18 @@ public class RouteDialogFragment extends DialogFragment {
     }
 
     private void adjustDialogSize() {
-        WindowManager windowManager = (WindowManager) requireActivity().getSystemService(Context.WINDOW_SERVICE);
+        // Get device's size
+        WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
         Point displaySize = new Point();
         display.getSize(displaySize);
 
         // Adjust dialog size
-        WindowManager.LayoutParams params = requireDialog().getWindow().getAttributes();
-        params.width = (int) (displaySize.x * 0.5);
-        params.height = (int) (displaySize.y * 0.5);
-        requireDialog().getWindow().setAttributes(params);
+        WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+        params.width = (int) (displaySize.x * 0.7);
+        params.height = (int) (displaySize.y * 0.7);
+        getDialog().getWindow().setAttributes(params);
     }
+
+
 }

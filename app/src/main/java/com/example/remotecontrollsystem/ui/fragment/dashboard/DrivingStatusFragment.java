@@ -57,15 +57,9 @@ public class DrivingStatusFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart");
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume");
+
         routeViewModel.getCurrentRoute().observe(requireActivity(), currentRouteObserver);
     }
 
@@ -76,21 +70,17 @@ public class DrivingStatusFragment extends Fragment {
         }
     };
 
-    private final Observer<AutoDrivingProgression> autoDrivingProgressionObserver = autoDrivingProgression -> {
-        drivingProgressView.updateAutoDrivingProgression(autoDrivingProgression);
+    private final Observer<Integer> manualMoveProgressionObserver = new Observer<Integer>() {
+        @Override
+        public void onChanged(Integer progress) {
+            drivingProgressView.updateAutoDrivingProgression(progress);
+        }
     };
-
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause");
-        routeViewModel.getCurrentRoute().removeObserver(currentRouteObserver);
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop");
+        routeViewModel.getCurrentRoute().removeObserver(currentRouteObserver);
     }
 
     @Override

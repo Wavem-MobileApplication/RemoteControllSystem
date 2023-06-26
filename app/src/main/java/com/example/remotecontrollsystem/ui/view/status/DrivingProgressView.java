@@ -46,7 +46,7 @@ public class DrivingProgressView extends androidx.appcompat.widget.AppCompatImag
 
     private Bitmap carBitmap;
 
-    private AutoDrivingProgression progression;
+    private int progression = 1;
     private Odometry odometry;
     private DecimalFormat decimalFormat;
 
@@ -64,7 +64,6 @@ public class DrivingProgressView extends androidx.appcompat.widget.AppCompatImag
 
     private void init() {
         route = new Route();
-        progression = new AutoDrivingProgression();
         odometry = new Odometry();
         decimalFormat = new DecimalFormat("#.#");
 
@@ -104,8 +103,12 @@ public class DrivingProgressView extends androidx.appcompat.widget.AppCompatImag
         updateUI();
     }
 
-    public void updateAutoDrivingProgression(AutoDrivingProgression autoDrivingProgression) {
-        this.progression = autoDrivingProgression;
+    public void updateAutoDrivingProgression(int progress) {
+        if (progress == 0) {
+            this.progression = 1;
+        } else {
+            this.progression = progress;
+        }
         invalidate();
     }
 
@@ -142,7 +145,7 @@ public class DrivingProgressView extends androidx.appcompat.widget.AppCompatImag
             Log.d(TAG, route.getWaypointList().get(i).getName());
         }
 
-        float carLeft = (float) ((progression.getClearedNum() + progression.getPercent()) * WIDTH_STRIDE - carBitmap.getWidth() / 2);
+        float carLeft = (float) (barRight / progression / 100 - carBitmap.getWidth() / 2);
         float carTop = getBottom() - BOTTOM_TEXT_SIZE - DEFAULT_HEIGHT - carBitmap.getHeight();
         canvas.drawBitmap(carBitmap, carLeft, carTop, new Paint());
 

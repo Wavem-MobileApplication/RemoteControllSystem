@@ -1,12 +1,55 @@
 package com.example.remotecontrollsystem.wol;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.example.remotecontrollsystem.ui.util.ToastMessage;
+
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class WakeOnLan {
-    public void sendWakeOnLan(String macAddress, String ipAddress) {
-        try {
+    private static final String TAG = WakeOnLan.class.getSimpleName();
+
+    private Context mContext;
+
+    private String macAddress;
+    private String ipAddress;
+
+    private WakeOnLanChecker wakeOnLanChecker;
+    private Thread wakeOnLanThread;
+
+    public WakeOnLan(Context context) {
+        this.mContext = context;
+        wakeOnLanChecker = new WakeOnLanChecker(context);
+        wakeOnLanThread = createNewThread(context);
+    }
+
+    public void startCheckWakeOnLan() {
+        wakeOnLanChecker.startCheckPcAwake();
+    }
+
+    public void startWakeOnLan() {
+        Thread.State state = wakeOnLanThread.getState();
+        Log.d(TAG, "State -> " + state.name());
+        switch (state) {
+            case TERMINATED:
+                wakeOnLanThread = createNewThread(mContext);
+                wakeOnLanThread.start();
+                startCheckWakeOnLan();
+                break;
+            case NEW:
+                wakeOnLanThread.start();
+                startCheckWakeOnLan();
+                break;
+        }
+    }
+
+    public void sendWakeOnLan(String macAddress, String ipAddress) throws IOException {
             byte[] macBytes = getMacBytes(macAddress);
             byte[] magicPacket = createMagicPacket(macBytes);
             InetAddress address = InetAddress.getByName(ipAddress);
@@ -15,12 +58,6 @@ public class WakeOnLan {
             DatagramSocket socket = new DatagramSocket();
             socket.send(packet);
             socket.close();
-
-            // WOL 전송 성공 처리
-        } catch (Exception e) {
-            e.printStackTrace();
-            // WOL 전송 실패 처리
-        }
     }
 
     private byte[] getMacBytes(String macAddress) throws IllegalArgumentException {
@@ -50,5 +87,24 @@ public class WakeOnLan {
         }
 
         return magicPacket;
+    }
+
+    public void setMacAddress(String macAddress) {
+        this.macAddress = macAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    private Thread createNewThread(Context context) {
+        return new Thread(() -> {
+            try {
+                sendWakeOnLan(macAddress, ipAddress);
+            } catch (IOException e) {
+                e.printStackTrace();
+                ToastMessage.showToast(context, "전송실패: 네트워크를 확인해주세요.");
+            }
+        });
     }
 }

@@ -4,13 +4,18 @@ import com.example.remotecontrollsystem.mqtt.msgs.BatteryState;
 import com.example.remotecontrollsystem.mqtt.msgs.ControlHardware;
 import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Request;
 import com.example.remotecontrollsystem.mqtt.msgs.GetMap_Response;
+import com.example.remotecontrollsystem.mqtt.msgs.GpsMoveFeedBack;
+import com.example.remotecontrollsystem.mqtt.msgs.GpsMoveRequest;
+import com.example.remotecontrollsystem.mqtt.msgs.GpsMoveResponse;
 import com.example.remotecontrollsystem.mqtt.msgs.LaserScan;
+import com.example.remotecontrollsystem.mqtt.msgs.NavSatFix;
 import com.example.remotecontrollsystem.mqtt.msgs.NavigateToPose_FeedBack;
 import com.example.remotecontrollsystem.mqtt.msgs.NavigateToPose_Request;
 import com.example.remotecontrollsystem.mqtt.msgs.NavigateToPose_Response;
 import com.example.remotecontrollsystem.mqtt.msgs.OccupancyGrid;
 import com.example.remotecontrollsystem.mqtt.msgs.Odometry;
 import com.example.remotecontrollsystem.mqtt.msgs.Pose;
+import com.example.remotecontrollsystem.mqtt.msgs.PoseStamped;
 import com.example.remotecontrollsystem.mqtt.msgs.RosMessage;
 import com.example.remotecontrollsystem.mqtt.msgs.TFMessage;
 import com.example.remotecontrollsystem.mqtt.msgs.Twist;
@@ -39,6 +44,11 @@ public class MessageManager {
 //        classMap.put(WidgetType.INITIAL_POSE.getType(), PoseWithCovarianceStamped.class);
         classMap.put(WidgetType.CONTROL_HARD_WARE.getType(), ControlHardware.class);
         classMap.put(WidgetType.BATTERY_STATE.getType(), BatteryState.class);
+        classMap.put(WidgetType.NAV_SAT_FIX.getType(), NavSatFix.class);
+        classMap.put(WidgetType.RTT_ODOM.getType(), PoseStamped.class);
+        classMap.put(WidgetType.GPS_MOVE_REQUEST.getType(), GpsMoveRequest.class);
+        classMap.put(WidgetType.GPS_MOVE_FEEDBACK.getType(), GpsMoveFeedBack.class);
+        classMap.put(WidgetType.GPS_MOVE_RESPONSE.getType(), GpsMoveResponse.class);
         classMap.put(
                 WidgetType.NAVIGATE_TO_POSE.getType() + MessageType.REQUEST.getType(),
                 NavigateToPose_Request.class);

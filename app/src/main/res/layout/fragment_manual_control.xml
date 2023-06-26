@@ -70,9 +70,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/angularJoystickView"
         app:layout_constraintStart_toEndOf="@+id/frame_rear_camera_manual"
-        app:layout_constraintTop_toBottomOf="@+id/frame_front_camera_manual">
-
-    </FrameLayout>
+        app:layout_constraintTop_toBottomOf="@+id/frame_front_camera_manual"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
@@ -90,9 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="현재 속도"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textStyle="bold"
+            style="@style/TextStatusTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -104,10 +100,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/text_background"
             android:text="0.0m/s"
-            android:textAlignment="center"
-            android:textColor="@color/color_text_sky_blue"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            style="@style/TextStatusContents"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_current_linear_vel_title" />
@@ -118,9 +111,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="회전 속도"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textStyle="bold"
+            style="@style/TextStatusTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_current_linear_vel" />
@@ -132,10 +123,7 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/text_background"
             android:text="0.0m/s"
-            android:textAlignment="center"
-            android:textColor="@color/color_text_sky_blue"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            style="@style/TextStatusContents"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_current_angular_vel_title" />
@@ -158,9 +146,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="전/후진 최대 속도"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textStyle="bold"
+            style="@style/TextStatusTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -173,10 +159,7 @@
             android:background="@drawable/text_background"
             android:inputType="numberDecimal"
             android:text="0.0"
-            android:textAlignment="center"
-            android:textColor="@color/color_text_sky_blue"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            style="@style/TextStatusContents"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_linear_max_vel_title" />
@@ -187,9 +170,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="회전 속도"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textStyle="bold"
+            style="@style/TextStatusTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_linear_max_vel" />
@@ -202,10 +183,7 @@
             android:background="@drawable/text_background"
             android:inputType="numberDecimal"
             android:text="0.0"
-            android:textAlignment="center"
-            android:textColor="@color/color_text_sky_blue"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            style="@style/TextStatusContents"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_angular_max_vel_title" />
@@ -250,5 +228,15 @@
         android:text="우측라이트"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/angularJoystickView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_right_light" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

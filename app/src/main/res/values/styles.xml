@@ -1,6 +1,101 @@
 <resources>
+
     <style name="Widget.Theme.RemoteControllSystem.MyView" parent="">
         <item name="android:background">@color/gray_400</item>
         <item name="exampleColor">@color/light_blue_400</item>
+    </style>
+
+    <!--    TextView Styles -->
+
+    <style name="TextTitleStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextTitleStyleLv2" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextTitleStyleLv3" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextContentsStyleLv1" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextContentsStyleLv2" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextContentsStyleLv3" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextListItemLv1" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextListItemLv2" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextStatusTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_text_gray</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="TextStatusContents" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_text_sky_blue</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <!--    EditText Styles -->
+
+    <style name="EditTextTitleStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/background_edittext_focused</item>
+    </style>
+
+    <style name="EditTextStyleContents" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <item name="android:textSize">16sp</item>
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="boxCornerRadiusBottomEnd">5dp</item>
+        <item name="boxCornerRadiusBottomStart">5dp</item>
+        <item name="boxCornerRadiusTopEnd">5dp</item>
+        <item name="boxCornerRadiusTopStart">5dp</item>
+    </style>
+
+    <!-- ImageButton Styles -->
+
+    <style name="IconButtonLv1" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/ripple_click_button_white_no_padding</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:contentDescription">@null</item>
+    </style>
+
+    <style name="IconButtonLv2" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/ripple_click_button_white</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:contentDescription">@null</item>
     </style>
 </resources>

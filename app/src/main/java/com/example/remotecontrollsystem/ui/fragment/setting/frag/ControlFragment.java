@@ -23,7 +23,6 @@ public class ControlFragment extends Fragment {
     private MqttPubViewModel mqttPubViewModel;
 
     private WakeOnLan wakeOnLan;
-    private Thread wakeOnLanThread;
     public ControlFragment() {
         // Required empty public constructor
     }
@@ -63,19 +62,14 @@ public class ControlFragment extends Fragment {
         MacAddressInputManager macAddressInputManager = new MacAddressInputManager(binding.etWakeOnLanMacAddress);
         binding.etWakeOnLanMacAddress.addTextChangedListener(macAddressInputManager.getMacAddressTextWatcher());
 
-        wakeOnLan = new WakeOnLan();
-        wakeOnLanThread = new Thread(() -> {
-            try {
-                wakeOnLan.sendWakeOnLan(
-                        binding.etWakeOnLanMacAddress.getText().toString(),
-                        binding.etWakeOnLanIpAddress.getText().toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-                ToastMessage.showToast(requireContext(), "전송실패: 네트워크를 확인해주세요.");
-            }
-        });
+        wakeOnLan = new WakeOnLan(requireContext());
 
-        binding.btnWakeOnLan.setOnClickListener(v -> wakeOnLanThread.start());
+        binding.btnWakeOnLan.setOnClickListener(v -> {
+            wakeOnLan.setIpAddress(binding.etWakeOnLanIpAddress.getText().toString());
+            wakeOnLan.setMacAddress(binding.etWakeOnLanMacAddress.getText().toString());
+
+            wakeOnLan.startWakeOnLan();
+        });
 
         binding.btnWakeOffLan.setOnClickListener(v ->
                 mqttPubViewModel.publishDefaultMqttTopic("nuc_shutdown", "nuc_shutdown"));

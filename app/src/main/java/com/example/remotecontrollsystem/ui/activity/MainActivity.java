@@ -1,16 +1,27 @@
 package com.example.remotecontrollsystem.ui.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.example.remotecontrollsystem.BuildConfig;
 import com.example.remotecontrollsystem.R;
 import com.example.remotecontrollsystem.databinding.ActivityMainBinding;
 import com.example.remotecontrollsystem.ui.dialog.MqttConnectFragment;
 
+import org.oscim.core.GeoPoint;
+
+import java.io.File;
+import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class MainActivity extends MqttActivity {
     private ActivityMainBinding binding;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +31,29 @@ public class MainActivity extends MqttActivity {
         init();
         settingClickEvents();
 
-        Log.d("경로", BuildConfig.APPLICATION_ID);
+        showAllFiles(getCacheDir().getAbsolutePath());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void showAllFiles(String dirPath) {
+        File dir = new File(dirPath);
+        File[] files = dir.listFiles();
+
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            if (file.isDirectory()) {
+                showAllFiles(file.getAbsolutePath());
+            } else {
+                try {
+                    Path path = Paths.get(file.getAbsolutePath());
+                    FileChannel fileChannel = FileChannel.open(path);
+                    Log.d("파일명", file.getAbsolutePath());
+                    Log.d("파일크기", String.valueOf(fileChannel.size()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void init() {

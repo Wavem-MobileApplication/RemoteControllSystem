@@ -40,8 +40,7 @@
         android:layout_height="36dp"
         android:layout_marginEnd="8dp"
         android:src="@drawable/icon_add_destination"
-        android:scaleType="fitCenter"
-        android:background="@drawable/ripple_click_button_white_no_padding"
+        style="@style/IconButtonLv1"
         app:layout_constraintBottom_toBottomOf="@+id/tv_waypoint_name_item"
         app:layout_constraintEnd_toStartOf="@+id/btn_edit_waypoint"
         app:layout_constraintTop_toTopOf="@+id/tv_waypoint_name_item"
@@ -53,12 +52,10 @@
         android:layout_height="36dp"
         android:layout_marginEnd="8dp"
         android:src="@drawable/icon_edit"
-        android:scaleType="fitCenter"
-        android:background="@drawable/ripple_click_button_white_no_padding"
+        style="@style/IconButtonLv1"
         app:layout_constraintBottom_toBottomOf="@+id/btn_sign_up_waypoint"
         app:layout_constraintEnd_toStartOf="@+id/btn_delete_waypoint"
-        app:layout_constraintTop_toTopOf="@+id/btn_sign_up_waypoint"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toTopOf="@+id/btn_sign_up_waypoint" />
 
     <ImageButton
         android:id="@+id/btn_delete_waypoint"
@@ -66,10 +63,8 @@
         android:layout_height="36dp"
         android:layout_marginEnd="8dp"
         android:src="@drawable/icon_delete"
-        android:scaleType="fitCenter"
-        android:background="@drawable/ripple_click_button_white_no_padding"
+        style="@style/IconButtonLv1"
         app:layout_constraintBottom_toBottomOf="@+id/btn_edit_waypoint"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_edit_waypoint"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toTopOf="@+id/btn_edit_waypoint" />
 </androidx.constraintlayout.widget.ConstraintLayout>

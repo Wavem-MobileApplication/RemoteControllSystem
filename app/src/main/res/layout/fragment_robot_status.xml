@@ -15,9 +15,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/car_info_title"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        style="@style/TextTitleStyle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,10 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/battery"
-            android:textAlignment="center"
-            android:textColor="@color/color_text_gray"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            style="@style/TextStatusTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -80,10 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="총 주행 시간"
-            android:textAlignment="center"
-            android:textColor="@color/color_text_gray"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            style="@style/TextStatusTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -118,10 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="총 주행 거리"
-            android:textAlignment="center"
-            android:textColor="@color/color_text_gray"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            style="@style/TextStatusTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

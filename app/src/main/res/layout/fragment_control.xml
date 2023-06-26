@@ -9,14 +9,12 @@
 
     <TextView
         android:id="@+id/tv_control_page_title"
+        style="@style/TextTitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="차량 제어"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,26 +35,23 @@
 
             <TextView
                 android:id="@+id/tv_wake_on_lan_title"
+                style="@style/TextTitleStyleLv2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="PC 전원제어"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout8"
-                style="?attr/textInputFilledDenseStyle"
+                style="@style/EditTextStyleContents"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:hint="IP 주소"
-                app:boxBackgroundColor="@color/white"
                 app:layout_constraintEnd_toStartOf="@+id/btn_wake_on_lan"
                 app:layout_constraintStart_toStartOf="@+id/tv_wake_on_lan_title"
                 app:layout_constraintTop_toBottomOf="@+id/tv_wake_on_lan_title">
@@ -68,11 +63,15 @@
                     android:text="10.223.188.11" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_wake_on_lan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ripple_button_sky_blue"
                 android:text="전원 켜기"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/textInputLayout9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textInputLayout8"
@@ -80,12 +79,11 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout9"
-                style="?attr/textInputFilledDenseStyle"
+                style="@style/EditTextStyleContents"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="Mac 주소"
-                app:boxBackgroundColor="@color/white"
                 app:layout_constraintEnd_toEndOf="@+id/textInputLayout8"
                 app:layout_constraintStart_toStartOf="@+id/textInputLayout8"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout8">
@@ -94,15 +92,19 @@
                     android:id="@+id/et_wake_on_lan_mac_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="48:21:0B:50:24:93"/>
+                    android:text="48:21:0B:50:24:93" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_wake_off_lan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
+                android:background="@drawable/ripple_button_red"
                 android:text="전원 종료"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout9" />

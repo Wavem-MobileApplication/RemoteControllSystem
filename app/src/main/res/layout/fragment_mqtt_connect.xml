@@ -14,9 +14,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/connect"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        style="@style/TextTitleStyle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,11 +42,11 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout5"
-                style="?attr/textInputOutlinedStyle"
+                style="@style/EditTextStyleContents"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -65,7 +63,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:completionThreshold="0"
-                    android:padding="15dp"
+                    style="?attr/editTextStyle"
+                    android:singleLine="true"
                     android:text="@string/mqtt_address_ex" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,7 +81,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout6"
-                style="?attr/textInputOutlinedStyle"
+                style="@style/EditTextStyleContents"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -99,7 +98,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:completionThreshold="0"
-                    android:padding="15dp"
+                    style="?attr/editTextStyle"
+                    android:singleLine="true"
                     android:text="@string/rtsp_url_ex" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -115,7 +115,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout7"
-                style="?attr/textInputOutlinedStyle"
+                style="@style/EditTextStyleContents"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -132,8 +132,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:completionThreshold="0"
-                    android:padding="15dp"
-                    android:text="rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4" />
+                    style="?attr/editTextStyle"
+                    android:singleLine="true"
+                    android:text="@string/rtsp_url_ex" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
